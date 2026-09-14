@@ -1,43 +1,57 @@
 import photo from '../assets/photos/palco-microfone-1.png'
 import { songs } from '../lib/site-data'
+import Reveal from './Reveal'
 
 export default function Discography() {
   return (
-    <section id="musicas" className="relative py-24 md:py-32 bg-[#120a14]">
-      <div className="max-w-6xl mx-auto px-6 md:px-12 grid md:grid-cols-2 gap-12 items-center">
-        <div>
-          <h2 className="font-display text-4xl md:text-5xl text-white leading-tight">
-            Sucessos que
-            <br />
-            marcaram
-            <br />
-            <span className="italic text-pink-300">gerações</span>
-          </h2>
-          <p className="mt-6 text-sm md:text-base text-pink-50/70 max-w-md">
-            Ao longo de sua trajetória, lançou canções que se tornaram parte
-            da história da música gospel brasileira.
-          </p>
-          <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3">
-            {songs.map((song) => (
-              <li
-                key={song}
-                className="text-pink-100/90 text-sm md:text-base border-b border-pink-100/10 pb-2"
-              >
-                {song}
-              </li>
-            ))}
-          </ul>
-          <p className="mt-8 text-sm text-pink-100/60 max-w-md">
-            Além de diversos outros sucessos que seguem impactando milhões de
-            pessoas em todo o Brasil.
-          </p>
+    <section id="musicas" className="relative py-28 md:py-40 bg-transparent overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 md:px-12">
+        <div className="grid md:grid-cols-12 gap-10 items-end">
+          <div className="md:col-span-6">
+            <Reveal>
+              <span className="text-[11px] tracking-[0.4em] uppercase text-[#1a2140]/50">
+                Discografia
+              </span>
+              <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-[#1a2140] mt-4 leading-[1.05]">
+                Sucessos que
+                <br />
+                marcaram
+                <br />
+                <span className="italic text-[#d1548f]">gerações</span>
+              </h2>
+            </Reveal>
+          </div>
+          <div className="md:col-span-6">
+            <Reveal delay={0.15}>
+              <img
+                src={photo}
+                alt="Giselli Cristina no palco"
+                className="w-full aspect-[16/11] object-cover grayscale-[10%]"
+              />
+            </Reveal>
+          </div>
         </div>
-        <img
-          src={photo}
-          alt="Giselli Cristina no palco"
-          className="rounded-lg w-full object-cover shadow-2xl shadow-pink-950/40"
-        />
       </div>
+
+      <div className="mt-20 md:mt-28 border-y border-[#a9a0d8] py-3">
+        <div className="flex whitespace-nowrap animate-[marquee_38s_linear_infinite] hover:[animation-play-state:paused]">
+          {[...songs, ...songs].map((song, i) => (
+            <span
+              key={i}
+              className="font-display italic text-3xl md:text-5xl text-[#1a2140]/35 mx-6 md:mx-10 shrink-0"
+            >
+              {song} <span className="text-[#1a2140]/20 not-italic">&middot;</span>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes marquee {
+          from { transform: translateX(0); }
+          to { transform: translateX(-50%); }
+        }
+      `}</style>
     </section>
   )
 }

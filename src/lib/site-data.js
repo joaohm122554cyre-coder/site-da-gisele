@@ -47,11 +47,11 @@ export const currentMoment = {
 }
 
 export const streaming = [
-  { name: 'Spotify', url: 'https://open.spotify.com' },
-  { name: 'Apple Music', url: 'https://music.apple.com' },
-  { name: 'YouTube', url: 'https://youtube.com' },
-  { name: 'Amazon Music', url: 'https://music.amazon.com' },
-  { name: 'Deezer', url: 'https://deezer.com' },
+  { name: 'Spotify', url: null },
+  { name: 'Apple Music', url: null },
+  { name: 'YouTube', url: null },
+  { name: 'Amazon Music', url: null },
+  { name: 'Deezer', url: null },
 ]
 
 export const contact = {
@@ -60,3 +60,47 @@ export const contact = {
   instagram: '@gisellicristinaoficial',
   youtube: 'Giselli Cristina',
 }
+
+export const meuBarquinho = {
+  title: 'Meu Barquinho',
+  description:
+    'O clássico que projetou Giselli Cristina para todo o país e se tornou uma das músicas mais lembradas da música gospel brasileira.',
+  url: null,
+}
+
+export const videos = {
+  title: 'Vídeos',
+  description: 'Apresentações, clipes e conteúdos oficiais.',
+  main: null,
+  items: [],
+}
+
+export const gallery = [
+  { src: 'palco-microfone-1.png', alt: 'Giselli Cristina no palco' },
+  { src: 'palco-microfone-3.png', alt: 'Giselli Cristina no palco' },
+  { src: 'bastidores.png', alt: 'Bastidores com Giselli Cristina' },
+  { src: 'show-banda.png', alt: 'Giselli Cristina com a banda' },
+  { src: 'retrato-casual.png', alt: 'Retrato de Giselli Cristina' },
+  { src: 'retrato-suave.png', alt: 'Retrato de Giselli Cristina' },
+]
+
+export const hire = {
+  title: 'Contrate Giselli Cristina',
+  description:
+    'Para igrejas, conferências e eventos, entre em contato com a assessoria oficial.',
+  whatsapp: null,
+  email: null,
+}
+
+export const press = {
+  title: 'Imprensa',
+  description:
+    'Mídia kit, fotos oficiais e informações de divulgação para imprensa e parceiros.',
+  mediaKitUrl: null,
+}
+
+export const socials = [
+  { name: 'Instagram', handle: '@gisellicristinaoficial', url: null },
+  { name: 'YouTube', handle: 'Giselli Cristina', url: null },
+  { name: 'Spotify', handle: null, url: null },
+]

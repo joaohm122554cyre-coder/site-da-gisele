@@ -1,22 +1,33 @@
 import photo from '../assets/photos/palco-microfone-2.jpeg'
 import { currentMoment } from '../lib/site-data'
+import Reveal from './Reveal'
 
 export default function CurrentMoment() {
   return (
-    <section className="relative py-24 md:py-32">
-      <div className="max-w-6xl mx-auto px-6 md:px-12 grid md:grid-cols-2 gap-12 items-center">
-        <img
-          src={photo}
-          alt="Giselli Cristina em show recente"
-          className="rounded-lg w-full object-cover shadow-2xl shadow-pink-950/40 order-2 md:order-1"
-        />
-        <div className="order-1 md:order-2">
-          <h2 className="font-display text-4xl md:text-5xl text-white mb-6">
-            {currentMoment.title}
-          </h2>
-          <div className="space-y-5 text-sm md:text-base text-pink-50/80 leading-relaxed">
+    <section className="relative py-28 md:py-40 bg-transparent">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 grid md:grid-cols-12 gap-10 md:gap-16">
+        <div className="md:col-span-5">
+          <Reveal className="md:sticky md:top-28">
+            <img
+              src={photo}
+              alt="Giselli Cristina em show recente"
+              className="w-full aspect-[4/5] object-cover grayscale-[10%]"
+            />
+          </Reveal>
+        </div>
+        <div className="md:col-span-6 md:col-start-7">
+          <Reveal>
+            <span className="text-[11px] tracking-[0.4em] uppercase text-[#1a2140]/50">
+              {currentMoment.title}
+            </span>
+          </Reveal>
+          <div className="mt-6 space-y-8">
             {currentMoment.paragraphs.map((p, i) => (
-              <p key={i}>{p}</p>
+              <Reveal key={i} delay={i * 0.1}>
+                <p className="text-sm md:text-base text-[#1a2140]/65 leading-relaxed">
+                  {p}
+                </p>
+              </Reveal>
             ))}
           </div>
         </div>

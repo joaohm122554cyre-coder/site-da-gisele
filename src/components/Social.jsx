@@ -1,20 +1,41 @@
+import { SiSpotify, SiApplemusic, SiYoutube, SiDeezer, SiInstagram } from 'react-icons/si'
 import { socials, streaming } from '../lib/site-data'
 import Reveal from './Reveal'
 
-function Item({ label, url }) {
+const icons = {
+  Spotify: SiSpotify,
+  'Apple Music': SiApplemusic,
+  YouTube: SiYoutube,
+  Deezer: SiDeezer,
+  Instagram: SiInstagram,
+}
+
+function Item({ name, label, url }) {
+  const Icon = icons[name]
+  const content = (
+    <>
+      {Icon && <Icon className="w-4 h-4" />}
+      <span>{label}</span>
+    </>
+  )
+
   if (url) {
     return (
       <a
         href={url}
         target="_blank"
         rel="noreferrer"
-        className="text-sm md:text-base text-[#1a2140]/70 hover:text-[#1a2140] border-b border-transparent hover:border-[#d1548f] transition-all pb-0.5"
+        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-[#1a2140]/20 text-sm text-[#1a2140]/80 hover:bg-[#1a2140] hover:text-[#ffdcee] hover:border-[#1a2140] transition-colors"
       >
-        {label}
+        {content}
       </a>
     )
   }
-  return <span className="text-sm md:text-base text-[#1a2140]/30">{label}</span>
+  return (
+    <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-[#1a2140]/10 text-sm text-[#1a2140]/30">
+      {content}
+    </span>
+  )
 }
 
 export default function Social() {
@@ -30,15 +51,15 @@ export default function Social() {
           </h2>
         </Reveal>
 
-        <Reveal delay={0.1} className="flex flex-wrap justify-center gap-x-8 gap-y-3 mb-8">
+        <Reveal delay={0.1} className="flex flex-wrap justify-center gap-3 mb-4">
           {socials.map((s) => (
-            <Item key={s.name} label={s.handle ?? s.name} url={s.url} />
+            <Item key={s.name} name={s.name} label={s.handle ?? s.name} url={s.url} />
           ))}
         </Reveal>
 
-        <Reveal delay={0.15} className="flex flex-wrap justify-center gap-x-8 gap-y-3">
+        <Reveal delay={0.15} className="flex flex-wrap justify-center gap-3">
           {streaming.map((s) => (
-            <Item key={s.name} label={s.name} url={s.url} />
+            <Item key={s.name} name={s.name} label={s.name} url={s.url} />
           ))}
         </Reveal>
       </div>

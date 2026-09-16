@@ -1,15 +1,9 @@
-import bg from '../assets/photos/cena-videoclipe.jpeg'
 import { hire } from '../lib/site-data'
 import Reveal from './Reveal'
 
 export default function Hire() {
   return (
-    <section id="contrate" className="relative py-32 md:py-48 overflow-hidden">
-      <div className="absolute inset-0">
-        <img src={bg} alt="" className="w-full h-full object-cover opacity-30 mix-blend-luminosity" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#2c1a48]/85 via-[#241a42]/85 to-[#1c1638]/90" />
-      </div>
-
+    <section id="contrate" className="relative py-32 md:py-48">
       <div className="relative z-10 max-w-3xl mx-auto px-6 md:px-12 text-center">
         <Reveal>
           <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">

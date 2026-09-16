@@ -1,29 +1,44 @@
-import photo1 from '../assets/photos/sessao-rosa-1.jpeg'
-import photo2 from '../assets/photos/sessao-rosa-2.png'
-import photo3 from '../assets/photos/sessao-rosa-3.png'
+import { motion } from 'framer-motion'
+import photoArco from '../assets/photos/sessao-rosa-1.jpeg'
+import retratoCasual from '../assets/photos/retrato-casual.png'
+import retratoSuave from '../assets/photos/retrato-suave.png'
 
-const photos = [photo1, photo2, photo3]
+const photos = [photoArco, retratoCasual, retratoSuave]
+const rowTop = [...photos, ...photos]
+const rowBottom = [...photos].reverse().concat([...photos].reverse())
+
+function MarqueeRow({ images, direction, duration }) {
+  const animateX = direction === 'left' ? [0, '-50%'] : ['-50%', 0]
+  return (
+    <div className="overflow-hidden">
+      <motion.div
+        className="flex gap-4 w-max"
+        animate={{ x: animateX }}
+        transition={{ duration, repeat: Infinity, ease: 'linear' }}
+      >
+        {images.map((src, i) => (
+          <div
+            key={i}
+            className="glow-ring h-56 md:h-80 w-44 md:w-64 flex-shrink-0 rounded-2xl"
+            style={{ '--glow-color': '#d1548f' }}
+          >
+            <img
+              src={src}
+              alt="Giselli Cristina"
+              className="rounded-xl object-cover grayscale-[10%]"
+            />
+          </div>
+        ))}
+      </motion.div>
+    </div>
+  )
+}
 
 export default function PhotoSessionPink() {
   return (
-    <section className="relative py-24 md:py-32 bg-[#1a0a16] overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(244,114,182,0.18),transparent_60%)]" />
-      <div className="relative z-10 max-w-6xl mx-auto px-6 md:px-12">
-        <p className="font-display italic text-lg text-pink-200/80 text-center">Ensaio</p>
-        <h2 className="font-display text-4xl md:text-5xl text-white text-center mb-16">
-          Sessão <span className="italic text-pink-300">Rosa</span>
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          {photos.map((src, i) => (
-            <img
-              key={i}
-              src={src}
-              alt="Giselli Cristina - ensaio rosa"
-              className="rounded-lg w-full h-96 object-cover shadow-2xl shadow-pink-950/50 ring-1 ring-pink-200/20"
-            />
-          ))}
-        </div>
-      </div>
+    <section className="relative py-16 md:py-24 space-y-4">
+      <MarqueeRow images={rowTop} direction="left" duration={32} />
+      <MarqueeRow images={rowBottom} direction="right" duration={36} />
     </section>
   )
 }

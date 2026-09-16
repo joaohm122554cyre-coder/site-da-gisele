@@ -1,5 +1,61 @@
+import { useRef } from 'react'
 import { videos } from '../lib/site-data'
 import Reveal from './Reveal'
+
+function VideoCarousel({ items }) {
+  const trackRef = useRef(null)
+
+  const scroll = (dir) => {
+    trackRef.current?.scrollBy({
+      left: dir * trackRef.current.clientWidth * 0.9,
+      behavior: 'smooth',
+    })
+  }
+
+  return (
+    <div className="relative">
+      <div
+        ref={trackRef}
+        className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory"
+        style={{ scrollbarWidth: 'none' }}
+      >
+        {items.map((item, i) => (
+          <a
+            key={i}
+            href={item.url}
+            target="_blank"
+            rel="noreferrer"
+            className="snap-start shrink-0 w-64 md:w-72 group"
+          >
+            <div className="aspect-video rounded-xl overflow-hidden bg-[#1a2140]/10">
+              <img
+                src={item.thumbnail}
+                alt={item.title}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+            </div>
+            <p className="mt-3 text-sm text-[#1a2140]/80">{item.title}</p>
+          </a>
+        ))}
+      </div>
+
+      <button
+        onClick={() => scroll(-1)}
+        aria-label="Vídeo anterior"
+        className="hidden md:flex absolute -left-5 top-[38%] -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur items-center justify-center shadow text-[#1a2140] hover:bg-white transition-colors"
+      >
+        ‹
+      </button>
+      <button
+        onClick={() => scroll(1)}
+        aria-label="Próximo vídeo"
+        className="hidden md:flex absolute -right-5 top-[38%] -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur items-center justify-center shadow text-[#1a2140] hover:bg-white transition-colors"
+      >
+        ›
+      </button>
+    </div>
+  )
+}
 
 export default function Videos() {
   return (
@@ -19,7 +75,7 @@ export default function Videos() {
 
         <Reveal delay={0.1}>
           {videos.main ? (
-            <div className="aspect-video max-w-4xl mx-auto overflow-hidden">
+            <div className="aspect-video max-w-4xl mx-auto overflow-hidden rounded-xl">
               <iframe
                 src={videos.main}
                 title={videos.title}
@@ -29,13 +85,22 @@ export default function Videos() {
               />
             </div>
           ) : (
-            <div className="max-w-4xl mx-auto aspect-video border border-[#a9a0d8]/60 flex items-center justify-center">
+            <div className="max-w-4xl mx-auto aspect-video border border-[#a9a0d8]/60 rounded-xl flex items-center justify-center">
               <p className="text-[11px] uppercase tracking-[0.2em] text-[#1a2140]/40">
                 Vídeos em breve
               </p>
             </div>
           )}
         </Reveal>
+
+        {videos.items.length > 0 && (
+          <Reveal delay={0.2} className="mt-16">
+            <p className="text-[11px] tracking-[0.3em] uppercase text-[#1a2140]/50 mb-6">
+              Mais assistidos
+            </p>
+            <VideoCarousel items={videos.items} />
+          </Reveal>
+        )}
       </div>
     </section>
   )

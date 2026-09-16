@@ -1,6 +1,49 @@
+import { motion } from 'framer-motion'
 import photo from '../assets/photos/retrato-jardim.png'
 import { about } from '../lib/site-data'
 import Reveal from './Reveal'
+
+const BADGE_RADIUS = 82
+const BADGE_CIRCUMFERENCE = 2 * Math.PI * BADGE_RADIUS
+
+function CareerBadge() {
+  return (
+    <div className="relative w-28 h-28 md:w-36 md:h-36 shrink-0">
+      <motion.svg
+        viewBox="0 0 200 200"
+        className="absolute inset-0 w-full h-full text-[#1a2140]/70"
+        animate={{ rotate: 360 }}
+        transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
+      >
+        <defs>
+          <path
+            id="badgeCircle"
+            d={`M 100,100 m -${BADGE_RADIUS},0 a ${BADGE_RADIUS},${BADGE_RADIUS} 0 1,1 ${BADGE_RADIUS * 2},0 a ${BADGE_RADIUS},${BADGE_RADIUS} 0 1,1 -${BADGE_RADIUS * 2},0`}
+          />
+        </defs>
+        <circle cx="100" cy="100" r="96" fill="none" stroke="currentColor" strokeWidth="0.75" opacity="0.4" />
+        <text fontSize="10" fill="currentColor">
+          <textPath
+            href="#badgeCircle"
+            startOffset="0%"
+            textLength={BADGE_CIRCUMFERENCE}
+            lengthAdjust="spacingAndGlyphs"
+          >
+            ✦ ANOS DE CARREIRA ✦ TRAJETÓRIA GOSPEL
+          </textPath>
+        </text>
+      </motion.svg>
+      <div className="absolute inset-[20%] rounded-full bg-[#fdf3f8]/95 backdrop-blur-sm border border-[#d1548f]/30 flex flex-col items-center justify-center">
+        <p className="font-display text-2xl md:text-3xl text-[#1a2140] leading-none">29</p>
+        <p className="mt-1 text-[7px] md:text-[8px] tracking-[0.15em] uppercase text-[#1a2140]/55 text-center leading-tight">
+          Anos de
+          <br />
+          carreira
+        </p>
+      </div>
+    </div>
+  )
+}
 
 export default function About() {
   return (
@@ -9,10 +52,10 @@ export default function About() {
         <div className="grid md:grid-cols-12 gap-10 md:gap-6 items-start">
           <div className="md:col-span-5">
             <Reveal>
-              <span className="text-[11px] tracking-[0.4em] uppercase text-[#1a2140]/50">
+              <span className="font-script text-4xl md:text-5xl text-[#d1548f] leading-none">
                 Sobre
               </span>
-              <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-[#1a2140] mt-4 leading-[1.05]">
+              <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-[#1a2140] mt-3 leading-[1.05]">
                 Uma voz que
                 <br />
                 atravessa
@@ -31,29 +74,34 @@ export default function About() {
                 alt="Giselli Cristina"
                 className="w-full object-cover aspect-[4/5] grayscale-[10%]"
               />
-              <div className="absolute -bottom-6 -left-6 bg-[#fdf3f8]/90 backdrop-blur-sm border border-[#a9a0d8]/30 px-6 py-4 hidden sm:block">
-                <p className="font-display text-3xl text-[#1a2140]">29</p>
-                <p className="text-[10px] tracking-[0.25em] uppercase text-[#1a2140]/55">
-                  Anos de carreira
-                </p>
+              <div className="absolute -bottom-8 -left-8 md:-bottom-10 md:-left-10 hidden md:block">
+                <CareerBadge />
               </div>
             </Reveal>
           </div>
         </div>
 
         <div className="grid md:grid-cols-12 gap-6 mt-20 md:mt-28">
-          <div className="md:col-span-7 md:col-start-6 space-y-6 text-sm md:text-base text-[#1a2140]/65 leading-relaxed">
+          <div className="md:col-span-7 md:col-start-6 space-y-7 font-serif text-lg md:text-xl text-[#1a2140]/75 leading-relaxed">
             {about.paragraphs.map((p, i) => (
               <Reveal key={i} delay={i * 0.08}>
-                <p>{p}</p>
+                <p className={i === 0 ? 'drop-cap' : ''}>{p}</p>
               </Reveal>
             ))}
           </div>
         </div>
 
         <Reveal delay={0.1}>
-          <p className="font-display italic text-2xl md:text-4xl text-[#1a2140]/90 leading-snug mt-24 md:mt-32 max-w-4xl">
-            &ldquo;{about.closing}&rdquo;
+          <p className="font-serif italic text-3xl md:text-5xl text-[#1a2140]/85 leading-snug mt-24 md:mt-32 max-w-4xl">
+            &ldquo;Mais do que uma cantora,{' '}
+            <span className="not-italic font-semibold text-[#d1548f] text-[1.15em]">
+              Giselli Cristina
+            </span>{' '}
+            representa uma geração da{' '}
+            <span className="text-[#1a2140]">música gospel brasileira</span>. Sua
+            trajetória é marcada por{' '}
+            <span className="text-[#1a2140]">fé, excelência, credibilidade</span> e
+            canções que continuam emocionando pessoas em todo o país.&rdquo;
           </p>
         </Reveal>
       </div>

@@ -6,7 +6,11 @@ export default function BackgroundVideo() {
   const filter = useTransform(
     scrollY,
     [0, 300, 900],
-    ['blur(0px) brightness(1)', 'blur(10px) brightness(0.45)', 'blur(20px) brightness(0.2)']
+    [
+      'blur(0px) brightness(0.8) saturate(0.8)',
+      'blur(10px) brightness(0.4) saturate(0.75)',
+      'blur(20px) brightness(0.18) saturate(0.7)',
+    ]
   )
 
   return (

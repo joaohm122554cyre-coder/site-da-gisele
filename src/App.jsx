@@ -20,7 +20,7 @@ export default function App() {
   return (
     <div className="relative">
       <BackgroundVideo />
-      <div className="absolute inset-x-0 top-0 h-[220vh] -z-10 bg-gradient-to-b from-transparent via-[#1c1638]/65 to-[#14122a]" />
+      <div className="absolute inset-x-0 top-0 h-[220vh] -z-10 bg-[linear-gradient(to_bottom,transparent_0%,transparent_38%,#3a1030_46%,#33224a_58%,#241a42_72%,#1c1638_86%,#14122a_100%)]" />
 
       <main className="md:pl-14 relative">
         <Nav />

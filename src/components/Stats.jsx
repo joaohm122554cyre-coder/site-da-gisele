@@ -1,14 +1,21 @@
-import bg from '../assets/photos/show-banda.png'
+import bgVideo from '../assets/videos/stats-bg.mp4'
 import { stats } from '../lib/site-data'
 import Reveal from './Reveal'
 import AnimatedNumber from './AnimatedNumber'
 
 export default function Stats() {
   return (
-    <section className="relative py-28 md:py-40">
+    <section className="relative py-28 md:py-40 overflow-hidden">
       <div className="absolute inset-0">
-        <img src={bg} alt="" className="w-full h-full object-cover opacity-15 mix-blend-luminosity" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#241a42]/75 via-[#2c1a48]/75 to-[#1c1638]/75" />
+        <video
+          src={bgVideo}
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#241a42]/55 via-[#2c1a48]/55 to-[#1c1638]/60" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">

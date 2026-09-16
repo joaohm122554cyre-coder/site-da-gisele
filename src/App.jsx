@@ -1,4 +1,5 @@
 import Nav from './components/Nav'
+import BackgroundVideo from './components/BackgroundVideo'
 import Hero from './components/Hero'
 import About from './components/About'
 import Stats from './components/Stats'
@@ -17,23 +18,28 @@ import Footer from './components/Footer'
 
 export default function App() {
   return (
-    <main className="md:pl-14">
-      <Nav />
-      <Hero />
-      <About />
-      <Stats />
-      <MeuBarquinho />
-      <PhotoSessionPink />
-      <Discography />
-      <CurrentMoment />
-      <MotherSon />
-      <Videos />
-      <Gallery />
-      <Agenda />
-      <Hire />
-      <Press />
-      <Social />
-      <Footer />
-    </main>
+    <div className="relative">
+      <BackgroundVideo />
+      <div className="absolute inset-x-0 top-0 h-[220vh] -z-10 bg-gradient-to-b from-transparent via-[#1c1638]/65 to-[#14122a]" />
+
+      <main className="md:pl-14 relative">
+        <Nav />
+        <Hero />
+        <About />
+        <Stats />
+        <MeuBarquinho />
+        <PhotoSessionPink />
+        <Discography />
+        <CurrentMoment />
+        <MotherSon />
+        <Videos />
+        <Gallery />
+        <Agenda />
+        <Hire />
+        <Press />
+        <Social />
+        <Footer />
+      </main>
+    </div>
   )
 }

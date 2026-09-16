@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import Nav from './components/Nav'
 import BackgroundVideo from './components/BackgroundVideo'
 import Hero from './components/Hero'
@@ -17,15 +18,19 @@ import Social from './components/Social'
 import Footer from './components/Footer'
 
 export default function App() {
+  const statsRef = useRef(null)
+
   return (
     <div className="relative">
-      <BackgroundVideo />
+      <BackgroundVideo switchRef={statsRef} />
 
       <main className="md:pl-14 relative">
         <Nav />
         <Hero />
         <About />
-        <Stats />
+        <div ref={statsRef}>
+          <Stats />
+        </div>
         <MeuBarquinho />
         <PhotoSessionPink />
         <Discography />

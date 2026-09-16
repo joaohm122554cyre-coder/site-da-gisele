@@ -36,14 +36,14 @@ export default function MotherSon() {
           <button
             onClick={() => go(-1)}
             aria-label="Foto anterior"
-            className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/70 backdrop-blur flex items-center justify-center text-[#1a2140] hover:bg-white transition-colors"
+            className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/70 backdrop-blur flex items-center justify-center text-[#1c1638] hover:bg-white transition-colors"
           >
             ‹
           </button>
           <button
             onClick={() => go(1)}
             aria-label="Próxima foto"
-            className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/70 backdrop-blur flex items-center justify-center text-[#1a2140] hover:bg-white transition-colors"
+            className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/70 backdrop-blur flex items-center justify-center text-[#1c1638] hover:bg-white transition-colors"
           >
             ›
           </button>
@@ -56,7 +56,7 @@ export default function MotherSon() {
               onClick={() => setIndex(i)}
               aria-label={`Ir para foto ${i + 1}`}
               className={`w-2 h-2 rounded-full transition-colors ${
-                i === index ? 'bg-[#4f7fd6]' : 'bg-[#1a2140]/20'
+                i === index ? 'bg-[#4f7fd6]' : 'bg-[#f4eef7]/20'
               }`}
             />
           ))}

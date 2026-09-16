@@ -16,8 +16,8 @@ html {
 }
 
 body {
-  background: linear-gradient(180deg, #ffdcee 0%, #ffc7e6 12%, #f5b8e3 28%, #d8b3e6 45%, #aab6ea 65%, #7fa8ec 82%, #5f97e8 100%);
-  color: #1a2140;
+  background: linear-gradient(180deg, #14122a 0%, #1c1638 20%, #241a42 45%, #2c1a48 65%, #241640 85%, #170f28 100%);
+  color: #f4eef7;
   font-family: var(--font-body);
 }
 
@@ -53,12 +53,12 @@ body {
   font-weight: 600;
   padding-right: 0.1em;
   padding-top: 0.03em;
-  color: #d1548f;
+  color: #d954d1;
 }
 
 ::selection {
-  background: #1a2140;
-  color: #ffc7e6;
+  background: #d954d1;
+  color: #14122a;
 }
 
 .glow-ring {
@@ -74,7 +74,7 @@ body {
   inset: -150%;
   background: conic-gradient(
     transparent 0deg,
-    var(--glow-color, #d1548f) 25deg,
+    var(--glow-color, #d954d1) 25deg,
     transparent 70deg,
     transparent 360deg
   );

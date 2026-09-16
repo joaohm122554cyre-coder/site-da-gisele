@@ -9,15 +9,15 @@ export default function Discography() {
         <div className="grid md:grid-cols-12 gap-10 items-end">
           <div className="md:col-span-6">
             <Reveal>
-              <span className="text-[11px] tracking-[0.4em] uppercase text-[#1a2140]/50">
+              <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">
                 Discografia
               </span>
-              <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-[#1a2140] mt-4 leading-[1.05]">
+              <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-[#f4eef7] mt-4 leading-[1.05]">
                 Sucessos que
                 <br />
                 marcaram
                 <br />
-                <span className="italic text-[#d1548f]">gerações</span>
+                <span className="italic text-[#d954d1]">gerações</span>
               </h2>
             </Reveal>
           </div>
@@ -38,9 +38,9 @@ export default function Discography() {
           {[...songs, ...songs].map((song, i) => (
             <span
               key={i}
-              className="font-display italic text-3xl md:text-5xl text-[#1a2140]/35 mx-6 md:mx-10 shrink-0"
+              className="font-display italic text-3xl md:text-5xl text-[#f4eef7]/35 mx-6 md:mx-10 shrink-0"
             >
-              {song} <span className="text-[#1a2140]/20 not-italic">&middot;</span>
+              {song} <span className="text-[#f4eef7]/20 not-italic">&middot;</span>
             </span>
           ))}
         </div>

@@ -11,7 +11,7 @@ function CareerBadge() {
     <div className="relative w-28 h-28 md:w-36 md:h-36 shrink-0">
       <motion.svg
         viewBox="0 0 200 200"
-        className="absolute inset-0 w-full h-full text-[#1a2140]/70"
+        className="absolute inset-0 w-full h-full text-[#f4eef7]/70"
         animate={{ rotate: 360 }}
         transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
       >
@@ -33,9 +33,9 @@ function CareerBadge() {
           </textPath>
         </text>
       </motion.svg>
-      <div className="absolute inset-[20%] rounded-full bg-[#fdf3f8]/95 backdrop-blur-sm border border-[#d1548f]/30 flex flex-col items-center justify-center">
-        <p className="font-display text-2xl md:text-3xl text-[#1a2140] leading-none">29</p>
-        <p className="mt-1 text-[7px] md:text-[8px] tracking-[0.15em] uppercase text-[#1a2140]/55 text-center leading-tight">
+      <div className="absolute inset-[20%] rounded-full bg-[#fdf3f8]/95 backdrop-blur-sm border border-[#d954d1]/30 flex flex-col items-center justify-center">
+        <p className="font-display text-2xl md:text-3xl text-[#1c1638] leading-none">29</p>
+        <p className="mt-1 text-[7px] md:text-[8px] tracking-[0.15em] uppercase text-[#1c1638]/55 text-center leading-tight">
           Anos de
           <br />
           carreira
@@ -52,15 +52,15 @@ export default function About() {
         <div className="grid md:grid-cols-12 gap-10 md:gap-6 items-start">
           <div className="md:col-span-5">
             <Reveal>
-              <span className="font-script text-4xl md:text-5xl text-[#d1548f] leading-none">
+              <span className="font-script text-4xl md:text-5xl text-[#d954d1] leading-none">
                 Sobre
               </span>
-              <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-[#1a2140] mt-3 leading-[1.05]">
+              <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-[#f4eef7] mt-3 leading-[1.05]">
                 Uma voz que
                 <br />
                 atravessa
                 <br />
-                <span className="italic text-[#d1548f]">gerações</span>
+                <span className="italic text-[#d954d1]">gerações</span>
               </h2>
             </Reveal>
           </div>
@@ -82,7 +82,7 @@ export default function About() {
         </div>
 
         <div className="grid md:grid-cols-12 gap-6 mt-20 md:mt-28">
-          <div className="md:col-span-7 md:col-start-6 space-y-7 font-serif text-lg md:text-xl text-[#1a2140]/75 leading-relaxed">
+          <div className="md:col-span-7 md:col-start-6 space-y-7 font-serif text-lg md:text-xl text-[#f4eef7]/75 leading-relaxed">
             {about.paragraphs.map((p, i) => (
               <Reveal key={i} delay={i * 0.08}>
                 <p className={i === 0 ? 'drop-cap' : ''}>{p}</p>
@@ -92,15 +92,15 @@ export default function About() {
         </div>
 
         <Reveal delay={0.1}>
-          <p className="font-serif italic text-3xl md:text-5xl text-[#1a2140]/85 leading-snug mt-24 md:mt-32 max-w-4xl">
+          <p className="font-serif italic text-3xl md:text-5xl text-[#f4eef7]/85 leading-snug mt-24 md:mt-32 max-w-4xl">
             &ldquo;Mais do que uma cantora,{' '}
-            <span className="not-italic font-semibold text-[#d1548f] text-[1.15em]">
+            <span className="not-italic font-semibold text-[#d954d1] text-[1.15em]">
               Giselli Cristina
             </span>{' '}
             representa uma geração da{' '}
-            <span className="text-[#1a2140]">música gospel brasileira</span>. Sua
+            <span className="text-[#f4eef7]">música gospel brasileira</span>. Sua
             trajetória é marcada por{' '}
-            <span className="text-[#1a2140]">fé, excelência, credibilidade</span> e
+            <span className="text-[#f4eef7]">fé, excelência, credibilidade</span> e
             canções que continuam emocionando pessoas em todo o país.&rdquo;
           </p>
         </Reveal>

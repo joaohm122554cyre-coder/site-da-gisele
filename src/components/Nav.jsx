@@ -33,14 +33,14 @@ export default function Nav() {
           <a
             key={l.label}
             href={l.href}
-            className="text-[10px] tracking-[0.3em] uppercase text-[#1a2140]/60 hover:text-[#1a2140] transition-colors [writing-mode:vertical-lr] [text-orientation:upright]"
+            className="text-[10px] tracking-[0.3em] uppercase text-[#f4eef7]/60 hover:text-[#f4eef7] transition-colors [writing-mode:vertical-lr] [text-orientation:upright]"
           >
             {l.label}
           </a>
         ))}
       </div>
 
-      <span className="text-[9px] tracking-[0.3em] uppercase text-[#1a2140]/30 [writing-mode:vertical-lr] [text-orientation:upright]">
+      <span className="text-[9px] tracking-[0.3em] uppercase text-[#f4eef7]/30 [writing-mode:vertical-lr] [text-orientation:upright]">
         Gospel
       </span>
     </motion.nav>

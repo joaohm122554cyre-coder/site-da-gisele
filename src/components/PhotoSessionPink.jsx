@@ -20,7 +20,7 @@ function MarqueeRow({ images, direction, duration }) {
           <div
             key={i}
             className="glow-ring h-56 md:h-80 w-44 md:w-64 flex-shrink-0 rounded-2xl"
-            style={{ '--glow-color': '#d1548f' }}
+            style={{ '--glow-color': '#d954d1' }}
           >
             <img
               src={src}

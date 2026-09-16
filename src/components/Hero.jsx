@@ -21,7 +21,7 @@ export default function Hero() {
           playsInline
           className="w-full h-full object-cover object-[65%_top] grayscale-[15%]"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#3a1030] via-[#3a1030]/15 to-[#ffc7e6]/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#3a1030] via-[#3a1030]/15 to-[#1c1638]/50" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#3a1030]/70 via-transparent to-transparent" />
       </motion.div>
 
@@ -51,7 +51,7 @@ export default function Hero() {
               initial={{ y: '100%' }}
               animate={{ y: 0 }}
               transition={{ duration: 1.1, delay: 2.05, ease: [0.16, 1, 0.3, 1] }}
-              className="font-display italic text-[16vw] md:text-[9rem] lg:text-[10.5rem] leading-[0.82] text-transparent [-webkit-text-stroke:1px_#d1548f] md:[-webkit-text-stroke:1.5px_#d1548f]"
+              className="font-display italic text-[16vw] md:text-[9rem] lg:text-[10.5rem] leading-[0.82] text-transparent [-webkit-text-stroke:1px_#d954d1] md:[-webkit-text-stroke:1.5px_#d954d1]"
             >
               Cristina
             </motion.h1>
@@ -72,7 +72,7 @@ export default function Hero() {
               className="group inline-flex items-center gap-3 text-[11px] tracking-[0.3em] uppercase text-white/90 hover:text-white transition-colors"
             >
               A história
-              <span className="w-10 h-px bg-[#d1548f] group-hover:w-16 transition-all duration-500" />
+              <span className="w-10 h-px bg-[#d954d1] group-hover:w-16 transition-all duration-500" />
             </a>
           </motion.div>
         </div>

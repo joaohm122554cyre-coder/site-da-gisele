@@ -17,14 +17,14 @@ export default function CurrentMoment() {
         </div>
         <div className="md:col-span-6 md:col-start-7">
           <Reveal>
-            <span className="text-[11px] tracking-[0.4em] uppercase text-[#1a2140]/50">
+            <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">
               {currentMoment.title}
             </span>
           </Reveal>
           <div className="mt-6 space-y-8">
             {currentMoment.paragraphs.map((p, i) => (
               <Reveal key={i} delay={i * 0.1}>
-                <p className="text-sm md:text-base text-[#1a2140]/65 leading-relaxed">
+                <p className="text-sm md:text-base text-[#f4eef7]/65 leading-relaxed">
                   {p}
                 </p>
               </Reveal>

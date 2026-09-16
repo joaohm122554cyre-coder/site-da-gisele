@@ -17,6 +17,9 @@ export default function BackgroundVideo() {
         loop
         muted
         playsInline
+        initial={{ scale: 1.12 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 2.4, ease: [0.16, 1, 0.3, 1] }}
         style={{ filter }}
         className="w-full h-full object-cover object-[65%_top]"
       />

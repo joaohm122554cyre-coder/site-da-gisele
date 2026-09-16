@@ -1,29 +1,13 @@
 import { motion } from 'framer-motion'
-import heroVideo from '../assets/videos/hero-bg.mp4'
-import heroImg from '../assets/photos/hero-glamour.png'
 import { artist } from '../lib/site-data'
 
 export default function Hero() {
   return (
     <section className="relative h-screen min-h-[720px] flex items-end overflow-hidden">
-      <motion.div
-        className="absolute inset-0"
-        initial={{ scale: 1.12 }}
-        animate={{ scale: 1 }}
-        transition={{ duration: 2.4, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <video
-          src={heroVideo}
-          poster={heroImg}
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover object-[65%_top] grayscale-[15%]"
-        />
+      <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-t from-[#3a1030] via-[#3a1030]/15 to-[#1c1638]/50" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#3a1030]/70 via-transparent to-transparent" />
-      </motion.div>
+      </div>
 
       <div className="relative z-10 w-full pb-16 md:pb-24">
         <div className="max-w-7xl mx-auto px-6 md:px-12">

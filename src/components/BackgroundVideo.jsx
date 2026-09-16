@@ -5,8 +5,8 @@ export default function BackgroundVideo() {
   const { scrollY } = useScroll()
   const filter = useTransform(
     scrollY,
-    [0, 500, 1400],
-    ['blur(0px) brightness(1)', 'blur(8px) brightness(0.55)', 'blur(20px) brightness(0.22)']
+    [0, 300, 900],
+    ['blur(0px) brightness(1)', 'blur(10px) brightness(0.45)', 'blur(20px) brightness(0.2)']
   )
 
   return (

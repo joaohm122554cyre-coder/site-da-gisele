@@ -5,8 +5,8 @@ export default function Hero() {
   return (
     <section className="relative h-screen min-h-[720px] flex items-end overflow-hidden">
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-t from-[#14122a]/85 via-[#1c1638]/25 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#14122a]/60 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#14122a]/55 via-[#1c1638]/15 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#14122a]/50 via-transparent to-transparent" />
       </div>
 
       <div className="relative z-10 w-full pb-16 md:pb-24">

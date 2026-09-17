@@ -1,8 +1,40 @@
+import { useEffect, useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import heroVideo from '../assets/videos/hero-bg.mp4'
 import statsVideo from '../assets/videos/stats-bg.mp4'
 
+function useForceAutoplay() {
+  const ref = useRef(null)
+
+  useEffect(() => {
+    const video = ref.current
+    if (!video) return
+
+    video.muted = true
+    video.defaultMuted = true
+
+    const tryPlay = () => {
+      video.play().catch(() => {})
+    }
+
+    tryPlay()
+
+    document.addEventListener('touchstart', tryPlay, { once: true, passive: true })
+    document.addEventListener('click', tryPlay, { once: true })
+
+    return () => {
+      document.removeEventListener('touchstart', tryPlay)
+      document.removeEventListener('click', tryPlay)
+    }
+  }, [])
+
+  return ref
+}
+
 export default function BackgroundVideo({ switchRef }) {
+  const heroRef = useForceAutoplay()
+  const statsRef = useForceAutoplay()
+
   const { scrollY } = useScroll()
   const heroFilter = useTransform(
     scrollY,
@@ -24,11 +56,14 @@ export default function BackgroundVideo({ switchRef }) {
   return (
     <div className="fixed inset-0 -z-20 overflow-hidden">
       <motion.video
+        ref={heroRef}
         src={heroVideo}
         autoPlay
         loop
         muted
         playsInline
+        webkit-playsinline="true"
+        preload="auto"
         initial={{ scale: 1.12 }}
         animate={{ scale: 1 }}
         transition={{ duration: 2.4, ease: [0.16, 1, 0.3, 1] }}
@@ -36,11 +71,14 @@ export default function BackgroundVideo({ switchRef }) {
         className="absolute inset-0 w-full h-full object-cover object-[65%_top]"
       />
       <motion.video
+        ref={statsRef}
         src={statsVideo}
         autoPlay
         loop
         muted
         playsInline
+        webkit-playsinline="true"
+        preload="auto"
         style={{ opacity: statsOpacity, filter: 'blur(3px) brightness(0.5) saturate(0.85)' }}
         className="absolute inset-0 w-full h-full object-cover"
       />

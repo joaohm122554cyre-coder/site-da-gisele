@@ -33,10 +33,21 @@ function useForceAutoplay() {
 
     document.addEventListener('visibilitychange', tryPlay)
 
+    const retryInterval = setInterval(() => {
+      if (video.paused) {
+        tryPlay()
+      } else {
+        clearInterval(retryInterval)
+      }
+    }, 500)
+    const stopRetrying = setTimeout(() => clearInterval(retryInterval), 8000)
+
     return () => {
       gestureEvents.forEach((evt) => document.removeEventListener(evt, tryPlay))
       dataEvents.forEach((evt) => video.removeEventListener(evt, tryPlay))
       document.removeEventListener('visibilitychange', tryPlay)
+      clearInterval(retryInterval)
+      clearTimeout(stopRetrying)
     }
   }, [])
 

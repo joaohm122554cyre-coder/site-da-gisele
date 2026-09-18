@@ -18,22 +18,22 @@ import Social from './components/Social'
 import Footer from './components/Footer'
 
 export default function App() {
-  const statsRef = useRef(null)
+  const discographyRef = useRef(null)
 
   return (
     <div className="relative">
-      <BackgroundVideo switchRef={statsRef} />
+      <BackgroundVideo switchRef={discographyRef} />
 
       <main className="md:pl-14 relative">
         <Nav />
         <Hero />
         <About />
-        <div ref={statsRef}>
-          <Stats />
-        </div>
+        <Stats />
         <MeuBarquinho />
         <PhotoSessionPink />
-        <Discography />
+        <div ref={discographyRef}>
+          <Discography />
+        </div>
         <CurrentMoment />
         <MotherSon />
         <Videos />

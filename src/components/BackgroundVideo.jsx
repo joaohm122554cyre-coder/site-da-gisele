@@ -48,7 +48,7 @@ export default function BackgroundVideo({ switchRef }) {
 
   const { scrollYProgress } = useScroll({
     target: switchRef,
-    offset: ['start 90%', 'start 35%'],
+    offset: ['start 25%', 'start -45%'],
   })
   const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0])
   const statsOpacity = useTransform(scrollYProgress, [0, 1], [0, 1])

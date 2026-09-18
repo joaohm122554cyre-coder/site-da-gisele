@@ -12,19 +12,42 @@ function useForceAutoplay() {
 
     video.muted = true
     video.defaultMuted = true
+    video.setAttribute('muted', '')
+    video.setAttribute('playsinline', '')
+    video.setAttribute('webkit-playsinline', '')
 
     const tryPlay = () => {
-      video.play().catch(() => {})
+      if (video.paused) video.play().catch(() => {})
     }
 
+    video.load()
     tryPlay()
 
-    document.addEventListener('touchstart', tryPlay, { once: true, passive: true })
-    document.addEventListener('click', tryPlay, { once: true })
+    const gestureEvents = ['touchstart', 'touchend', 'pointerdown', 'click', 'scroll']
+    gestureEvents.forEach((evt) =>
+      document.addEventListener(evt, tryPlay, { passive: true })
+    )
+
+    const dataEvents = ['loadeddata', 'canplay', 'canplaythrough']
+    dataEvents.forEach((evt) => video.addEventListener(evt, tryPlay))
+
+    document.addEventListener('visibilitychange', tryPlay)
+
+    const retryInterval = setInterval(() => {
+      if (video.paused) {
+        tryPlay()
+      } else {
+        clearInterval(retryInterval)
+      }
+    }, 500)
+    const stopRetrying = setTimeout(() => clearInterval(retryInterval), 8000)
 
     return () => {
-      document.removeEventListener('touchstart', tryPlay)
-      document.removeEventListener('click', tryPlay)
+      gestureEvents.forEach((evt) => document.removeEventListener(evt, tryPlay))
+      dataEvents.forEach((evt) => video.removeEventListener(evt, tryPlay))
+      document.removeEventListener('visibilitychange', tryPlay)
+      clearInterval(retryInterval)
+      clearTimeout(stopRetrying)
     }
   }, [])
 
@@ -64,6 +87,8 @@ export default function BackgroundVideo({ switchRef }) {
         playsInline
         webkit-playsinline="true"
         preload="auto"
+        disableRemotePlayback
+        controlsList="nodownload noplaybackrate"
         initial={{ scale: 1.12 }}
         animate={{ scale: 1 }}
         transition={{ duration: 2.4, ease: [0.16, 1, 0.3, 1] }}
@@ -79,6 +104,8 @@ export default function BackgroundVideo({ switchRef }) {
         playsInline
         webkit-playsinline="true"
         preload="auto"
+        disableRemotePlayback
+        controlsList="nodownload noplaybackrate"
         style={{ opacity: statsOpacity, filter: 'blur(3px) brightness(0.5) saturate(0.85)' }}
         className="absolute inset-0 w-full h-full object-cover"
       />

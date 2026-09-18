@@ -17,7 +17,7 @@ function formatCompact(n) {
   return `${Math.round(n)}`
 }
 
-export default function AnimatedCompactNumber({ value, duration = 2.6 }) {
+export default function AnimatedCompactNumber({ value, duration = 3.2 }) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-10%' })
   const [display, setDisplay] = useState(formatCompact(0))
@@ -26,7 +26,7 @@ export default function AnimatedCompactNumber({ value, duration = 2.6 }) {
     if (!inView) return
     const controls = animate(0, value, {
       duration,
-      ease: 'easeOut',
+      ease: 'linear',
       onUpdate: (v) => setDisplay(formatCompact(v)),
     })
     return () => controls.stop()

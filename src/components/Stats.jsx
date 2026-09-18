@@ -16,7 +16,10 @@ export default function Stats() {
         <div className="mt-10 grid grid-cols-2 md:grid-cols-4 divide-x divide-[#a9a0d8]/30">
           {stats.map((s, i) => (
             <Reveal key={i} delay={i * 0.1} className="px-4 md:px-8 first:pl-0">
-              <p className="font-display italic font-semibold text-4xl sm:text-5xl md:text-6xl text-[#d954d1] leading-none">
+              <p
+                translate="no"
+                className="notranslate font-display italic font-semibold text-4xl sm:text-5xl md:text-6xl text-[#d954d1] leading-none"
+              >
                 {s.prefix}
                 {s.raw ? (
                   <AnimatedCompactNumber value={s.raw} />
@@ -27,7 +30,10 @@ export default function Stats() {
                 )}
                 {s.suffix}
               </p>
-              <p className="mt-4 text-[11px] md:text-xs uppercase tracking-[0.2em] text-[#f4eef7]/55">
+              <p
+                translate="no"
+                className="notranslate mt-4 text-[11px] md:text-xs uppercase tracking-[0.2em] text-[#f4eef7]/55"
+              >
                 {s.label}
               </p>
             </Reveal>

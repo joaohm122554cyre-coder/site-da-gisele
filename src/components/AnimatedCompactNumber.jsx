@@ -3,21 +3,18 @@ import { animate, useInView } from 'framer-motion'
 
 function formatCompact(n) {
   if (n >= 1_000_000_000) {
-    const v = n / 1_000_000_000
-    return `${v % 1 === 0 ? v.toFixed(0) : v.toFixed(1)}bi`
+    return `${Math.round(n / 1_000_000_000)}bi`
   }
   if (n >= 1_000_000) {
-    const v = n / 1_000_000
-    return `${v % 1 === 0 ? v.toFixed(0) : v.toFixed(1)}mi`
+    return `${Math.round(n / 1_000_000)}mi`
   }
   if (n >= 1_000) {
-    const v = n / 1_000
-    return `${v % 1 === 0 ? v.toFixed(0) : v.toFixed(1)}mil`
+    return `${Math.round(n / 1_000)}mil`
   }
   return `${Math.round(n)}`
 }
 
-export default function AnimatedCompactNumber({ value, duration = 3.2 }) {
+export default function AnimatedCompactNumber({ value, duration = 1.6 }) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-10%' })
   const [display, setDisplay] = useState(formatCompact(0))

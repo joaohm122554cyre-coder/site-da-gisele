@@ -2,6 +2,8 @@ import photo from '../assets/photos/palco-microfone-1.png'
 import { songs } from '../lib/site-data'
 import Reveal from './Reveal'
 
+const hits = ['Meu Barquinho', 'Eu Só Quero Adorar', 'Bondade de Deus']
+
 export default function Discography() {
   return (
     <section id="musicas" className="relative py-28 md:py-40 bg-transparent overflow-hidden">
@@ -33,16 +35,29 @@ export default function Discography() {
         </div>
       </div>
 
-      <div className="mt-20 md:mt-28 border-y border-[#a9a0d8] py-3">
+      <div
+        className="mt-20 md:mt-28 py-6"
+        style={{ maskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)' }}
+      >
         <div className="flex whitespace-nowrap animate-[marquee_38s_linear_infinite] hover:[animation-play-state:paused]">
-          {[...songs, ...songs].map((song, i) => (
-            <span
-              key={i}
-              className="font-display italic text-3xl md:text-5xl text-[#f4eef7]/35 mx-6 md:mx-10 shrink-0"
-            >
-              {song} <span className="text-[#f4eef7]/20 not-italic">&middot;</span>
-            </span>
-          ))}
+          {[...songs, ...songs].map((song, i) => {
+            const isHit = hits.includes(song)
+            return (
+              <span
+                key={i}
+                className={`group mx-6 md:mx-10 shrink-0 transition-colors duration-300 ${
+                  isHit
+                    ? 'font-display italic font-semibold text-4xl md:text-6xl text-[#d954d1] hover:text-[#f4eef7]'
+                    : 'font-display italic text-2xl md:text-4xl text-[#f4eef7]/45 hover:text-[#f4eef7]/90'
+                }`}
+              >
+                {song}{' '}
+                <span className="text-[#f4eef7]/25 not-italic text-xl md:text-2xl align-middle">
+                  &middot;
+                </span>
+              </span>
+            )
+          })}
         </div>
       </div>
 

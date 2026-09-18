@@ -4,42 +4,47 @@ import Reveal from './Reveal'
 
 const hits = ['Meu Barquinho', 'Eu Só Quero Adorar', 'Bondade de Deus']
 
-function Row({ list, reverse, duration }) {
+function Row({ list, reverse, duration, band, rotate, z }) {
   return (
     <div
-      className="py-4 overflow-hidden"
-      style={{ maskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)' }}
+      className={`relative w-[130%] -ml-[15%] py-5 md:py-7 shadow-2xl shadow-black/50 ${band}`}
+      style={{ transform: `rotate(${rotate}deg)`, zIndex: z }}
     >
       <div
-        className="flex whitespace-nowrap hover:[animation-play-state:paused]"
-        style={{
-          animation: `${reverse ? 'marquee-reverse' : 'marquee'} ${duration}s linear infinite`,
-        }}
+        className="overflow-hidden"
+        style={{ maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)' }}
       >
-        {[...list, ...list].map((song, i) => {
-          const isHit = hits.includes(song)
-          return (
-            <span
-              key={i}
-              className="inline-block shrink-0"
-              style={{
-                animation: `float 3.4s ease-in-out infinite`,
-                animationDelay: `${(i % list.length) * 0.18}s`,
-              }}
-            >
+        <div
+          className="flex whitespace-nowrap hover:[animation-play-state:paused]"
+          style={{
+            animation: `${reverse ? 'marquee-reverse' : 'marquee'} ${duration}s linear infinite`,
+          }}
+        >
+          {[...list, ...list].map((song, i) => {
+            const isHit = hits.includes(song)
+            return (
               <span
-                className={`group mx-5 md:mx-8 transition-colors duration-300 ${
-                  isHit
-                    ? 'font-script text-5xl md:text-7xl text-[#e685e0] hover:text-[#f9c8f5] pulse-glow'
-                    : 'font-display italic text-xl md:text-3xl text-[#f4eef7]/40 hover:text-[#f4eef7]/85'
-                }`}
+                key={i}
+                className="inline-block shrink-0"
+                style={{
+                  animation: `float 3.4s ease-in-out infinite`,
+                  animationDelay: `${(i % list.length) * 0.18}s`,
+                }}
               >
-                {song}
+                <span
+                  className={`group mx-5 md:mx-8 transition-colors duration-300 ${
+                    isHit
+                      ? 'font-script text-5xl md:text-7xl text-[#f9c8f5] hover:text-white pulse-glow'
+                      : 'font-display italic text-xl md:text-3xl text-[#f4eef7]/55 hover:text-[#f4eef7]/95'
+                  }`}
+                >
+                  {song}
+                </span>
+                <span className="text-[#f4eef7]/45 text-lg md:text-2xl align-middle">&#9835;</span>
               </span>
-              <span className="text-[#d954d1]/50 text-lg md:text-2xl align-middle">&#9835;</span>
-            </span>
-          )
-        })}
+            )
+          })}
+        </div>
       </div>
     </div>
   )
@@ -76,9 +81,23 @@ export default function Discography() {
         </div>
       </div>
 
-      <div className="mt-20 md:mt-28 space-y-2">
-        <Row list={songs} duration={34} />
-        <Row list={[...songs].reverse()} reverse duration={40} />
+      <div className="relative mt-24 md:mt-32 mb-8 py-10 overflow-hidden">
+        <Row
+          list={songs}
+          duration={34}
+          band="bg-gradient-to-r from-[#5c1a52] via-[#7a2468] to-[#4a1444]"
+          rotate={-3}
+          z={0}
+        />
+        <div className="h-3 md:h-5" />
+        <Row
+          list={[...songs].reverse()}
+          reverse
+          duration={40}
+          band="bg-gradient-to-r from-[#141a42] via-[#1f2c66] to-[#121738]"
+          rotate={2}
+          z={10}
+        />
       </div>
 
       <style>{`

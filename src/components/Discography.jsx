@@ -4,54 +4,50 @@ import Reveal from './Reveal'
 
 const hits = ['Meu Barquinho', 'Eu Só Quero Adorar', 'Bondade de Deus']
 
-function Row({ list, reverse, duration, band, rotate, z, hitColor, faded }) {
+function Row({ list, reverse, duration, hitColor }) {
   const hitClass =
     hitColor === 'blue'
-      ? 'font-script text-3xl md:text-5xl text-[#bcd2fb] hover:text-white pulse-glow-blue'
-      : 'font-script text-3xl md:text-5xl text-[#f9c8f5] hover:text-white pulse-glow-pink'
+      ? 'font-script text-2xl md:text-4xl text-[#bcd2fb] hover:text-white pulse-glow-blue'
+      : 'font-script text-2xl md:text-4xl text-[#f9c8f5] hover:text-white pulse-glow-pink'
 
   return (
     <div
-      className={`relative w-[160%] -ml-[30%] py-4 md:py-6 backdrop-blur-md ${band} ${faded ? 'opacity-60' : ''}`}
+      className="overflow-hidden py-2"
       style={{
-        transform: `rotate(${rotate}deg)`,
-        zIndex: z,
         maskImage:
-          'linear-gradient(to right, transparent, black 18%, black 82%, transparent)',
+          'linear-gradient(to right, transparent, black 8%, black 92%, transparent)',
       }}
     >
-      <div className="overflow-hidden">
-        <div
-          className="flex whitespace-nowrap hover:[animation-play-state:paused]"
-          style={{
-            animation: `${reverse ? 'marquee-reverse' : 'marquee'} ${duration}s linear infinite`,
-          }}
-        >
-          {[...list, ...list].map((song, i) => {
-            const isHit = hits.includes(song)
-            return (
+      <div
+        className="flex whitespace-nowrap hover:[animation-play-state:paused]"
+        style={{
+          animation: `${reverse ? 'marquee-reverse' : 'marquee'} ${duration}s linear infinite`,
+        }}
+      >
+        {[...list, ...list].map((song, i) => {
+          const isHit = hits.includes(song)
+          return (
+            <span
+              key={i}
+              className="inline-block shrink-0"
+              style={{
+                animation: `float 3.4s ease-in-out infinite`,
+                animationDelay: `${(i % list.length) * 0.18}s`,
+              }}
+            >
               <span
-                key={i}
-                className="inline-block shrink-0"
-                style={{
-                  animation: `float 3.4s ease-in-out infinite`,
-                  animationDelay: `${(i % list.length) * 0.18}s`,
-                }}
+                className={`group mx-4 md:mx-6 transition-colors duration-300 ${
+                  isHit
+                    ? hitClass
+                    : 'font-display italic text-base md:text-xl text-[#f4eef7]/55 hover:text-[#f4eef7]/95'
+                }`}
               >
-                <span
-                  className={`group mx-4 md:mx-6 transition-colors duration-300 ${
-                    isHit
-                      ? hitClass
-                      : 'font-display italic text-base md:text-xl text-[#f4eef7]/55 hover:text-[#f4eef7]/95'
-                  }`}
-                >
-                  {song}
-                </span>
-                <span className="text-[#f4eef7]/45 text-sm md:text-lg align-middle">&#9835;</span>
+                {song}
               </span>
-            )
-          })}
-        </div>
+              <span className="text-[#f4eef7]/45 text-sm md:text-lg align-middle">&#9835;</span>
+            </span>
+          )
+        })}
       </div>
     </div>
   )
@@ -88,26 +84,9 @@ export default function Discography() {
         </div>
       </div>
 
-      <div className="relative mt-24 md:mt-32 mb-8 py-16 overflow-hidden">
-        <Row
-          list={songs}
-          duration={34}
-          band="bg-gradient-to-r from-[#5c1a52]/25 via-[#7a2468]/25 to-[#4a1444]/25"
-          rotate={-1.5}
-          z={0}
-          hitColor="pink"
-          faded
-        />
-        <div className="h-4 md:h-6" />
-        <Row
-          list={[...songs].reverse()}
-          reverse
-          duration={40}
-          band="bg-gradient-to-r from-[#141a42]/50 via-[#1f2c66]/50 to-[#121738]/50"
-          rotate={1.5}
-          z={10}
-          hitColor="blue"
-        />
+      <div className="mt-20 md:mt-28 space-y-1">
+        <Row list={songs} duration={34} hitColor="pink" />
+        <Row list={[...songs].reverse()} reverse duration={40} hitColor="blue" />
       </div>
 
       <style>{`

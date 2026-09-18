@@ -20,8 +20,8 @@ export const about = {
 
 export const stats = [
   { value: '30', suffix: ' anos', label: 'de carreira' },
-  { value: '1', prefix: '+', suffix: 'bi', label: 'streams acumulados' },
-  { value: '1', prefix: '+', suffix: 'mi', label: 'discos vendidos' },
+  { raw: 1_000_000_000, prefix: '+', label: 'streams acumulados' },
+  { raw: 1_000_000, prefix: '+', label: 'discos vendidos' },
   { value: 'Disco de Ouro', label: 'com "Eu Só Quero Adorar"' },
 ]
 

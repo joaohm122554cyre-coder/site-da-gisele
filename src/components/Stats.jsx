@@ -1,6 +1,7 @@
 import { stats } from '../lib/site-data'
 import Reveal from './Reveal'
 import AnimatedNumber from './AnimatedNumber'
+import AnimatedCompactNumber from './AnimatedCompactNumber'
 
 export default function Stats() {
   return (
@@ -17,7 +18,9 @@ export default function Stats() {
             <Reveal key={i} delay={i * 0.1} className="px-4 md:px-8 first:pl-0">
               <p className="font-display italic font-semibold text-4xl sm:text-5xl md:text-6xl text-[#d954d1] leading-none">
                 {s.prefix}
-                {Number.isNaN(Number(s.value)) ? (
+                {s.raw ? (
+                  <AnimatedCompactNumber value={s.raw} />
+                ) : Number.isNaN(Number(s.value)) ? (
                   s.value
                 ) : (
                   <AnimatedNumber value={Number(s.value)} />

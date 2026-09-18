@@ -12,7 +12,7 @@ function Row({ list, reverse, duration, band, rotate, z, hitColor, faded }) {
 
   return (
     <div
-      className={`relative w-[160%] -ml-[30%] py-5 md:py-7 backdrop-blur-md ${band} ${faded ? 'opacity-60' : ''}`}
+      className={`relative w-[160%] -ml-[30%] py-10 md:py-14 backdrop-blur-md ${band} ${faded ? 'opacity-60' : ''}`}
       style={{
         transform: `rotate(${rotate}deg)`,
         zIndex: z,
@@ -120,8 +120,8 @@ export default function Discography() {
           to { transform: translateX(0); }
         }
         @keyframes float {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-10px); }
+          0%, 100% { transform: translateY(2px); }
+          50% { transform: translateY(-4px); }
         }
         .pulse-glow-pink {
           animation: glow-pulse-pink 2.4s ease-in-out infinite;

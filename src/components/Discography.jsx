@@ -7,12 +7,12 @@ const hits = ['Meu Barquinho', 'Eu Só Quero Adorar', 'Bondade de Deus']
 function Row({ list, reverse, duration, band, rotate, z, hitColor, faded }) {
   const hitClass =
     hitColor === 'blue'
-      ? 'font-script text-5xl md:text-7xl text-[#bcd2fb] hover:text-white pulse-glow-blue'
-      : 'font-script text-5xl md:text-7xl text-[#f9c8f5] hover:text-white pulse-glow-pink'
+      ? 'font-script text-3xl md:text-5xl text-[#bcd2fb] hover:text-white pulse-glow-blue'
+      : 'font-script text-3xl md:text-5xl text-[#f9c8f5] hover:text-white pulse-glow-pink'
 
   return (
     <div
-      className={`relative w-[160%] -ml-[30%] py-10 md:py-14 backdrop-blur-md ${band} ${faded ? 'opacity-60' : ''}`}
+      className={`relative w-[160%] -ml-[30%] py-4 md:py-6 backdrop-blur-md ${band} ${faded ? 'opacity-60' : ''}`}
       style={{
         transform: `rotate(${rotate}deg)`,
         zIndex: z,
@@ -39,15 +39,15 @@ function Row({ list, reverse, duration, band, rotate, z, hitColor, faded }) {
                 }}
               >
                 <span
-                  className={`group mx-5 md:mx-8 transition-colors duration-300 ${
+                  className={`group mx-4 md:mx-6 transition-colors duration-300 ${
                     isHit
                       ? hitClass
-                      : 'font-display italic text-xl md:text-3xl text-[#f4eef7]/55 hover:text-[#f4eef7]/95'
+                      : 'font-display italic text-base md:text-xl text-[#f4eef7]/55 hover:text-[#f4eef7]/95'
                   }`}
                 >
                   {song}
                 </span>
-                <span className="text-[#f4eef7]/45 text-lg md:text-2xl align-middle">&#9835;</span>
+                <span className="text-[#f4eef7]/45 text-sm md:text-lg align-middle">&#9835;</span>
               </span>
             )
           })}

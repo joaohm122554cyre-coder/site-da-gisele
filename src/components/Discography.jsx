@@ -4,10 +4,15 @@ import Reveal from './Reveal'
 
 const hits = ['Meu Barquinho', 'Eu Só Quero Adorar', 'Bondade de Deus']
 
-function Row({ list, reverse, duration, band, rotate, z }) {
+function Row({ list, reverse, duration, band, rotate, z, hitColor, faded }) {
+  const hitClass =
+    hitColor === 'blue'
+      ? 'font-script text-5xl md:text-7xl text-[#bcd2fb] hover:text-white pulse-glow-blue'
+      : 'font-script text-5xl md:text-7xl text-[#f9c8f5] hover:text-white pulse-glow-pink'
+
   return (
     <div
-      className={`relative w-[160%] -ml-[30%] py-5 md:py-7 backdrop-blur-md ${band}`}
+      className={`relative w-[160%] -ml-[30%] py-5 md:py-7 backdrop-blur-md ${band} ${faded ? 'opacity-60' : ''}`}
       style={{
         transform: `rotate(${rotate}deg)`,
         zIndex: z,
@@ -36,7 +41,7 @@ function Row({ list, reverse, duration, band, rotate, z }) {
                 <span
                   className={`group mx-5 md:mx-8 transition-colors duration-300 ${
                     isHit
-                      ? 'font-script text-5xl md:text-7xl text-[#f9c8f5] hover:text-white pulse-glow'
+                      ? hitClass
                       : 'font-display italic text-xl md:text-3xl text-[#f4eef7]/55 hover:text-[#f4eef7]/95'
                   }`}
                 >
@@ -87,18 +92,21 @@ export default function Discography() {
         <Row
           list={songs}
           duration={34}
-          band="bg-gradient-to-r from-[#5c1a52]/45 via-[#7a2468]/45 to-[#4a1444]/45"
+          band="bg-gradient-to-r from-[#5c1a52]/25 via-[#7a2468]/25 to-[#4a1444]/25"
           rotate={-1.5}
           z={0}
+          hitColor="pink"
+          faded
         />
         <div className="h-4 md:h-6" />
         <Row
           list={[...songs].reverse()}
           reverse
           duration={40}
-          band="bg-gradient-to-r from-[#141a42]/45 via-[#1f2c66]/45 to-[#121738]/45"
+          band="bg-gradient-to-r from-[#141a42]/50 via-[#1f2c66]/50 to-[#121738]/50"
           rotate={1.5}
           z={10}
+          hitColor="blue"
         />
       </div>
 
@@ -115,12 +123,19 @@ export default function Discography() {
           0%, 100% { transform: translateY(0); }
           50% { transform: translateY(-10px); }
         }
-        .pulse-glow {
-          animation: glow-pulse 2.4s ease-in-out infinite;
+        .pulse-glow-pink {
+          animation: glow-pulse-pink 2.4s ease-in-out infinite;
         }
-        @keyframes glow-pulse {
+        @keyframes glow-pulse-pink {
           0%, 100% { text-shadow: 0 0 10px rgba(217,84,209,0.35), 0 0 2px rgba(217,84,209,0.5); }
           50% { text-shadow: 0 0 28px rgba(217,84,209,0.9), 0 0 8px rgba(217,84,209,0.8); }
+        }
+        .pulse-glow-blue {
+          animation: glow-pulse-blue 2.4s ease-in-out infinite;
+        }
+        @keyframes glow-pulse-blue {
+          0%, 100% { text-shadow: 0 0 10px rgba(79,127,214,0.35), 0 0 2px rgba(79,127,214,0.5); }
+          50% { text-shadow: 0 0 28px rgba(79,127,214,0.9), 0 0 8px rgba(79,127,214,0.8); }
         }
       `}</style>
     </section>

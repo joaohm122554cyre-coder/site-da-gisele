@@ -11,6 +11,12 @@
   --font-cormorant-sc: 'Cormorant SC', serif;
 }
 
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;

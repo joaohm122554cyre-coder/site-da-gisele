@@ -2,14 +2,12 @@ import photo from '../assets/photos/palco-microfone-1.png'
 import { songs } from '../lib/site-data'
 import Reveal from './Reveal'
 
-const hits = ['Meu Barquinho', 'Eu Só Quero Adorar', 'Bondade de Deus']
+const pinkClass =
+  'font-script text-2xl md:text-4xl text-[#f9c8f5] hover:text-white pulse-glow-pink'
+const blueClass =
+  'font-script text-2xl md:text-4xl text-[#bcd2fb] hover:text-white pulse-glow-blue'
 
-function Row({ list, reverse, duration, hitColor }) {
-  const hitClass =
-    hitColor === 'blue'
-      ? 'font-script text-2xl md:text-4xl text-[#bcd2fb] hover:text-white pulse-glow-blue'
-      : 'font-script text-2xl md:text-4xl text-[#f9c8f5] hover:text-white pulse-glow-pink'
-
+function Row({ list, reverse, duration, startColor }) {
   return (
     <div
       className="overflow-hidden py-2"
@@ -25,7 +23,7 @@ function Row({ list, reverse, duration, hitColor }) {
         }}
       >
         {[...list, ...list].map((song, i) => {
-          const isHit = hits.includes(song)
+          const isPink = (i + (startColor === 'blue' ? 1 : 0)) % 2 === 0
           return (
             <span
               key={i}
@@ -35,13 +33,7 @@ function Row({ list, reverse, duration, hitColor }) {
                 animationDelay: `${(i % list.length) * 0.18}s`,
               }}
             >
-              <span
-                className={`group mx-4 md:mx-6 transition-colors duration-300 ${
-                  isHit
-                    ? hitClass
-                    : 'font-display italic text-base md:text-xl text-[#f4eef7]/55 hover:text-[#f4eef7]/95'
-                }`}
-              >
+              <span className={`group mx-4 md:mx-6 transition-colors duration-300 ${isPink ? pinkClass : blueClass}`}>
                 {song}
               </span>
               <span className="text-[#f4eef7]/45 text-sm md:text-lg align-middle">&#9835;</span>
@@ -85,8 +77,8 @@ export default function Discography() {
       </div>
 
       <div className="mt-20 md:mt-28 space-y-1">
-        <Row list={songs} duration={34} hitColor="pink" />
-        <Row list={[...songs].reverse()} reverse duration={40} hitColor="blue" />
+        <Row list={songs} duration={34} startColor="pink" />
+        <Row list={[...songs].reverse()} reverse duration={40} startColor="blue" />
       </div>
 
       <style>{`

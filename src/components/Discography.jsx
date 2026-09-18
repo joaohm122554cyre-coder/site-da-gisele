@@ -7,13 +7,15 @@ const hits = ['Meu Barquinho', 'Eu Só Quero Adorar', 'Bondade de Deus']
 function Row({ list, reverse, duration, band, rotate, z }) {
   return (
     <div
-      className={`relative w-[130%] -ml-[15%] py-5 md:py-7 shadow-2xl shadow-black/50 ${band}`}
-      style={{ transform: `rotate(${rotate}deg)`, zIndex: z }}
+      className={`relative w-[160%] -ml-[30%] py-5 md:py-7 backdrop-blur-md ${band}`}
+      style={{
+        transform: `rotate(${rotate}deg)`,
+        zIndex: z,
+        maskImage:
+          'linear-gradient(to right, transparent, black 18%, black 82%, transparent)',
+      }}
     >
-      <div
-        className="overflow-hidden"
-        style={{ maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)' }}
-      >
+      <div className="overflow-hidden">
         <div
           className="flex whitespace-nowrap hover:[animation-play-state:paused]"
           style={{
@@ -81,21 +83,21 @@ export default function Discography() {
         </div>
       </div>
 
-      <div className="relative mt-24 md:mt-32 mb-8 py-10 overflow-hidden">
+      <div className="relative mt-24 md:mt-32 mb-8 py-16 overflow-hidden">
         <Row
           list={songs}
           duration={34}
-          band="bg-gradient-to-r from-[#5c1a52] via-[#7a2468] to-[#4a1444]"
-          rotate={-3}
+          band="bg-gradient-to-r from-[#5c1a52]/45 via-[#7a2468]/45 to-[#4a1444]/45"
+          rotate={-1.5}
           z={0}
         />
-        <div className="h-3 md:h-5" />
+        <div className="h-4 md:h-6" />
         <Row
           list={[...songs].reverse()}
           reverse
           duration={40}
-          band="bg-gradient-to-r from-[#141a42] via-[#1f2c66] to-[#121738]"
-          rotate={2}
+          band="bg-gradient-to-r from-[#141a42]/45 via-[#1f2c66]/45 to-[#121738]/45"
+          rotate={1.5}
           z={10}
         />
       </div>

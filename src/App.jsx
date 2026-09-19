@@ -5,7 +5,6 @@ import Hero from './components/Hero'
 import About from './components/About'
 import Stats from './components/Stats'
 import MeuBarquinho from './components/MeuBarquinho'
-import SongMarquee from './components/SongMarquee'
 import PhotoSessionPink from './components/PhotoSessionPink'
 import Discography from './components/Discography'
 import CurrentMoment from './components/CurrentMoment'
@@ -31,16 +30,6 @@ export default function App() {
         <About />
         <Stats />
         <MeuBarquinho />
-        <SongMarquee
-          eyebrow="Repertório"
-          title={
-            <>
-              Músicas que encantaram
-              <br />
-              <span className="italic text-[#d954d1]">corações</span> de gerações
-            </>
-          }
-        />
         <PhotoSessionPink />
         <div ref={discographyRef}>
           <Discography />

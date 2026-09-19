@@ -106,6 +106,17 @@ export default function MeuBarquinho() {
   return (
     <section id="meu-barquinho" className="relative py-28 md:py-40">
       <div className="max-w-7xl mx-auto px-6 md:px-12 grid md:grid-cols-12 gap-10 items-center">
+        <Reveal className="md:col-span-12 text-center mb-2 md:mb-10">
+          <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">
+            Repertório
+          </span>
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl text-[#f4eef7] mt-4 leading-[1.15]">
+            Músicas que encantaram
+            <br />
+            <span className="italic text-[#d954d1]">corações</span> de gerações
+          </h2>
+        </Reveal>
+
         <div className="md:col-span-5 flex justify-center">
           <div className="relative flex items-center gap-3 md:gap-5">
             <button

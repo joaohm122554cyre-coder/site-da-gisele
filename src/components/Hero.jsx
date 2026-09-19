@@ -3,9 +3,20 @@ import { artist } from '../lib/site-data'
 
 export default function Hero() {
   return (
-    <section className="relative h-screen min-h-[720px] flex items-end overflow-hidden">
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-t from-[#14122a]/55 via-[#1c1638]/15 to-transparent" />
+    <section className="relative h-screen min-h-[720px] flex items-end overflow-x-clip">
+      <div
+        className="absolute inset-x-0 top-0 h-[130%] pointer-events-none"
+        style={{
+          maskImage: 'linear-gradient(to bottom, black 0%, black 77%, transparent 100%)',
+        }}
+      >
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(to bottom, transparent 0%, rgba(28,22,56,0.12) 40%, rgba(20,18,42,0.5) 70%, rgba(20,18,42,0.42) 77%, transparent 100%)',
+          }}
+        />
         <div className="absolute inset-0 bg-gradient-to-r from-[#14122a]/50 via-transparent to-transparent" />
       </div>
 
@@ -15,7 +26,7 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 2.4 }}
-            className="text-[11px] md:text-xs tracking-[0.4em] uppercase text-white/70 mb-6"
+            className="text-[11px] md:text-xs tracking-[0.4em] uppercase text-white/80 mb-6 [text-shadow:0_1px_14px_rgba(10,8,25,0.85)]"
           >
             Cantora &middot; Compositora &middot; {artist.label}
           </motion.p>
@@ -47,13 +58,13 @@ export default function Hero() {
             transition={{ duration: 1, delay: 2.6 }}
             className="mt-10 flex flex-col md:flex-row md:items-end md:justify-between gap-6"
           >
-            <p className="max-w-sm text-sm md:text-base text-white/80 leading-relaxed">
+            <p className="max-w-sm text-sm md:text-base text-white/90 leading-relaxed [text-shadow:0_1px_14px_rgba(10,8,25,0.85)]">
               {artist.tagline}. Quase 30 anos construindo a trilha sonora da
               fé de milhões de brasileiros.
             </p>
             <a
               href="#sobre"
-              className="group inline-flex items-center gap-3 text-[11px] tracking-[0.3em] uppercase text-white/90 hover:text-white transition-colors"
+              className="group inline-flex items-center gap-3 text-[11px] tracking-[0.3em] uppercase text-white/90 hover:text-white transition-colors [text-shadow:0_1px_14px_rgba(10,8,25,0.85)]"
             >
               A história
               <span className="w-10 h-px bg-[#d954d1] group-hover:w-16 transition-all duration-500" />

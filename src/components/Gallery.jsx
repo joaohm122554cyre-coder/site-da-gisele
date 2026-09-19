@@ -6,9 +6,12 @@ const photoModules = import.meta.glob('../assets/photos/*', {
   import: 'default',
 })
 
+const withoutExt = (name) => name.replace(/\.[^./]+$/, '')
+
 function resolvePhoto(filename) {
-  const match = Object.entries(photoModules).find(([path]) =>
-    path.endsWith(`/${filename}`)
+  const wanted = withoutExt(filename)
+  const match = Object.entries(photoModules).find(
+    ([path]) => withoutExt(path.split('/').pop()) === wanted
   )
   return match ? match[1] : undefined
 }
@@ -31,6 +34,8 @@ export default function Gallery() {
               <img
                 src={resolvePhoto(photo.src)}
                 alt={photo.alt}
+                loading="lazy"
+                decoding="async"
                 className="w-full h-64 object-cover grayscale-[10%] hover:grayscale-0 transition-all duration-500"
               />
             </Reveal>

@@ -40,7 +40,7 @@ function Item({ name, label, url }) {
 
 export default function Social() {
   return (
-    <section id="redes" className="relative py-28 md:py-40 border-t border-[#a9a0d8]/60">
+    <section id="redes" className="relative py-28 md:py-40">
       <div className="max-w-4xl mx-auto px-6 md:px-12 text-center">
         <Reveal>
           <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">

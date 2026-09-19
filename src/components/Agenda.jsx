@@ -4,7 +4,7 @@ const upcoming = []
 
 export default function Agenda() {
   return (
-    <section id="agenda" className="relative py-28 md:py-40 border-t border-[#a9a0d8] bg-transparent">
+    <section id="agenda" className="relative py-28 md:py-40 bg-transparent">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <Reveal>
           <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">

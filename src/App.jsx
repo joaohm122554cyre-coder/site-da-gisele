@@ -5,7 +5,6 @@ import Hero from './components/Hero'
 import About from './components/About'
 import Stats from './components/Stats'
 import MeuBarquinho from './components/MeuBarquinho'
-import SongMarquee from './components/SongMarquee'
 import PhotoSessionPink from './components/PhotoSessionPink'
 import Discography from './components/Discography'
 import CurrentMoment from './components/CurrentMoment'
@@ -31,7 +30,6 @@ export default function App() {
         <About />
         <Stats />
         <MeuBarquinho />
-        <SongMarquee />
         <PhotoSessionPink />
         <div ref={discographyRef}>
           <Discography />

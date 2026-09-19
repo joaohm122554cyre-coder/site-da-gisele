@@ -125,7 +125,7 @@ const tracks = [
   },
 ]
 
-const EDGE_MASK = 'linear-gradient(to bottom, transparent 0%, #000 18%, #000 82%, transparent 100%)'
+const EDGE_MASK = 'linear-gradient(to bottom, transparent 0, #000 7rem, #000 calc(100% - 7rem), transparent 100%)'
 
 export default function MeuBarquinho() {
   const [index, setIndex] = useState(0)

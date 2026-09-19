@@ -1,3 +1,5 @@
+import { useRef } from 'react'
+import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
 import Reveal from './Reveal'
 import barquinhoAlbum from '../assets/photos/meu-barquinho-album.jpg'
 import bondadeCena from '../assets/photos/bondade-de-deus-cena.jpg'
@@ -47,11 +49,26 @@ const items = [
 ]
 
 function Entry({ item, index }) {
+  const ref = useRef(null)
   const textOnLeft = index % 2 === 0
 
+  // o marco acende quando a luz da linha chega nele
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 58%', 'start 52%'] })
+  const lit = useTransform(scrollYProgress, [0, 1], [0, 1])
+  const litScale = useTransform(lit, [0, 1], [0.4, 1])
+
   return (
-    <div className="relative grid gap-x-20 gap-y-6 pb-16 pl-12 md:grid-cols-2 md:pb-24 md:pl-0 last:pb-0">
-      <span className="absolute left-4 top-3 h-3 w-3 -translate-x-1/2 rounded-full bg-[#d954d1] shadow-[0_0_14px_3px_rgba(217,84,209,0.55)] ring-4 ring-[#1c1638] md:left-1/2" />
+    <div
+      ref={ref}
+      className="relative grid gap-x-20 gap-y-6 pb-16 pl-12 md:grid-cols-2 md:pb-24 md:pl-0 last:pb-0"
+    >
+      <span className="absolute left-4 top-3 h-3 w-3 -translate-x-1/2 md:left-1/2">
+        <span className="absolute inset-0 rounded-full bg-[#f4eef7]/25 ring-4 ring-[#1c1638]" />
+        <motion.span
+          style={{ opacity: lit, scale: litScale }}
+          className="absolute inset-0 rounded-full bg-[#d954d1] shadow-[0_0_14px_3px_rgba(217,84,209,0.6)]"
+        />
+      </span>
 
       <Reveal
         className={`md:row-start-1 ${
@@ -92,6 +109,15 @@ function Entry({ item, index }) {
 }
 
 export default function Timeline() {
+  const trackRef = useRef(null)
+  const reduce = useReducedMotion()
+
+  const { scrollYProgress } = useScroll({ target: trackRef, offset: ['start 55%', 'end 55%'] })
+  const spring = useSpring(scrollYProgress, { stiffness: 110, damping: 26, restDelta: 0.0005 })
+  const progress = reduce ? scrollYProgress : spring
+  const headTop = useTransform(progress, (v) => `${(v * 100).toFixed(3)}%`)
+  const headOpacity = useTransform(progress, [0, 0.015, 0.985, 1], [0, 1, 1, 0])
+
   return (
     <section id="historia" className="relative py-28 md:py-40">
       <div className="mx-auto max-w-6xl px-6 md:px-12">
@@ -106,8 +132,19 @@ export default function Timeline() {
           </h2>
         </Reveal>
 
-        <div className="relative">
-          <div className="absolute bottom-0 left-4 top-0 w-px -translate-x-1/2 bg-gradient-to-b from-transparent via-[#d954d1]/45 to-transparent md:left-1/2" />
+        <div ref={trackRef} className="relative">
+          <div className="absolute inset-y-0 left-4 w-0 md:left-1/2">
+            <div className="absolute inset-y-0 left-0 w-px -translate-x-1/2 bg-gradient-to-b from-transparent via-[#f4eef7]/15 to-transparent" />
+            <motion.div
+              style={{ scaleY: progress }}
+              className="absolute inset-y-0 left-0 w-[2px] -translate-x-1/2 origin-top bg-gradient-to-b from-[#d954d1] via-[#d954d1] to-[#7f9cf5] shadow-[0_0_12px_rgba(217,84,209,0.55)]"
+            />
+            <motion.span
+              style={{ top: headTop, opacity: headOpacity }}
+              className="absolute left-0 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#fdf3f8] shadow-[0_0_20px_7px_rgba(217,84,209,0.8)]"
+            />
+          </div>
+
           {items.map((item, i) => (
             <Entry key={item.title} item={item} index={i} />
           ))}

@@ -4,7 +4,8 @@ import logo from '../assets/logo/gc-monograma.png'
 
 const links = [
   { id: null, href: '#', label: 'Início' },
-  { id: 'sobre', href: '#sobre', label: 'História' },
+  { id: 'sobre', href: '#sobre', label: 'Sobre' },
+  { id: 'historia', href: '#historia', label: 'História' },
   { id: 'musicas', href: '#musicas', label: 'Músicas' },
   { id: 'videos', href: '#videos', label: 'Vídeos' },
   { id: 'galeria', href: '#galeria', label: 'Galeria' },

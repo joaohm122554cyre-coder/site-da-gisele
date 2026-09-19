@@ -6,7 +6,6 @@ import About from './components/About'
 import Stats from './components/Stats'
 import MeuBarquinho from './components/MeuBarquinho'
 import PhotoSessionPink from './components/PhotoSessionPink'
-import Discography from './components/Discography'
 import CurrentMoment from './components/CurrentMoment'
 import MotherSon from './components/MotherSon'
 import Videos from './components/Videos'
@@ -18,11 +17,11 @@ import Social from './components/Social'
 import Footer from './components/Footer'
 
 export default function App() {
-  const discographyRef = useRef(null)
+  const switchRef = useRef(null)
 
   return (
     <div className="relative">
-      <BackgroundVideo switchRef={discographyRef} />
+      <BackgroundVideo switchRef={switchRef} />
 
       <main className="md:pl-14 relative">
         <Nav />
@@ -31,10 +30,9 @@ export default function App() {
         <Stats />
         <MeuBarquinho />
         <PhotoSessionPink />
-        <div ref={discographyRef}>
-          <Discography />
+        <div ref={switchRef}>
+          <CurrentMoment />
         </div>
-        <CurrentMoment />
         <MotherSon />
         <Videos />
         <Gallery />

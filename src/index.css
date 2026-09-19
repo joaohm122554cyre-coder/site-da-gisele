@@ -95,3 +95,18 @@ body {
     transform: rotate(360deg);
   }
 }
+
+.vinyl-spin {
+  animation: vinyl-rotate 3.6s linear infinite;
+  animation-play-state: paused;
+}
+
+.vinyl-spin.is-playing {
+  animation-play-state: running;
+}
+
+@keyframes vinyl-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -15,6 +15,7 @@ import Agenda from './components/Agenda'
 import Hire from './components/Hire'
 import Press from './components/Press'
 import Social from './components/Social'
+import ClosingQuote from './components/ClosingQuote'
 import Footer from './components/Footer'
 
 export default function App() {
@@ -42,6 +43,7 @@ export default function App() {
         <Hire />
         <Press />
         <Social />
+        <ClosingQuote />
         <Footer />
       </main>
     </div>

@@ -148,6 +148,15 @@ body {
   }
 }
 
+@keyframes panel-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
 .bg-drift {
   animation: bg-drift 26s ease-in-out infinite alternate;
 }

@@ -36,5 +36,12 @@ export default function AnimatedCompactNumber({ value, duration = 1.6 }) {
     return () => controls.stop()
   }, [inView, value, duration])
 
-  return <span ref={ref}>{display}</span>
+  const [, digits, unit] = display.match(/^(\d+)(\D*)$/)
+
+  return (
+    <span ref={ref}>
+      {digits}
+      {unit && <span className="ml-1 text-[0.42em]">{unit}</span>}
+    </span>
+  )
 }

@@ -13,31 +13,42 @@ export default function Stats() {
           </span>
         </Reveal>
 
-        <div className="mt-10 grid grid-cols-2 md:grid-cols-4 divide-x divide-[#a9a0d8]/30">
-          {stats.map((s, i) => (
-            <Reveal key={i} delay={i * 0.1} className="px-4 md:px-8 first:pl-0">
-              <p
-                translate="no"
-                className="notranslate font-display italic font-semibold text-4xl sm:text-5xl md:text-6xl text-[#d954d1] leading-none"
-              >
-                {s.prefix}
-                {s.raw ? (
-                  <AnimatedCompactNumber value={s.raw} />
-                ) : Number.isNaN(Number(s.value)) ? (
-                  s.value
-                ) : (
-                  <AnimatedNumber value={Number(s.value)} />
-                )}
-                {s.suffix}
-              </p>
-              <p
-                translate="no"
-                className="notranslate mt-4 text-[11px] md:text-xs uppercase tracking-[0.2em] text-[#f4eef7]/55"
-              >
-                {s.label}
-              </p>
-            </Reveal>
-          ))}
+        <div className="mt-12 md:mt-16 grid grid-cols-2 md:grid-cols-4 gap-x-6 md:gap-x-10 gap-y-14">
+          {stats.map((s, i) => {
+            const isNumeric = Boolean(s.raw) || !Number.isNaN(Number(s.value))
+            return (
+              <Reveal key={i} delay={i * 0.1}>
+                <p
+                  translate="no"
+                  className={`notranslate flex items-end font-display italic font-semibold leading-none ${
+                    i % 2 === 0 ? 'stat-pink' : 'stat-blue'
+                  } ${
+                    isNumeric
+                      ? 'min-h-12 sm:min-h-[3.75rem] md:min-h-[4.5rem] text-5xl sm:text-6xl md:text-7xl'
+                      : 'min-h-12 sm:min-h-[3.75rem] md:min-h-[4.5rem] text-3xl sm:text-4xl'
+                  }`}
+                >
+                  <span>
+                    {s.prefix}
+                    {s.raw ? (
+                      <AnimatedCompactNumber value={s.raw} />
+                    ) : isNumeric ? (
+                      <AnimatedNumber value={Number(s.value)} />
+                    ) : (
+                      s.value
+                    )}
+                    {s.suffix && <span className="ml-2 text-[0.42em]">{s.suffix.trim()}</span>}
+                  </span>
+                </p>
+                <p
+                  translate="no"
+                  className="notranslate mt-5 text-[11px] md:text-xs uppercase tracking-[0.25em] text-[#f4eef7]/60"
+                >
+                  {s.label}
+                </p>
+              </Reveal>
+            )
+          })}
         </div>
       </div>
     </section>

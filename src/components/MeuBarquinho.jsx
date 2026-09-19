@@ -1,17 +1,21 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Reveal from './Reveal'
 import VinylPlayer from './VinylPlayer'
 import barquinhoLabel from '../assets/photos/meu-barquinho-capa.jpg'
 import barquinhoAudio from '../assets/audio/meu-barquinho-preview.mp3'
+import barquinhoAlbum from '../assets/photos/meu-barquinho-album.jpg'
 import adorarLabel from '../assets/photos/eu-so-quero-adorar-capa.jpg'
-import adorarAudio from '../assets/audio/eu-so-quero-adorar-preview.mp3'
+import adorarVideo from '../assets/videos/adorar-preview.mp4'
 import discoDeOuroAdorar from '../assets/photos/disco-de-ouro-adorar.jpg'
 import bondadeLabel from '../assets/photos/bondade-de-deus-capa.jpg'
-import bondadeAudio from '../assets/audio/bondade-de-deus-preview.mp3'
+import bondadeVideo from '../assets/videos/bondade-preview.mp4'
 import queroAdoraLoLabel from '../assets/photos/quero-adora-lo-capa.jpg'
-import queroAdoraLoAudio from '../assets/audio/quero-adora-lo-preview.mp3'
+import queroAdoraLoVideo from '../assets/videos/quero-adora-lo-preview.mp4'
 import pensandoBemLabel from '../assets/photos/pensando-bem-capa.jpg'
-import pensandoBemAudio from '../assets/audio/pensando-bem-preview.mp3'
+import pensandoBemVideo from '../assets/videos/pensando-bem-preview.mp4'
+import bondadeCena from '../assets/photos/bondade-de-deus-cena.jpg'
+import queroAdoraLoCena from '../assets/photos/quero-adora-lo-cena.jpg'
+import pensandoBemCena from '../assets/photos/pensando-bem-cena.jpg'
 
 const tracks = [
   {
@@ -22,10 +26,17 @@ const tracks = [
       'A canção que projetou Giselli Cristina para todo o país e se tornou uma das músicas mais lembradas da música gospel brasileira.',
     label: barquinhoLabel,
     audio: barquinhoAudio,
+    backdrop: barquinhoAlbum,
+    duration: 45,
     youtubeUrl: 'https://www.youtube.com/watch?v=_AOK_aSiDmo',
     meta: {
       views: 104631250,
       premiere: '11/11/2010',
+    },
+    award: {
+      image: barquinhoAlbum,
+      caption: 'Capa do álbum Meu Barquinho',
+      maxWidth: 'max-w-[240px]',
     },
   },
   {
@@ -35,7 +46,8 @@ const tracks = [
     description:
       'Gravada ao lado do filho, Nicolas Henrique, conquistou Disco de Ouro e se tornou um dos maiores fenômenos da música gospel nas plataformas digitais.',
     label: adorarLabel,
-    audio: adorarAudio,
+    video: adorarVideo,
+    duration: 78,
     youtubeUrl: 'https://www.youtube.com/watch?v=jFPV45ARHqg',
     meta: {
       views: 17993828,
@@ -55,11 +67,17 @@ const tracks = [
     description:
       'Um dos maiores sucessos do segmento gospel, reafirmando a força de Giselli Cristina nas plataformas digitais em parceria com Clayton Queiroz.',
     label: bondadeLabel,
-    audio: bondadeAudio,
+    video: bondadeVideo,
+    duration: 72,
     youtubeUrl: 'https://www.youtube.com/watch?v=dkfSaLXj2S4',
     meta: {
       views: 64344815,
       premiere: '31/03/2023',
+    },
+    award: {
+      image: bondadeCena,
+      caption: 'Giselli Cristina em Bondade de Deus',
+      maxWidth: 'max-w-[240px]',
     },
   },
   {
@@ -69,12 +87,18 @@ const tracks = [
     description:
       'Registro ao vivo na Igreja Assembleia de Deus em Ponta Grossa, com participação especial do coral de mulheres da UFADPG e dos filhos Rafaelli Cristina e Nicolas Henrique.',
     label: queroAdoraLoLabel,
-    audio: queroAdoraLoAudio,
+    video: queroAdoraLoVideo,
+    duration: 75,
     youtubeUrl: 'https://www.youtube.com/watch?v=WteDeyyXFuM',
     meta: {
       views: 9699384,
       premiere: '11/02/2025',
       credit: 'Direção: Pr. Altair de Moraes e Pra. Elienai',
+    },
+    award: {
+      image: queroAdoraLoCena,
+      caption: 'Ao vivo com o Coral UFADPG',
+      maxWidth: 'max-w-[240px]',
     },
   },
   {
@@ -84,7 +108,8 @@ const tracks = [
     description:
       'Um dueto intimista entre mãe e filho, Giselli Cristina e Nicolas Henrique, em uma versão acústica que emocionou o público.',
     label: pensandoBemLabel,
-    audio: pensandoBemAudio,
+    video: pensandoBemVideo,
+    duration: 76,
     youtubeUrl: 'https://www.youtube.com/watch?v=KeAEX20EqZ0',
     meta: {
       views: 2459514,
@@ -92,20 +117,109 @@ const tracks = [
       credit: 'Nilseu Buarque / Editora Prisma',
       tags: ['louvores', 'musicagospel', 'clipegospel'],
     },
+    award: {
+      image: pensandoBemCena,
+      caption: 'Com Nicolas Henrique em Pensando Bem',
+      maxWidth: 'max-w-[240px]',
+    },
   },
 ]
 
+const EDGE_MASK = 'linear-gradient(to bottom, transparent 0%, #000 18%, #000 82%, transparent 100%)'
+
 export default function MeuBarquinho() {
   const [index, setIndex] = useState(0)
+  const [playing, setPlaying] = useState(false)
+  const [current, setCurrent] = useState(0)
+  const [duration, setDuration] = useState(tracks[0].duration)
+  const mediaRef = useRef(null)
+  const sectionRef = useRef(null)
   const track = tracks[index]
+
+  useEffect(() => {
+    setPlaying(false)
+    setCurrent(0)
+    setDuration(tracks[index].duration)
+
+    const media = mediaRef.current
+    if (!media) return
+
+    const onTime = () => setCurrent(media.currentTime)
+    const onLoaded = () => {
+      if (Number.isFinite(media.duration) && media.duration > 0) setDuration(media.duration)
+    }
+    const onPlay = () => setPlaying(true)
+    const onPause = () => setPlaying(false)
+
+    media.addEventListener('timeupdate', onTime)
+    media.addEventListener('loadedmetadata', onLoaded)
+    media.addEventListener('play', onPlay)
+    media.addEventListener('pause', onPause)
+    return () => {
+      media.removeEventListener('timeupdate', onTime)
+      media.removeEventListener('loadedmetadata', onLoaded)
+      media.removeEventListener('play', onPlay)
+      media.removeEventListener('pause', onPause)
+      media.pause()
+    }
+  }, [index])
+
+  useEffect(() => {
+    const el = sectionRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) mediaRef.current?.pause()
+    })
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
+  const toggle = () => {
+    const media = mediaRef.current
+    if (!media) return
+    if (media.paused) media.play().catch(() => {})
+    else media.pause()
+  }
 
   const go = (dir) => {
     setIndex((i) => (i + dir + tracks.length) % tracks.length)
   }
 
   return (
-    <section id="meu-barquinho" className="relative py-28 md:py-40">
-      <div className="max-w-7xl mx-auto px-6 md:px-12 grid md:grid-cols-12 gap-10 items-center">
+    <section ref={sectionRef} id="meu-barquinho" className="relative py-28 md:py-40">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-0 transition-opacity duration-1000"
+        style={{ opacity: playing ? 1 : 0, WebkitMaskImage: EDGE_MASK, maskImage: EDGE_MASK }}
+      >
+        <div className="sticky top-0 h-[100svh] max-h-full w-full overflow-hidden">
+          {track.video ? (
+            <video
+              key={track.key}
+              ref={mediaRef}
+              src={track.video}
+              preload="metadata"
+              playsInline
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{ filter: 'brightness(0.62) saturate(1.02)' }}
+            />
+          ) : (
+            <>
+              <audio key={track.key} ref={mediaRef} src={track.audio} preload="metadata" />
+              <img
+                src={track.backdrop}
+                alt=""
+                className={`absolute inset-0 h-full w-full object-cover ${playing ? 'bg-drift' : ''}`}
+                style={{ objectPosition: '50% 38%', filter: 'blur(4px) brightness(0.52) saturate(1.05)' }}
+              />
+            </>
+          )}
+          <div className="absolute inset-0 bg-[#14122a]/40" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(20,18,42,0.5)_100%)]" />
+        </div>
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 grid md:grid-cols-12 gap-10 items-center [text-shadow:0_1px_16px_rgba(20,18,42,0.85)]">
         <div className="md:col-span-5 flex justify-center">
           <div className="relative flex items-center gap-3 md:gap-5">
             <button
@@ -123,8 +237,12 @@ export default function MeuBarquinho() {
               <VinylPlayer
                 label={track.label}
                 labelAlt={`${track.title} — capa`}
-                audioSrc={track.audio}
                 trackName={track.title}
+                playing={playing}
+                onToggle={toggle}
+                progress={duration ? Math.min(current / duration, 1) : 0}
+                current={current}
+                duration={duration}
                 meta={track.meta}
                 youtubeUrl={track.youtubeUrl}
               />
@@ -156,7 +274,7 @@ export default function MeuBarquinho() {
             </p>
 
             {track.award && (
-              <div className="mt-8 max-w-sm">
+              <div className={`mt-8 ${track.award.maxWidth ?? 'max-w-sm'}`}>
                 <img
                   src={track.award.image}
                   alt={track.award.caption}

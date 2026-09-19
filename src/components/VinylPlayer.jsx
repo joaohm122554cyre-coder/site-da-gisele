@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion, animate } from 'framer-motion'
 
 function formatTime(s) {
@@ -24,50 +24,22 @@ function CountUpViews({ value, delay = 0 }) {
   return <>{display.toLocaleString('pt-BR')}</>
 }
 
-export default function VinylPlayer({ label, labelAlt, audioSrc, trackName, meta, youtubeUrl }) {
-  const audioRef = useRef(null)
-  const [playing, setPlaying] = useState(false)
-  const [progress, setProgress] = useState(0)
-  const [duration, setDuration] = useState(0)
-  const [current, setCurrent] = useState(0)
-
-  useEffect(() => {
-    const audio = audioRef.current
-    if (!audio) return
-
-    const onTime = () => {
-      setCurrent(audio.currentTime)
-      setProgress(audio.duration ? audio.currentTime / audio.duration : 0)
-    }
-    const onLoaded = () => setDuration(audio.duration)
-    const onEnd = () => setPlaying(false)
-
-    audio.addEventListener('timeupdate', onTime)
-    audio.addEventListener('loadedmetadata', onLoaded)
-    audio.addEventListener('ended', onEnd)
-    return () => {
-      audio.removeEventListener('timeupdate', onTime)
-      audio.removeEventListener('loadedmetadata', onLoaded)
-      audio.removeEventListener('ended', onEnd)
-    }
-  }, [])
-
-  const toggle = () => {
-    const audio = audioRef.current
-    if (!audio) return
-    if (playing) {
-      audio.pause()
-      setPlaying(false)
-    } else {
-      audio.play().catch(() => {})
-      setPlaying(true)
-    }
-  }
+export default function VinylPlayer({
+  label,
+  labelAlt,
+  trackName,
+  playing,
+  onToggle,
+  progress,
+  current,
+  duration,
+  meta,
+  youtubeUrl,
+}) {
+  const toggle = onToggle
 
   return (
     <div className="flex flex-col items-center gap-6">
-      <audio ref={audioRef} src={audioSrc} preload="metadata" />
-
       <div className="relative w-64 h-64 md:w-80 md:h-80">
         {/* tonearm */}
         <div

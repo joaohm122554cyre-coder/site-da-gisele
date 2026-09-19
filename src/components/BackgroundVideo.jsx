@@ -1,7 +1,17 @@
 import { useEffect, useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import heroVideo from '../assets/videos/hero-bg.mp4'
-import statsVideo from '../assets/videos/stats-bg.mp4'
+import heroVideoHd from '../assets/videos/hero-bg.mp4'
+import heroVideoSm from '../assets/videos/hero-bg-sm.mp4'
+import statsVideoHd from '../assets/videos/stats-bg-hd.mp4'
+import statsVideoSm from '../assets/videos/stats-bg.mp4'
+
+const isHdScreen =
+  typeof window !== 'undefined' &&
+  window.matchMedia('(min-width: 900px)').matches &&
+  !navigator.connection?.saveData
+
+const heroVideo = isHdScreen ? heroVideoHd : heroVideoSm
+const statsVideo = isHdScreen ? statsVideoHd : statsVideoSm
 
 function useForceAutoplay() {
   const ref = useRef(null)
@@ -106,7 +116,7 @@ export default function BackgroundVideo({ switchRef }) {
         preload="auto"
         disableRemotePlayback
         controlsList="nodownload noplaybackrate"
-        style={{ opacity: statsOpacity, filter: 'blur(3px) brightness(0.5) saturate(0.85)' }}
+        style={{ opacity: statsOpacity, filter: 'blur(1.5px) brightness(0.5) saturate(0.9)' }}
         className="absolute inset-0 w-full h-full object-cover"
       />
     </div>

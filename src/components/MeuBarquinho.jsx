@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Reveal from './Reveal'
 import VinylPlayer from './VinylPlayer'
+import SongMarquee from './SongMarquee'
 import barquinhoLabel from '../assets/photos/meu-barquinho-capa.jpg'
 import barquinhoAudio from '../assets/audio/meu-barquinho-preview.mp3'
 import barquinhoAlbum from '../assets/photos/meu-barquinho-album.jpg'
@@ -125,7 +126,7 @@ const tracks = [
   },
 ]
 
-const EDGE_MASK = 'linear-gradient(to bottom, transparent 0%, #000 18%, #000 82%, transparent 100%)'
+const EDGE_MASK = 'linear-gradient(to bottom, transparent 0, #000 7rem, #000 calc(100% - 7rem), transparent 100%)'
 
 export default function MeuBarquinho() {
   const [index, setIndex] = useState(0)
@@ -186,7 +187,7 @@ export default function MeuBarquinho() {
   }
 
   return (
-    <section ref={sectionRef} id="meu-barquinho" className="relative py-28 md:py-40">
+    <section ref={sectionRef} id="musicas" className="relative py-28 md:py-40">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 z-0 transition-opacity duration-1000"
@@ -316,6 +317,10 @@ export default function MeuBarquinho() {
             </div>
           </Reveal>
         </div>
+      </div>
+
+      <div className="relative z-10 mt-16 md:mt-24">
+        <SongMarquee />
       </div>
     </section>
   )

@@ -31,7 +31,16 @@ export default function App() {
         <About />
         <Stats />
         <MeuBarquinho />
-        <SongMarquee />
+        <SongMarquee
+          eyebrow="Repertório"
+          title={
+            <>
+              Músicas que encantaram
+              <br />
+              <span className="italic text-[#d954d1]">corações</span> de gerações
+            </>
+          }
+        />
         <PhotoSessionPink />
         <div ref={discographyRef}>
           <Discography />

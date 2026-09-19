@@ -1,4 +1,5 @@
 import { songs } from '../lib/site-data'
+import Reveal from './Reveal'
 
 const pinkClass =
   'font-script text-2xl md:text-4xl text-[#f9c8f5] hover:text-white pulse-glow-pink'
@@ -43,9 +44,21 @@ function Row({ list, reverse, duration, startColor }) {
   )
 }
 
-export default function SongMarquee() {
+export default function SongMarquee({ eyebrow, title }) {
   return (
     <div className="relative py-6 md:py-10 space-y-1">
+      {title && (
+        <Reveal className="max-w-4xl mx-auto px-6 text-center mb-10 md:mb-14">
+          {eyebrow && (
+            <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">
+              {eyebrow}
+            </span>
+          )}
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl text-[#f4eef7] mt-4 leading-[1.15]">
+            {title}
+          </h2>
+        </Reveal>
+      )}
       <Row list={songs} duration={34} startColor="pink" />
       <Row list={[...songs].reverse()} reverse duration={40} startColor="blue" />
 

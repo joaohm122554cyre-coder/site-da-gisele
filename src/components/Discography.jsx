@@ -1,4 +1,4 @@
-import photo from '../assets/photos/palco-microfone-1.png'
+import photo from '../assets/photos/palco-microfone-1.webp'
 import Reveal from './Reveal'
 import SongMarquee from './SongMarquee'
 

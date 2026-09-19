@@ -1,6 +1,6 @@
-import photoArco from '../assets/photos/sessao-rosa-1.jpeg'
-import retratoCasual from '../assets/photos/retrato-casual.png'
-import retratoSuave from '../assets/photos/retrato-suave.png'
+import photoArco from '../assets/photos/sessao-rosa-1.webp'
+import retratoCasual from '../assets/photos/retrato-casual.webp'
+import retratoSuave from '../assets/photos/retrato-suave.webp'
 import Marquee from './Marquee'
 
 const photos = [photoArco, retratoCasual, retratoSuave]

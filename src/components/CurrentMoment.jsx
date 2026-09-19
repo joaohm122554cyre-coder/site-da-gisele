@@ -1,4 +1,4 @@
-import photo from '../assets/photos/palco-microfone-2.jpeg'
+import photo from '../assets/photos/palco-microfone-2.webp'
 import { currentMoment } from '../lib/site-data'
 import Reveal from './Reveal'
 

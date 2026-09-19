@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import photo1 from '../assets/photos/giselli-nicolas-1.png'
-import photo2 from '../assets/photos/giselli-nicolas-2.jpeg'
-import photo3 from '../assets/photos/giselli-nicolas-3.jpeg'
+import photo1 from '../assets/photos/giselli-nicolas-1.webp'
+import photo2 from '../assets/photos/giselli-nicolas-2.webp'
+import photo3 from '../assets/photos/giselli-nicolas-3.webp'
 
 const photos = [photo1, photo2, photo3]
 

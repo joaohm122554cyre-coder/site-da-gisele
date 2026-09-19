@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import photo from '../assets/photos/retrato-jardim.png'
+import photo from '../assets/photos/retrato-jardim.webp'
 import { about } from '../lib/site-data'
 import Reveal from './Reveal'
 

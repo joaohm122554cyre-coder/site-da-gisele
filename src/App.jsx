@@ -3,6 +3,7 @@ import Nav from './components/Nav'
 import BackgroundVideo from './components/BackgroundVideo'
 import Hero from './components/Hero'
 import About from './components/About'
+import Timeline from './components/Timeline'
 import Stats from './components/Stats'
 import MeuBarquinho from './components/MeuBarquinho'
 import PhotoSessionPink from './components/PhotoSessionPink'
@@ -27,6 +28,7 @@ export default function App() {
         <Nav />
         <Hero />
         <About />
+        <Timeline />
         <Stats />
         <MeuBarquinho />
         <PhotoSessionPink />

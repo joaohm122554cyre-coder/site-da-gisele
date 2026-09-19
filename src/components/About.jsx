@@ -90,20 +90,6 @@ export default function About() {
             ))}
           </div>
         </div>
-
-        <Reveal delay={0.1}>
-          <p className="font-serif italic text-3xl md:text-5xl text-[#f4eef7]/85 leading-snug mt-24 md:mt-32 max-w-4xl">
-            &ldquo;Mais do que uma cantora,{' '}
-            <span className="not-italic font-semibold text-[#d954d1] text-[1.15em]">
-              Giselli Cristina
-            </span>{' '}
-            representa uma geração da{' '}
-            <span className="text-[#f4eef7]">música gospel brasileira</span>. Sua
-            trajetória é marcada por{' '}
-            <span className="text-[#f4eef7]">fé, excelência, credibilidade</span> e
-            canções que continuam emocionando pessoas em todo o país.&rdquo;
-          </p>
-        </Reveal>
       </div>
     </section>
   )

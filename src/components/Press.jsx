@@ -3,7 +3,7 @@ import Reveal from './Reveal'
 
 export default function Press() {
   return (
-    <section id="imprensa" className="relative py-28 md:py-40 border-t border-[#a9a0d8]/60">
+    <section id="imprensa" className="relative py-28 md:py-40">
       <div className="max-w-3xl mx-auto px-6 md:px-12 text-center">
         <Reveal>
           <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">

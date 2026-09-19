@@ -1,6 +1,6 @@
 import photo from '../assets/photos/palco-microfone-1.png'
-import { songs } from '../lib/site-data'
 import Reveal from './Reveal'
+import SongMarquee from './SongMarquee'
 
 export default function Discography() {
   return (
@@ -33,25 +33,9 @@ export default function Discography() {
         </div>
       </div>
 
-      <div className="mt-20 md:mt-28 border-y border-[#a9a0d8] py-3">
-        <div className="flex whitespace-nowrap animate-[marquee_38s_linear_infinite] hover:[animation-play-state:paused]">
-          {[...songs, ...songs].map((song, i) => (
-            <span
-              key={i}
-              className="font-display italic text-3xl md:text-5xl text-[#f4eef7]/35 mx-6 md:mx-10 shrink-0"
-            >
-              {song} <span className="text-[#f4eef7]/20 not-italic">&middot;</span>
-            </span>
-          ))}
-        </div>
+      <div className="mt-20 md:mt-28">
+        <SongMarquee />
       </div>
-
-      <style>{`
-        @keyframes marquee {
-          from { transform: translateX(0); }
-          to { transform: translateX(-50%); }
-        }
-      `}</style>
     </section>
   )
 }

@@ -1,22 +1,35 @@
 import { useEffect, useRef, useState } from 'react'
 import { animate, useInView } from 'framer-motion'
 
-export default function AnimatedNumber({ value, duration = 1.6 }) {
+function formatCompact(n) {
+  if (n >= 1_000_000_000) {
+    return `${Math.round(n / 1_000_000_000)}bi`
+  }
+  if (n >= 1_000_000) {
+    return `${Math.round(n / 1_000_000)}mi`
+  }
+  if (n >= 1_000) {
+    return `${Math.round(n / 1_000)}mil`
+  }
+  return `${Math.round(n)}`
+}
+
+export default function AnimatedCompactNumber({ value, duration = 1.6 }) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-10%' })
-  const [display, setDisplay] = useState(0)
+  const [display, setDisplay] = useState(formatCompact(0))
   const lastUpdate = useRef(0)
 
   useEffect(() => {
     if (!inView) return
     const controls = animate(0, value, {
       duration,
-      ease: 'easeOut',
+      ease: 'linear',
       onUpdate: (v) => {
         const now = performance.now()
         if (v === value || now - lastUpdate.current > 45) {
           lastUpdate.current = now
-          setDisplay(Math.round(v))
+          setDisplay(formatCompact(v))
         }
       },
     })

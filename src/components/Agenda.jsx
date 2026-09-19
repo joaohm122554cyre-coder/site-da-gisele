@@ -11,7 +11,7 @@ export default function Agenda() {
             Agenda
           </span>
           <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-[#f4eef7] mt-4">
-            Próximos <span className="italic text-[#d954d1]">shows</span>
+            Próximos <span className="italic text-[#4f7fd6]">shows</span>
           </h2>
         </Reveal>
 
@@ -26,7 +26,7 @@ export default function Agenda() {
               className="group inline-flex items-center gap-3 mt-10 text-[11px] tracking-[0.3em] uppercase text-[#f4eef7]/75 hover:text-[#f4eef7] transition-colors"
             >
               Falar com a assessoria
-              <span className="w-10 h-px bg-[#d954d1] group-hover:w-16 transition-all duration-500" />
+              <span className="w-10 h-px bg-[#4f7fd6] group-hover:w-16 transition-all duration-500" />
             </a>
           </Reveal>
         ) : (

@@ -105,6 +105,24 @@ body {
   }
 }
 
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(var(--marquee-shift) * -1));
+  }
+}
+
+@keyframes marquee-scroll-reverse {
+  from {
+    transform: translateX(calc(var(--marquee-shift) * -1));
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
 .vinyl-spin {
   animation: vinyl-rotate 3.6s linear infinite;
   animation-play-state: paused;

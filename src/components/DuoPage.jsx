@@ -137,7 +137,7 @@ function DuoBackground() {
   }, [])
 
   return (
-    <div aria-hidden="true" className="fixed inset-0 -z-20 h-lvh overflow-hidden bg-[#14122a]">
+    <div aria-hidden="true" className="fixed inset-0 -z-20 h-lvh overflow-hidden">
       <video
         ref={ref}
         src={fundoVideo}

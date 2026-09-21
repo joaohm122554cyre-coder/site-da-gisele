@@ -136,27 +136,18 @@ function TopBar() {
         <FiArrowLeft className="text-sm transition-transform group-hover:-translate-x-1" aria-hidden="true" />
         Voltar ao site
       </BackLink>
-      <Link to="/" aria-label="Giselli Cristina — página inicial" className="pointer-events-auto">
+      <Link
+        to="/"
+        aria-label="Giselli Cristina — página inicial"
+        className="pointer-events-auto rounded-full bg-[#14122a]/45 p-2 backdrop-blur-md"
+      >
         <img
           src={logo}
           alt="GC"
-          className="w-9 opacity-90 drop-shadow-[0_0_10px_rgba(217,84,209,0.35)] transition hover:opacity-100 md:w-10"
+          className="w-8 opacity-90 drop-shadow-[0_0_10px_rgba(217,84,209,0.35)] transition hover:opacity-100 md:w-9"
         />
       </Link>
     </nav>
-  )
-}
-
-function NamePill({ side, name, role }) {
-  return (
-    <div
-      className={`absolute bottom-3 rounded-xl border border-[#f4eef7]/15 bg-[#14122a]/55 px-3 py-2 backdrop-blur-md ${
-        side === 'left' ? 'left-3' : 'right-3 text-right'
-      }`}
-    >
-      <p className="font-display text-sm text-[#f4eef7]">{name}</p>
-      <p className="mt-0.5 text-[9px] uppercase tracking-[0.25em] text-[#f4eef7]/60">{role}</p>
-    </div>
   )
 }
 
@@ -170,24 +161,20 @@ function PageHero() {
 
   return (
     <header ref={ref} className="relative md:flex md:h-[100svh] md:min-h-[640px] md:items-end md:overflow-hidden">
-      <div className="relative aspect-[3/2] overflow-hidden md:absolute md:inset-0 md:aspect-auto md:[-webkit-mask-image:linear-gradient(to_bottom,#000_60%,transparent_100%)] md:[mask-image:linear-gradient(to_bottom,#000_60%,transparent_100%)]">
+      <div className="relative aspect-[4/5] overflow-hidden [-webkit-mask-image:linear-gradient(to_bottom,#000_48%,transparent_100%)] [mask-image:linear-gradient(to_bottom,#000_48%,transparent_100%)] md:absolute md:inset-0 md:aspect-auto md:[-webkit-mask-image:linear-gradient(to_bottom,#000_60%,transparent_100%)] md:[mask-image:linear-gradient(to_bottom,#000_60%,transparent_100%)]">
         <motion.img
           src={fotoRoxo}
           alt="Nicolas Henrique ao teclado e Giselli Cristina, sorrindo, sob luzes roxas"
           decoding="async"
           fetchPriority="high"
-          style={{ y: imageY, scale: 1.15 }}
-          className="absolute inset-0 h-full w-full object-cover"
+          style={isDesktop ? { y: imageY, scale: 1.15 } : undefined}
+          className="absolute inset-0 h-full w-full object-cover object-[60%_50%] md:object-center"
         />
-        <div className="md:hidden">
-          <NamePill side="left" name="Nicolas Henrique" role="Voz, teclado e violão" />
-          <NamePill side="right" name="Giselli Cristina" role="Voz" />
-        </div>
       </div>
 
       <motion.div
         style={isDesktop ? { y: textY, opacity: textOpacity } : undefined}
-        className="relative z-10 w-full px-6 pb-12 pt-10 text-center md:px-16 md:pb-20 md:pt-0 md:text-left"
+        className="relative z-10 -mt-44 w-full px-6 pb-12 text-center md:mt-0 md:px-16 md:pb-20 md:text-left"
       >
         <motion.span
           initial={{ opacity: 0, y: 24 }}
@@ -212,7 +199,7 @@ function PageHero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.1, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
-          className="mx-auto mt-5 max-w-xl font-serif text-xl italic leading-relaxed text-[#f4eef7]/80 [text-shadow:0_2px_24px_rgba(20,18,42,0.9)] md:mx-0 md:text-2xl"
+          className="mx-auto mt-5 max-w-xl text-balance font-serif text-xl italic leading-snug text-[#f4eef7]/80 [text-shadow:0_2px_24px_rgba(20,18,42,0.9)] md:mx-0 md:text-2xl md:leading-relaxed"
         >
           Uma mãe, um filho e a música como ponto de encontro.
         </motion.p>

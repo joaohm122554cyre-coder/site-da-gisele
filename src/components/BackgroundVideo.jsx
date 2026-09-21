@@ -87,7 +87,7 @@ export default function BackgroundVideo({ switchRef }) {
   const statsOpacity = useTransform(scrollYProgress, [0, 1], [0, 1])
 
   return (
-    <div className="fixed inset-0 h-lvh -z-20 overflow-hidden bg-[#14122a]">
+    <div className="fixed inset-0 h-lvh -z-20 overflow-hidden">
       <motion.video
         ref={heroRef}
         src={heroVideo}

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useInView, useReducedMotion } from 'framer-motion'
 import photoArco from '../assets/photos/sessao-rosa-1.webp'
 import cenaSentada from '../assets/photos/ensaio/dsc02660.webp'
@@ -25,9 +25,7 @@ const photos = [
 ]
 
 const SLIDE_SECONDS = 5
-const OFFSETS = [-2, -1, 0, 1, 2, 3]
 const pad = (n) => String(n).padStart(2, '0')
-const growOf = (rel) => (rel === 0 ? 3.4 : rel === 1 || rel === 2 ? 1 : 0)
 
 const arrowClass =
   'flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#f4eef7]/20 text-[#f4eef7]/60 transition-colors hover:border-[#f4eef7]/50 hover:text-[#f4eef7]'
@@ -35,16 +33,28 @@ const arrowClass =
 export default function PhotoSessionPink() {
   const [active, setActive] = useState(0)
   const [hovering, setHovering] = useState(false)
+  const [narrow, setNarrow] = useState(2)
   const stripRef = useRef(null)
   const inView = useInView(stripRef, { margin: '-15% 0px' })
   const reduceMotion = useReducedMotion()
   const running = inView && !hovering
 
+  useEffect(() => {
+    const el = stripRef.current
+    if (!el) return
+    const measure = () =>
+      setNarrow(Math.min(photos.length - 3, Math.max(2, Math.floor((el.clientWidth - 700) / 280))))
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
   const go = (dir) => setActive((i) => (i + dir + photos.length) % photos.length)
 
   return (
     <section className="relative pt-4 md:pt-8 pb-20 md:pb-28">
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
+      <div className="max-w-[max(80rem,calc(100vw_-_3.5rem))] mx-auto px-6 md:px-12">
         <Reveal>
           <div className="flex items-center justify-between mb-6 md:mb-8">
             <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">Ensaio</span>
@@ -69,18 +79,17 @@ export default function PhotoSessionPink() {
             ref={stripRef}
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}
-            className="relative flex flex-col md:flex-row h-[34rem] md:h-[36rem] md:-mr-3"
+            className="relative flex flex-col md:flex-row h-[34rem] md:h-[clamp(36rem,calc((100vw_-_9.5rem)_/_2.1),90vh)] md:-mr-3"
           >
             <div
               aria-hidden="true"
               className="pointer-events-none absolute -inset-x-10 -bottom-16 h-56 bg-[radial-gradient(ellipse_at_center,rgba(217,84,209,0.16),transparent_65%)]"
             />
 
-            {OFFSETS.map((rel) => {
-              const idx = (active + rel + photos.length) % photos.length
-              const photo = photos[idx]
+            {photos.map((photo, idx) => {
+              const rel = ((idx - active + 2 + photos.length) % photos.length) - 2
               const isActive = rel === 0
-              const shown = rel >= 0 && rel <= 2
+              const shown = rel >= 0 && rel <= narrow
               return (
                 <button
                   key={idx}
@@ -94,7 +103,8 @@ export default function PhotoSessionPink() {
                     shown ? '' : 'pointer-events-none'
                   }`}
                   style={{
-                    flexGrow: growOf(rel),
+                    order: rel,
+                    flexGrow: isActive ? 3.4 : shown ? 1 : 0,
                     '--gap': shown ? '0.75rem' : '0rem',
                     opacity: shown ? 1 : 0,
                     boxShadow: isActive

@@ -137,7 +137,7 @@ function DuoBackground() {
   }, [])
 
   return (
-    <div aria-hidden="true" className="fixed inset-0 -z-20 overflow-hidden">
+    <div aria-hidden="true" className="fixed inset-0 -z-20 h-lvh overflow-hidden bg-[#14122a]">
       <video
         ref={ref}
         src={fundoVideo}
@@ -159,7 +159,7 @@ function TopBar() {
   return (
     <nav
       aria-label="Navegação"
-      className="pointer-events-none fixed inset-x-0 top-0 z-50 flex items-center justify-between px-4 py-4 md:px-10 md:py-6"
+      className="pointer-events-none fixed inset-x-0 top-0 z-50 flex items-center justify-between px-4 pb-4 pt-[calc(1rem+env(safe-area-inset-top))] md:px-10 md:py-6"
     >
       <BackLink className="pointer-events-auto group inline-flex items-center gap-2.5 rounded-full border border-[#f4eef7]/20 bg-[#14122a]/55 py-2.5 pl-3.5 pr-5 text-[10px] uppercase tracking-[0.28em] text-[#f4eef7]/90 backdrop-blur-md transition hover:border-[#d954d1]/60 hover:bg-[#14122a]/75">
         <FiArrowLeft className="text-sm transition-transform group-hover:-translate-x-1" aria-hidden="true" />

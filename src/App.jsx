@@ -10,6 +10,7 @@ import PhotoSessionPink from './components/PhotoSessionPink'
 import CurrentMoment from './components/CurrentMoment'
 import Videos from './components/Videos'
 import Gallery from './components/Gallery'
+import PhotoSessionBlue from './components/PhotoSessionBlue'
 import Divider from './components/Divider'
 import Agenda from './components/Agenda'
 import Hire from './components/Hire'
@@ -38,6 +39,7 @@ export default function App() {
         </div>
         <Videos />
         <Gallery />
+        <PhotoSessionBlue />
         <Divider />
         <Agenda />
         <Hire />

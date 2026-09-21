@@ -17,16 +17,17 @@ html, body, #root {
   width: 100%;
 }
 
+/* O fundo fica no html (e não no body) para ir para trás dos vídeos fixos com z-index negativo;
+   um fundo no body cobriria os vídeos. A cor sólida é a que o iOS usa para tingir as barras. */
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
   background-color: #14122a;
+  background-image: linear-gradient(180deg, #14122a 0%, #1c1638 20%, #241a42 45%, #2c1a48 65%, #241640 85%, #170f28 100%);
   color-scheme: dark;
 }
 
 body {
-  background: linear-gradient(180deg, #14122a 0%, #1c1638 20%, #241a42 45%, #2c1a48 65%, #241640 85%, #170f28 100%);
-  background-color: #14122a;
   color: #f4eef7;
   font-family: var(--font-body);
   overflow-x: clip;

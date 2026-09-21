@@ -115,6 +115,64 @@ body {
   text-shadow: 0 0 32px rgba(79, 127, 214, 0.65), 0 0 3px rgba(79, 127, 214, 0.6);
 }
 
+/* Luz que percorre o contorno do enfeite, do centro para as laterais */
+.ornament-shine {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  background-image:
+    linear-gradient(90deg, transparent, #ffffff 40%, #ffffff 60%, transparent),
+    linear-gradient(90deg, transparent, #ffffff 50%, transparent),
+    linear-gradient(90deg, transparent, #a9ceff 50%, transparent);
+  background-size: 16% 100%, 32% 100%, 58% 100%;
+  background-repeat: no-repeat;
+  background-position: 50% 0, 50% 0, 50% 0;
+  opacity: 0;
+  animation: ornament-shine 2s ease-out 1.8s infinite;
+}
+
+.ornament-glow {
+  filter: drop-shadow(0 0 14px rgba(79, 127, 214, 0.45));
+}
+
+.ornament-shine-left {
+  clip-path: inset(0 50% 0 0);
+  --shine-end: 0%;
+}
+
+.ornament-shine-right {
+  clip-path: inset(0 0 0 50%);
+  --shine-end: 100%;
+}
+
+@keyframes ornament-shine {
+  0% {
+    background-position: 50% 0, 50% 0, 50% 0;
+    opacity: 0;
+  }
+  6% {
+    opacity: 1;
+  }
+  60% {
+    background-position: var(--shine-end) 0, var(--shine-end) 0, var(--shine-end) 0;
+    opacity: 0;
+  }
+  100% {
+    background-position: var(--shine-end) 0, var(--shine-end) 0, var(--shine-end) 0;
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ornament-shine {
+    animation: none;
+  }
+}
+
 @keyframes marquee-scroll {
   from {
     transform: translateX(0);

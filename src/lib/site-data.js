@@ -1,7 +1,7 @@
 export const artist = {
   name: 'Giselli Cristina',
   tagline: 'Uma das vozes mais importantes da música gospel brasileira',
-  instagram: '@gisellicristinaoficial',
+  instagram: '@gisellicristinacantora',
   youtube: 'Giselli Cristina',
   label: 'Maximus Records',
 }
@@ -47,17 +47,17 @@ export const currentMoment = {
 }
 
 export const streaming = [
-  { name: 'Spotify', url: null },
-  { name: 'Apple Music', url: null },
-  { name: 'YouTube', url: null },
-  { name: 'Amazon Music', url: null },
-  { name: 'Deezer', url: null },
+  { name: 'Spotify', url: 'https://open.spotify.com/artist/3UZ4OGYI3ycaPT42PUS25B' },
+  { name: 'Apple Music', url: 'https://music.apple.com/br/artist/giselli-cristina/688705142' },
+  { name: 'YouTube', url: 'https://www.youtube.com/@gisellicristinaoficial' },
+  { name: 'Amazon Music', url: 'https://music.amazon.com.br/artists/B00EKQ8ZHK/giselli-cristina' },
+  { name: 'Deezer', url: 'https://www.deezer.com/en/artist/5098383' },
 ]
 
 export const contact = {
   title: 'Contato para Imprensa, Entrevista e Eventos',
   label: 'Maximus Records',
-  instagram: '@gisellicristinaoficial',
+  instagram: '@gisellicristinacantora',
   youtube: 'Giselli Cristina',
 }
 
@@ -100,7 +100,6 @@ export const press = {
 }
 
 export const socials = [
-  { name: 'Instagram', handle: '@gisellicristinaoficial', url: null },
-  { name: 'YouTube', handle: 'Giselli Cristina', url: null },
-  { name: 'Spotify', handle: null, url: null },
+  { name: 'Instagram', handle: '@gisellicristinacantora', url: 'https://www.instagram.com/gisellicristinacantora/' },
+  { name: 'YouTube', handle: 'Giselli Cristina', url: 'https://www.youtube.com/@gisellicristinaoficial' },
 ]

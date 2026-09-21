@@ -1,17 +1,22 @@
 import { hire } from '../lib/site-data'
 import Reveal from './Reveal'
+import ZigzagLine from './ZigzagLine'
 
 export default function Hire() {
   return (
     <section id="contrate" className="relative py-32 md:py-48">
-      <div className="relative z-10 max-w-3xl mx-auto px-6 md:px-12 text-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 text-center">
         <Reveal>
           <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">
             Contrate
           </span>
-          <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-[#f4eef7] mt-4">
-            {hire.title}
-          </h2>
+          <div className="mt-4 flex items-center gap-2">
+            <ZigzagLine side="left" />
+            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-[#f4eef7]">
+              {hire.title}
+            </h2>
+            <ZigzagLine side="right" />
+          </div>
           <p className="mt-6 text-sm md:text-base text-[#f4eef7]/65 max-w-md mx-auto">
             {hire.description}
           </p>

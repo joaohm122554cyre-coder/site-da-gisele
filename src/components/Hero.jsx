@@ -67,7 +67,7 @@ export default function Hero() {
               className="group inline-flex items-center gap-3 text-[11px] tracking-[0.3em] uppercase text-white/90 hover:text-white transition-colors [text-shadow:0_1px_14px_rgba(10,8,25,0.85)]"
             >
               A história
-              <span className="w-10 h-px bg-[#d954d1] group-hover:w-16 transition-all duration-500" />
+              <span className="w-10 h-px bg-[#4f7fd6] group-hover:w-16 transition-all duration-500" />
             </a>
           </motion.div>
         </div>

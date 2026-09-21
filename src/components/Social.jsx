@@ -1,4 +1,5 @@
 import { SiSpotify, SiApplemusic, SiYoutube, SiDeezer, SiInstagram } from 'react-icons/si'
+import { FaAmazon } from 'react-icons/fa'
 import { socials, streaming } from '../lib/site-data'
 import Reveal from './Reveal'
 
@@ -6,6 +7,7 @@ const icons = {
   Spotify: SiSpotify,
   'Apple Music': SiApplemusic,
   YouTube: SiYoutube,
+  'Amazon Music': FaAmazon,
   Deezer: SiDeezer,
   Instagram: SiInstagram,
 }
@@ -25,7 +27,7 @@ function Item({ name, label, url }) {
         href={url}
         target="_blank"
         rel="noreferrer"
-        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-[#f4eef7]/20 text-sm text-[#f4eef7]/80 hover:bg-[#d954d1] hover:text-[#14122a] hover:border-[#d954d1] transition-colors"
+        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-[#f4eef7]/20 text-sm text-[#f4eef7]/80 hover:bg-[#4f7fd6] hover:text-[#14122a] hover:border-[#4f7fd6] transition-colors"
       >
         {content}
       </a>
@@ -47,7 +49,7 @@ export default function Social() {
             Siga e ouça
           </span>
           <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-[#f4eef7] mt-4 mb-12">
-            Redes <span className="italic text-[#d954d1]">e plataformas</span>
+            Redes <span className="italic text-[#4f7fd6]">e plataformas</span>
           </h2>
         </Reveal>
 

@@ -26,7 +26,7 @@ export default function Press() {
               className="group inline-flex items-center gap-3 mt-10 text-[11px] tracking-[0.3em] uppercase text-[#f4eef7]/80 hover:text-[#f4eef7] transition-colors"
             >
               Baixar mídia kit
-              <span className="w-10 h-px bg-[#d954d1] group-hover:w-16 transition-all duration-500" />
+              <span className="w-10 h-px bg-[#4f7fd6] group-hover:w-16 transition-all duration-500" />
             </a>
           ) : (
             <p className="mt-10 text-[11px] uppercase tracking-[0.2em] text-[#f4eef7]/40">

@@ -1,0 +1,3 @@
+{
+  "rewrites": [{ "source": "/dupla", "destination": "/index.html" }]
+}

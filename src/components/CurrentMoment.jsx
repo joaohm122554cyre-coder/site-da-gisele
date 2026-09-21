@@ -6,6 +6,7 @@ import { FiArrowRight } from 'react-icons/fi'
 import photoDuo from '../assets/photos/dupla-cantando.webp'
 import { currentMoment } from '../lib/site-data'
 import Reveal from './Reveal'
+import Link from './Link'
 
 // Recortes dos rostos (fundo ampliado 3x, centrado em cada rosto).
 const faces = [
@@ -75,8 +76,10 @@ export default function CurrentMoment() {
           </div>
 
           <Reveal delay={0.3} className="mt-12">
-            <a
-              href="#dupla"
+            <Link
+              to="/dupla"
+              id="conheca-dupla"
+              returnTo="conheca-dupla"
               className="group inline-flex items-center gap-4 rounded-full border border-[#d954d1]/45 bg-[#d954d1]/10 py-2 pl-2 pr-3 backdrop-blur-sm transition-all duration-500 hover:border-[#d954d1] hover:bg-[#d954d1]/20 hover:shadow-[0_0_40px_-8px_rgba(217,84,209,0.7)]"
             >
               <span className="flex -space-x-3" aria-hidden="true">
@@ -99,7 +102,7 @@ export default function CurrentMoment() {
               <span className="grid h-9 w-9 place-items-center rounded-full bg-[#d954d1] text-white transition-transform duration-500 group-hover:translate-x-1">
                 <FiArrowRight aria-hidden="true" />
               </span>
-            </a>
+            </Link>
           </Reveal>
         </div>
       </div>

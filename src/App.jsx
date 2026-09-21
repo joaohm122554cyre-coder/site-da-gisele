@@ -7,7 +7,6 @@ import Timeline from './components/Timeline'
 import Stats from './components/Stats'
 import MeuBarquinho from './components/MeuBarquinho'
 import CurrentMoment from './components/CurrentMoment'
-import Duo from './components/Duo'
 import Videos from './components/Videos'
 import Gallery from './components/Gallery'
 import PhotoSessionBlue from './components/PhotoSessionBlue'
@@ -36,7 +35,6 @@ export default function App() {
         <div ref={switchRef}>
           <CurrentMoment />
         </div>
-        <Duo />
         <Videos />
         <Gallery />
         <PhotoSessionBlue />

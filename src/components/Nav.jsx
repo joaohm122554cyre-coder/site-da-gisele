@@ -7,7 +7,6 @@ const links = [
   { id: 'sobre', href: '#sobre', label: 'Sobre' },
   { id: 'historia', href: '#historia', label: 'História' },
   { id: 'musicas', href: '#musicas', label: 'Músicas' },
-  { id: 'dupla', href: '#dupla', label: 'A dupla' },
   { id: 'videos', href: '#videos', label: 'Vídeos' },
   { id: 'galeria', href: '#galeria', label: 'Galeria' },
   { id: 'agenda', href: '#agenda', label: 'Agenda' },

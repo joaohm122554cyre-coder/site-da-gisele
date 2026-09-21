@@ -6,7 +6,6 @@ import About from './components/About'
 import Timeline from './components/Timeline'
 import Stats from './components/Stats'
 import MeuBarquinho from './components/MeuBarquinho'
-import PhotoSessionPink from './components/PhotoSessionPink'
 import CurrentMoment from './components/CurrentMoment'
 import Videos from './components/Videos'
 import Gallery from './components/Gallery'
@@ -30,7 +29,6 @@ export default function App() {
         <Nav />
         <Hero />
         <About />
-        <PhotoSessionPink />
         <Timeline />
         <Stats />
         <MeuBarquinho />

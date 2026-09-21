@@ -11,15 +11,16 @@ import retratoSorrindo from '../assets/photos/ensaio/dsc02702.webp'
 import retratoSorrindo2 from '../assets/photos/ensaio/dsc02698.webp'
 import Reveal from './Reveal'
 
+// Sequência de expressões: sorriso, canto sereno, emoção, louvor com as mãos erguidas e sorriso final.
 const photos = [
-  { src: cenaBracoErguido, alt: 'Giselli Cristina cantando com o braço erguido diante do arco rosa', position: '50% 30%' },
-  { src: cenaSentada, alt: 'Giselli Cristina sentada diante do arco iluminado em rosa', position: '50% 30%' },
   { src: retratoSorrindo, alt: 'Giselli Cristina sorrindo, sentada diante do arco em rosa', position: '50% 30%' },
-  { src: cenaInclinada, alt: 'Giselli Cristina cantando de olhos fechados, inclinada para o lado', position: '50% 30%' },
-  { src: cenaMaoErguida, alt: 'Giselli Cristina cantando com a mão erguida', position: '56% 30%' },
-  { src: cenaMaoNoCabelo, alt: 'Giselli Cristina cantando com a mão junto ao cabelo', position: '50% 30%' },
   { src: retratoSorrindo2, alt: 'Giselli Cristina sorrindo para a câmera diante do arco em rosa', position: '50% 30%' },
   { src: cenaCantando, alt: 'Giselli Cristina cantando sentada diante do arco em rosa', position: '50% 30%' },
+  { src: cenaSentada, alt: 'Giselli Cristina sentada diante do arco iluminado em rosa', position: '50% 30%' },
+  { src: cenaMaoNoCabelo, alt: 'Giselli Cristina cantando com a mão junto ao cabelo', position: '50% 30%' },
+  { src: cenaInclinada, alt: 'Giselli Cristina cantando de olhos fechados, inclinada para o lado', position: '50% 30%' },
+  { src: cenaBracoErguido, alt: 'Giselli Cristina cantando com o braço erguido diante do arco rosa', position: '50% 30%' },
+  { src: cenaMaoErguida, alt: 'Giselli Cristina cantando com a mão erguida', position: '56% 30%' },
   { src: photoArco, alt: 'Giselli Cristina sorrindo diante de um arco iluminado em rosa', position: '50% 12%' },
 ]
 
@@ -116,13 +117,6 @@ export default function PhotoSessionPink() {
                     className="absolute inset-0 bg-[#14122a] transition-opacity duration-700 group-hover:opacity-50"
                     style={{ opacity: isActive ? 0 : 0.6 }}
                   />
-                  <span
-                    aria-hidden="true"
-                    className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#14122a]/75 to-transparent"
-                  />
-                  <span className="absolute bottom-4 left-5 font-display italic text-2xl md:text-3xl text-[#f4eef7]/90 [text-shadow:0_1px_14px_rgba(10,8,25,0.7)]">
-                    {pad(idx + 1)}
-                  </span>
 
                   {isActive && !reduceMotion && (
                     <span

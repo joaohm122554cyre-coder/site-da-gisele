@@ -30,10 +30,10 @@ export default function App() {
         <Nav />
         <Hero />
         <About />
+        <PhotoSessionPink />
         <Timeline />
         <Stats />
         <MeuBarquinho />
-        <PhotoSessionPink />
         <div ref={switchRef}>
           <CurrentMoment />
         </div>

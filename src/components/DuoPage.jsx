@@ -24,7 +24,7 @@ const songs = [
     key: 'quero-adora-lo',
     month: 'Fevereiro de 2025',
     title: 'Quero Adorá-lo',
-    text: 'Registro ao vivo na Assembleia de Deus em Ponta Grossa, com o coral de mulheres da UFADPG e a participação dos filhos Rafaelli Cristina e Nicolas Henrique.',
+    text: 'Registro ao vivo na Assembleia de Deus em Ponta Grossa, com o **coral de mulheres da UFADPG** e a participação dos filhos Rafaelli Cristina e Nicolas Henrique.',
     views: 9699384,
     image: queroAdoraLoCena,
     alt: 'Giselli Cristina cantando ao vivo em “Quero Adorá-lo”',
@@ -35,7 +35,7 @@ const songs = [
     key: 'adorar',
     month: 'Abril de 2025',
     title: 'Eu Só Quero Adorar',
-    text: 'O clipe que reuniu Giselli e Nicolas Henrique e conquistou o Single de Ouro.',
+    text: 'O clipe que reuniu Giselli e Nicolas Henrique e conquistou o **Single de Ouro**.',
     views: 17993828,
     image: azulClipe,
     alt: 'Giselli Cristina e Nicolas Henrique ao teclado no clipe de “Eu Só Quero Adorar”',
@@ -46,7 +46,7 @@ const songs = [
     key: 'pensando-bem',
     month: 'Setembro de 2025',
     title: 'Pensando Bem',
-    text: 'Um dueto intimista, de mãe e filho, em versão acústica.',
+    text: 'Um dueto intimista, de **mãe e filho**, em versão acústica.',
     views: 2459514,
     image: pensandoBemCena,
     alt: 'Nicolas Henrique ao violão e Giselli Cristina em “Pensando Bem”',
@@ -58,11 +58,40 @@ const songs = [
 const totalViews = songs.reduce((sum, s) => sum + s.views, 0)
 const millions = (n) => `${(Math.floor(n / 1e5) / 10).toLocaleString('pt-BR')} mi`
 
+// Marcação simples: **frase** vira ênfase (branco, marca-texto rosa); [Nome] vira destaque grande em rosa.
 const paragraphs = [
-  'Giselli Cristina construiu, ao longo de quase três décadas, uma das trajetórias mais respeitadas da música gospel brasileira. Em 2025, essa história ganhou uma voz a mais: a do filho, Nicolas Henrique, que esteve ao lado dela em três registros que marcaram o ano.',
-  'Ele canta e toca teclado e violão; ela, na voz. Juntos, gravaram o clipe de “Eu Só Quero Adorar”, que rendeu o Single de Ouro, participaram do registro ao vivo de “Quero Adorá-lo”, com o coral de mulheres da UFADPG, e se encontraram num dueto acústico, “Pensando Bem”.',
-  'Foi na música que os dois se encontraram diante do público — e o público respondeu. Só nesses três registros, são mais de 30 milhões de visualizações.',
+  'Giselli Cristina construiu, ao longo de **quase três décadas**, uma das trajetórias mais respeitadas da música gospel brasileira. Em 2025, essa história ganhou **uma voz a mais**: a do filho, [Nicolas Henrique], que esteve ao lado dela em **três registros** que marcaram o ano.',
+  'Ele canta e toca teclado e violão; ela, na voz. Juntos, gravaram o clipe de [Eu Só Quero Adorar], que rendeu o **Single de Ouro**, participaram do registro ao vivo de [Quero Adorá-lo], com o coral de mulheres da UFADPG, e se encontraram num dueto acústico, [Pensando Bem].',
+  'Foi na música que os dois se encontraram diante do público. E **o público respondeu**: só nesses três registros, são **mais de 30 milhões de visualizações**.',
 ]
+
+const MARKUP = /(\*\*[^*]+\*\*|\[[^\]]+\])/g
+
+function Rich({ text }) {
+  return text.split(MARKUP).map((part, i) => {
+    if (part.startsWith('**')) {
+      return (
+        <strong
+          key={i}
+          className="px-[0.1em] font-semibold text-white [-webkit-box-decoration-break:clone] [background:linear-gradient(transparent_62%,rgba(217,84,209,0.42)_62%,rgba(217,84,209,0.42)_94%,transparent_94%)] [box-decoration-break:clone]"
+        >
+          {part.slice(2, -2)}
+        </strong>
+      )
+    }
+    if (part.startsWith('[')) {
+      return (
+        <em
+          key={i}
+          className="font-display text-[1.16em] italic text-[#fbcdf6] [text-shadow:0_0_26px_rgba(217,84,209,0.65)]"
+        >
+          {part.slice(1, -1)}
+        </em>
+      )
+    }
+    return part
+  })
+}
 
 const numbers = [
   { value: 3, label: 'registros juntos em 2025', tone: 'stat-pink' },
@@ -199,7 +228,7 @@ function PageHero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.1, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
-          className="mx-auto mt-5 max-w-xl text-balance font-serif text-xl italic leading-snug text-[#f4eef7]/80 [text-shadow:0_2px_24px_rgba(20,18,42,0.9)] md:mx-0 md:text-2xl md:leading-relaxed"
+          className="mx-auto mt-5 max-w-xl text-balance font-fraunces text-[1.15rem] italic leading-snug text-[#f4eef7]/95 [text-shadow:0_2px_24px_rgba(20,18,42,0.9)] md:mx-0 md:text-2xl md:leading-relaxed"
         >
           Uma mãe, um filho e a música como ponto de encontro.
         </motion.p>
@@ -256,8 +285,10 @@ function SongCard({ song, index, fill }) {
 
       <p className="mt-5 font-display text-2xl italic lining-nums text-[#d954d1]">{song.month}</p>
       <h3 className="mt-1 font-display text-2xl text-[#f4eef7] md:text-[1.7rem]">{song.title}</h3>
-      <p className="mt-3 font-serif text-lg leading-relaxed text-[#f4eef7]/75">{song.text}</p>
-      <p className="mt-4 text-[11px] uppercase tracking-[0.25em] text-[#f4eef7]/55">
+      <p className="mt-3 font-fraunces text-base leading-[1.75] text-[#f4eef7]/90 [text-shadow:0_1px_14px_rgba(20,18,42,0.85)] md:text-[1.05rem]">
+        <Rich text={song.text} />
+      </p>
+      <p className="mt-4 text-xs uppercase tracking-[0.22em] text-[#f4eef7]/80">
         <span className="stat-blue mr-2 font-display text-2xl normal-case italic tracking-normal lining-nums">
           {millions(song.views)}
         </span>
@@ -320,18 +351,18 @@ export default function DuoPage() {
                   {paragraphs.map((p, i) => (
                     <Reveal key={i} delay={i * 0.08}>
                       <p
-                        className={`font-serif text-lg lining-nums leading-relaxed text-[#f4eef7]/75 md:text-xl ${
+                        className={`font-fraunces text-[1.0625rem] lining-nums leading-[1.8] text-[#f4eef7]/95 [text-shadow:0_1px_14px_rgba(20,18,42,0.85)] md:text-[1.2rem] ${
                           i === 0 ? 'drop-cap' : ''
                         }`}
                       >
-                        {p}
+                        <Rich text={p} />
                       </p>
                     </Reveal>
                   ))}
                 </div>
 
                 <Reveal delay={0.1}>
-                  <div className="mt-12 grid grid-cols-3 gap-4 border-t border-[#f4eef7]/10 pt-8 md:gap-8">
+                  <div className="mt-12 grid grid-cols-[0.9fr_1.5fr_0.9fr] gap-4 border-t border-[#f4eef7]/10 pt-8 md:grid-cols-3 md:gap-8">
                     {numbers.map((n) => (
                       <div key={n.label}>
                         <p
@@ -341,7 +372,7 @@ export default function DuoPage() {
                           <AnimatedNumber value={n.value} />
                           {n.suffix && <span className="ml-1 text-[0.42em]">{n.suffix}</span>}
                         </p>
-                        <p className="mt-4 text-[10px] uppercase leading-relaxed tracking-[0.2em] text-[#f4eef7]/60 md:text-[11px]">
+                        <p className="mt-4 text-[11px] uppercase leading-relaxed tracking-[0.12em] text-[#f4eef7]/80 md:text-xs md:tracking-[0.18em]">
                           {n.label}
                         </p>
                       </div>
@@ -373,7 +404,7 @@ export default function DuoPage() {
             </div>
 
             <Reveal className="mb-12 mt-24 text-center md:mb-16 md:mt-40">
-              <span className="text-[11px] uppercase tracking-[0.4em] text-[#f4eef7]/50">Juntos na música</span>
+              <span className="text-xs uppercase tracking-[0.4em] text-[#f4eef7]/75">Juntos na música</span>
               <h2 className="mt-4 font-display text-3xl leading-[1.15] text-[#f4eef7] sm:text-4xl md:text-5xl">
                 Três registros, <span className="italic text-[#d954d1]">uma só família</span>
               </h2>
@@ -382,7 +413,7 @@ export default function DuoPage() {
             <Songs />
 
             <Reveal className="mt-24 text-center md:mt-36">
-              <p className="font-serif text-2xl italic text-[#f4eef7]/80 md:text-3xl">Ouça a dupla, do começo ao fim.</p>
+              <p className="font-fraunces text-2xl italic text-[#f4eef7]/95 md:text-3xl">Ouça a dupla, do começo ao fim.</p>
               <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                 <Link
                   to="/#musicas"
@@ -401,7 +432,7 @@ export default function DuoPage() {
                   Ver os vídeos
                 </Link>
               </div>
-              <BackLink className="group mt-10 inline-flex items-center gap-2.5 text-[11px] uppercase tracking-[0.3em] text-[#f4eef7]/60 transition hover:text-[#f4eef7]">
+              <BackLink className="group mt-10 inline-flex items-center gap-2.5 text-[11px] uppercase tracking-[0.3em] text-[#f4eef7]/80 transition hover:text-[#f4eef7]">
                 <FiArrowLeft className="transition-transform group-hover:-translate-x-1" aria-hidden="true" />
                 Voltar ao site
               </BackLink>

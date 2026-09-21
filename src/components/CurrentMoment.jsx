@@ -2,8 +2,16 @@ import photoStage from '../assets/photos/palco-microfone-2.webp'
 import photoKeys from '../assets/photos/giselli-nicolas-teclado.webp'
 import photoGuitar from '../assets/photos/giselli-nicolas-violao.webp'
 import photoGold from '../assets/photos/giselli-nicolas-disco-ouro.webp'
+import { FiArrowRight } from 'react-icons/fi'
+import photoDuo from '../assets/photos/dupla-cantando.webp'
 import { currentMoment } from '../lib/site-data'
 import Reveal from './Reveal'
+
+// Recortes dos rostos (fundo ampliado 3x, centrado em cada rosto).
+const faces = [
+  { name: 'Giselli', position: '8% 21%' },
+  { name: 'Nicolas', position: '96% 12%' },
+]
 
 function Photo({ src, alt, ratio, delay = 0 }) {
   return (
@@ -65,6 +73,34 @@ export default function CurrentMoment() {
               </Reveal>
             ))}
           </div>
+
+          <Reveal delay={0.3} className="mt-12">
+            <a
+              href="#dupla"
+              className="group inline-flex items-center gap-4 rounded-full border border-[#d954d1]/45 bg-[#d954d1]/10 py-2 pl-2 pr-3 backdrop-blur-sm transition-all duration-500 hover:border-[#d954d1] hover:bg-[#d954d1]/20 hover:shadow-[0_0_40px_-8px_rgba(217,84,209,0.7)]"
+            >
+              <span className="flex -space-x-3" aria-hidden="true">
+                {faces.map((face) => (
+                  <span
+                    key={face.name}
+                    className="block h-11 w-11 rounded-full ring-2 ring-[#1c1638]"
+                    style={{
+                      backgroundImage: `url(${photoDuo})`,
+                      backgroundSize: '300%',
+                      backgroundPosition: face.position,
+                    }}
+                  />
+                ))}
+              </span>
+              <span className="flex flex-col text-left leading-tight">
+                <span className="text-[10px] uppercase tracking-[0.3em] text-[#f4eef7]/55">Giselli &amp; Nicolas</span>
+                <span className="mt-1 font-display text-lg italic text-[#f4eef7] md:text-xl">Conheça essa dupla</span>
+              </span>
+              <span className="grid h-9 w-9 place-items-center rounded-full bg-[#d954d1] text-white transition-transform duration-500 group-hover:translate-x-1">
+                <FiArrowRight aria-hidden="true" />
+              </span>
+            </a>
+          </Reveal>
         </div>
       </div>
     </section>

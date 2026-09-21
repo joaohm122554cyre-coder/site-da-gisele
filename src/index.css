@@ -17,6 +17,8 @@ html, body, #root {
   width: 100%;
 }
 
+/* O fundo fica no html (e não no body) para ir para trás dos vídeos fixos com z-index negativo;
+   um fundo no body cobriria os vídeos. A cor sólida é a que o iOS usa para tingir as barras. */
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;

@@ -26,6 +26,7 @@ html {
 }
 
 body {
+  padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
   color: #f4eef7;
   font-family: var(--font-body);
   overflow-x: clip;

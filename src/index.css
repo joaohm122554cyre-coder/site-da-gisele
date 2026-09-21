@@ -20,10 +20,13 @@ html, body, #root {
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
+  background-color: #14122a;
+  color-scheme: dark;
 }
 
 body {
   background: linear-gradient(180deg, #14122a 0%, #1c1638 20%, #241a42 45%, #2c1a48 65%, #241640 85%, #170f28 100%);
+  background-color: #14122a;
   color: #f4eef7;
   font-family: var(--font-body);
   overflow-x: clip;

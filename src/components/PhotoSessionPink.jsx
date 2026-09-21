@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react'
 import { useInView, useReducedMotion } from 'framer-motion'
 import photoArco from '../assets/photos/sessao-rosa-1.webp'
-import photoJardim from '../assets/photos/retrato-suave.webp'
 import cenaSentada from '../assets/photos/ensaio/dsc02660.webp'
 import cenaBracoErguido from '../assets/photos/ensaio/dsc02679.webp'
 import cenaInclinada from '../assets/photos/ensaio/dsc02677.webp'
@@ -13,9 +12,7 @@ import retratoSorrindo2 from '../assets/photos/ensaio/dsc02698.webp'
 import Reveal from './Reveal'
 
 const photos = [
-  { src: photoArco, alt: 'Giselli Cristina sorrindo diante de um arco iluminado em rosa', position: '50% 12%' },
   { src: cenaBracoErguido, alt: 'Giselli Cristina cantando com o braço erguido diante do arco rosa', position: '50% 30%' },
-  { src: photoJardim, alt: 'Giselli Cristina em um jardim de rosas', position: '50% 8%' },
   { src: cenaSentada, alt: 'Giselli Cristina sentada diante do arco iluminado em rosa', position: '50% 30%' },
   { src: retratoSorrindo, alt: 'Giselli Cristina sorrindo, sentada diante do arco em rosa', position: '50% 30%' },
   { src: cenaInclinada, alt: 'Giselli Cristina cantando de olhos fechados, inclinada para o lado', position: '50% 30%' },
@@ -23,6 +20,7 @@ const photos = [
   { src: cenaMaoNoCabelo, alt: 'Giselli Cristina cantando com a mão junto ao cabelo', position: '50% 30%' },
   { src: retratoSorrindo2, alt: 'Giselli Cristina sorrindo para a câmera diante do arco em rosa', position: '50% 30%' },
   { src: cenaCantando, alt: 'Giselli Cristina cantando sentada diante do arco em rosa', position: '50% 30%' },
+  { src: photoArco, alt: 'Giselli Cristina sorrindo diante de um arco iluminado em rosa', position: '50% 12%' },
 ]
 
 const SLIDE_SECONDS = 5

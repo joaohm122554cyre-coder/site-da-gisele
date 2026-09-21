@@ -142,13 +142,6 @@ function MobileCarousel({ active, setActive, inView }) {
                     className="absolute inset-0 bg-[#14122a] transition-opacity duration-[1200ms]"
                     style={{ opacity: isActive ? 0 : 0.5 }}
                   />
-                  <span
-                    aria-hidden="true"
-                    className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#14122a]/75 to-transparent"
-                  />
-                  <span className="absolute bottom-4 left-5 font-display italic text-2xl text-[#f4eef7]/90 [text-shadow:0_1px_14px_rgba(10,8,25,0.7)]">
-                    {pad(i + 1)}
-                  </span>
                   {isActive && (
                     <span
                       key={active}
@@ -235,14 +228,6 @@ export default function PhotoSessionBlue() {
                     className="absolute inset-0 bg-[#14122a] transition-opacity duration-[1400ms] group-hover:opacity-50"
                     style={{ opacity: isActive ? 0 : 0.6 }}
                   />
-                  <span
-                    aria-hidden="true"
-                    className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#14122a]/75 to-transparent"
-                  />
-                  <span className="absolute bottom-4 left-5 font-display italic text-3xl text-[#f4eef7]/90 [text-shadow:0_1px_14px_rgba(10,8,25,0.7)]">
-                    {pad(i + 1)}
-                  </span>
-
                   {isActive && (
                     <span
                       key={active}

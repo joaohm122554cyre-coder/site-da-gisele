@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { useInView, useReducedMotion } from 'framer-motion'
 import photoArco from '../assets/photos/sessao-rosa-1.webp'
 import cenaSentada from '../assets/photos/ensaio/dsc02660.webp'
@@ -15,100 +15,204 @@ import Reveal from './Reveal'
 const photos = [
   { src: retratoSorrindo, alt: 'Giselli Cristina sorrindo, sentada diante do arco em rosa', position: '50% 30%' },
   { src: retratoSorrindo2, alt: 'Giselli Cristina sorrindo para a câmera diante do arco em rosa', position: '50% 30%' },
-  { src: cenaCantando, alt: 'Giselli Cristina cantando sentada diante do arco em rosa', position: '50% 30%' },
+  { src: cenaCantando, alt: 'Giselli Cristina cantando sentada diante do arco em rosa', position: '48% 30%' },
   { src: cenaSentada, alt: 'Giselli Cristina sentada diante do arco iluminado em rosa', position: '50% 30%' },
-  { src: cenaMaoNoCabelo, alt: 'Giselli Cristina cantando com a mão junto ao cabelo', position: '50% 30%' },
-  { src: cenaInclinada, alt: 'Giselli Cristina cantando de olhos fechados, inclinada para o lado', position: '50% 30%' },
-  { src: cenaBracoErguido, alt: 'Giselli Cristina cantando com o braço erguido diante do arco rosa', position: '50% 30%' },
-  { src: cenaMaoErguida, alt: 'Giselli Cristina cantando com a mão erguida', position: '56% 30%' },
+  { src: cenaMaoNoCabelo, alt: 'Giselli Cristina cantando com a mão junto ao cabelo', position: '52% 30%' },
+  { src: cenaInclinada, alt: 'Giselli Cristina cantando de olhos fechados, inclinada para o lado', position: '52% 30%' },
+  { src: cenaBracoErguido, alt: 'Giselli Cristina cantando com o braço erguido diante do arco rosa', position: '58% 30%' },
+  { src: cenaMaoErguida, alt: 'Giselli Cristina cantando com a mão erguida', position: '60% 30%' },
   { src: photoArco, alt: 'Giselli Cristina sorrindo diante de um arco iluminado em rosa', position: '50% 12%' },
 ]
 
-const SLIDE_SECONDS = 5
+const SLIDE_SECONDS = 3
+const SMOOTH = 'cubic-bezier(0.65,0,0.35,1)'
 const pad = (n) => String(n).padStart(2, '0')
+const progressStyle = (running) => ({
+  animation: `panel-progress ${SLIDE_SECONDS}s linear forwards`,
+  animationPlayState: running ? 'running' : 'paused',
+})
 
-const arrowClass =
-  'flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#f4eef7]/20 text-[#f4eef7]/60 transition-colors hover:border-[#f4eef7]/50 hover:text-[#f4eef7]'
+// Celular: carrossel que desliza pro lado, com um pedacinho da foto vizinha aparecendo.
+// Na primeira foto não existe "anterior"; a partir da segunda dá pra voltar.
+function MobileCarousel({ active, setActive, inView, autoplay }) {
+  const total = photos.length
+  const wrapRef = useRef(null)
+  const touchX = useRef(null)
+  const [width, setWidth] = useState(0)
+  const [fading, setFading] = useState(false)
+  const [jumping, setJumping] = useState(false)
 
-export default function PhotoSessionPink() {
-  const [active, setActive] = useState(0)
-  const [hovering, setHovering] = useState(false)
-  const [narrow, setNarrow] = useState(2)
-  const stripRef = useRef(null)
-  const inView = useInView(stripRef, { margin: '-15% 0px' })
-  const reduceMotion = useReducedMotion()
-  const running = inView && !hovering
-
-  useEffect(() => {
-    const el = stripRef.current
-    if (!el) return
-    const measure = () =>
-      setNarrow(Math.min(photos.length - 3, Math.max(2, Math.floor((el.clientWidth - 700) / 280))))
+  useLayoutEffect(() => {
+    const el = wrapRef.current
+    const measure = () => setWidth(el.clientWidth)
     measure()
     const observer = new ResizeObserver(measure)
     observer.observe(el)
     return () => observer.disconnect()
   }, [])
 
-  const go = (dir) => setActive((i) => (i + dir + photos.length) % photos.length)
+  const EDGE = 24
+  const GAP = 12
+  const slideW = width * 0.78
+  const step = slideW + GAP
+  const trackW = EDGE * 2 + total * slideW + (total - 1) * GAP
+  const maxShift = Math.max(trackW - width, 0)
+  const shift = Math.min(Math.max(EDGE + active * step - (width - slideW) / 2, 0), maxShift)
+
+  const advance = () => {
+    if (active < total - 1) {
+      setActive(active + 1)
+      return
+    }
+    // depois da última foto, some suave e recomeça pela primeira (sem "rebobinar")
+    setFading(true)
+    setTimeout(() => {
+      setJumping(true)
+      setActive(0)
+      setTimeout(() => {
+        setJumping(false)
+        setFading(false)
+      }, 60)
+    }, 520)
+  }
+
+  const onTouchEnd = (e) => {
+    if (touchX.current == null) return
+    const dx = e.changedTouches[0].clientX - touchX.current
+    touchX.current = null
+    if (dx < -40) advance()
+    else if (dx > 40 && active > 0) setActive(active - 1)
+  }
 
   return (
-    <section className="relative pt-4 md:pt-8 pb-20 md:pb-28">
-      <div className="max-w-[max(80rem,calc(100vw_-_3.5rem))] mx-auto px-6 md:px-12">
-        <Reveal>
-          <div className="flex items-center justify-between mb-6 md:mb-8">
-            <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">Ensaio</span>
-            <div className="flex items-center gap-3">
-              <button type="button" onClick={() => go(-1)} aria-label="Foto anterior" className={arrowClass}>
-                <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
-                  <path d="M10 2 4 8l6 6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
-              <span className="min-w-[4.5rem] text-center text-[11px] tabular-nums tracking-[0.3em] text-[#f4eef7]/45">
-                <span className="text-[#f4eef7]/90">{pad(active + 1)}</span> / {pad(photos.length)}
+    <div className="relative -mx-6 md:hidden">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-6 -bottom-10 h-40 bg-[radial-gradient(ellipse_at_center,rgba(217,84,209,0.2),transparent_65%)]"
+      />
+      <div
+        ref={wrapRef}
+        className="relative overflow-hidden"
+        style={{ touchAction: 'pan-y' }}
+        onTouchStart={(e) => {
+          touchX.current = e.touches[0].clientX
+        }}
+        onTouchEnd={onTouchEnd}
+      >
+        {width > 0 && (
+          <div
+            className="flex h-[26rem]"
+            style={{
+              width: trackW,
+              paddingInline: EDGE,
+              gap: GAP,
+              transform: `translate3d(${-shift}px,0,0)`,
+              transition: `${jumping ? 'none' : `transform 1200ms ${SMOOTH}`}, opacity 500ms ease`,
+              opacity: fading ? 0 : 1,
+            }}
+          >
+            {photos.map((photo, i) => {
+              const isActive = i === active
+              return (
+                <button
+                  key={photo.src}
+                  type="button"
+                  onClick={() => (isActive ? advance() : setActive(i))}
+                  aria-label={
+                    isActive ? `Foto ${i + 1} de ${total}. Toque para ver a próxima` : `Ir para a foto ${i + 1}`
+                  }
+                  aria-current={isActive ? 'true' : undefined}
+                  className="relative h-full shrink-0 overflow-hidden rounded-2xl text-left outline-none focus-visible:ring-2 focus-visible:ring-[#d954d1]"
+                  style={{
+                    width: slideW,
+                    boxShadow: isActive
+                      ? '0 0 0 1px rgba(217,84,209,0.4), 0 0 60px -14px rgba(217,84,209,0.55)'
+                      : '0 0 0 1px rgba(244,238,247,0.1)',
+                  }}
+                >
+                  <img
+                    src={photo.src}
+                    alt={photo.alt}
+                    loading="lazy"
+                    decoding="async"
+                    draggable="false"
+                    className="absolute inset-0 h-full w-full select-none object-cover"
+                    style={{ objectPosition: photo.position }}
+                  />
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-0 bg-[#14122a] transition-opacity duration-[1200ms]"
+                    style={{ opacity: isActive ? 0 : 0.5 }}
+                  />
+                  {isActive && autoplay && (
+                    <span
+                      key={active}
+                      aria-hidden="true"
+                      onAnimationEnd={advance}
+                      className="absolute inset-x-0 bottom-0 h-[2px] origin-left bg-[#d954d1]"
+                      style={progressStyle(inView && !fading)}
+                    />
+                  )}
+                </button>
+              )
+            })}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+export default function PhotoSessionPink() {
+  const [active, setActive] = useState(0)
+  const [hovering, setHovering] = useState(false)
+  const wrapRef = useRef(null)
+  const inView = useInView(wrapRef, { margin: '-15% 0px' })
+  const autoplay = !useReducedMotion()
+  const total = photos.length
+
+  const next = () => setActive((i) => (i + 1) % total)
+
+  return (
+    <section id="ensaio-rosa" className="relative pt-4 md:pt-8 pb-20 md:pb-28">
+      <Reveal>
+        <div ref={wrapRef}>
+          <div className="max-w-7xl md:max-w-none mx-auto px-6 md:px-12">
+            <div className="flex items-end justify-between mb-6 md:mb-8">
+              <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">Ensaio rosa</span>
+              <span className="text-[11px] tabular-nums tracking-[0.3em] text-[#f4eef7]/45">
+                <span className="text-[#f4eef7]/90">{pad(active + 1)}</span> / {pad(total)}
               </span>
-              <button type="button" onClick={() => go(1)} aria-label="Próxima foto" className={arrowClass}>
-                <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
-                  <path d="M6 2l6 6-6 6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
             </div>
+
+            <MobileCarousel active={active} setActive={setActive} inView={inView} autoplay={autoplay} />
           </div>
 
+          {/* computador: painéis que abrem, de ponta a ponta da tela */}
           <div
-            ref={stripRef}
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}
-            className="relative flex flex-col md:flex-row h-[34rem] md:h-[clamp(36rem,calc((100vw_-_9.5rem)_/_2.1),90vh)] md:-mr-3"
+            className="relative hidden md:flex w-full gap-3 h-[clamp(30rem,42vw,46rem)]"
           >
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute -inset-x-10 -bottom-16 h-56 bg-[radial-gradient(ellipse_at_center,rgba(217,84,209,0.16),transparent_65%)]"
+              className="pointer-events-none absolute inset-x-0 -bottom-16 h-56 bg-[radial-gradient(ellipse_at_center,rgba(217,84,209,0.18),transparent_65%)]"
             />
 
-            {photos.map((photo, idx) => {
-              const rel = ((idx - active + 2 + photos.length) % photos.length) - 2
-              const isActive = rel === 0
-              const shown = rel >= 0 && rel <= narrow
+            {photos.map((photo, i) => {
+              const isActive = i === active
               return (
                 <button
-                  key={idx}
+                  key={photo.src}
                   type="button"
-                  onClick={() => setActive(idx)}
-                  tabIndex={shown ? 0 : -1}
-                  aria-hidden={shown ? undefined : true}
-                  aria-label={`Foto ${idx + 1} de ${photos.length}`}
+                  onClick={() => setActive(i)}
+                  aria-label={`Foto ${i + 1} de ${total}`}
                   aria-current={isActive ? 'true' : undefined}
-                  className={`group relative min-h-0 min-w-0 basis-0 overflow-hidden rounded-2xl text-left outline-none transition-[flex-grow,margin,box-shadow,opacity] duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] focus-visible:ring-2 focus-visible:ring-[#d954d1] mb-[var(--gap)] md:mb-0 md:mr-[var(--gap)] ${
-                    shown ? '' : 'pointer-events-none'
-                  }`}
+                  className="group relative min-h-0 min-w-0 basis-0 overflow-hidden rounded-2xl first-of-type:rounded-l-none last-of-type:rounded-r-none text-left outline-none transition-[flex-grow,box-shadow] duration-[1500ms] ease-[cubic-bezier(0.65,0,0.35,1)] focus-visible:ring-2 focus-visible:ring-[#d954d1]"
                   style={{
-                    order: rel,
-                    flexGrow: isActive ? 3.4 : shown ? 1 : 0,
-                    '--gap': shown ? '0.75rem' : '0rem',
-                    opacity: shown ? 1 : 0,
+                    flexGrow: isActive ? 5 : 1,
                     boxShadow: isActive
-                      ? '0 0 0 1px rgba(217,84,209,0.35), 0 0 70px -16px rgba(217,84,209,0.55)'
+                      ? '0 0 0 1px rgba(217,84,209,0.4), 0 0 70px -16px rgba(217,84,209,0.55)'
                       : '0 0 0 1px rgba(244,238,247,0.08)',
                   }}
                 >
@@ -117,35 +221,32 @@ export default function PhotoSessionPink() {
                     alt={photo.alt}
                     loading="lazy"
                     decoding="async"
-                    className={`absolute inset-0 h-full w-full object-cover transition-transform duration-[1400ms] ease-out ${
+                    className={`absolute inset-0 h-full w-full object-cover transition-transform duration-[2000ms] ease-in-out ${
                       isActive ? 'scale-100' : 'scale-110'
                     }`}
                     style={{ objectPosition: photo.position }}
                   />
                   <span
                     aria-hidden="true"
-                    className="absolute inset-0 bg-[#14122a] transition-opacity duration-700 group-hover:opacity-50"
+                    className="absolute inset-0 bg-[#14122a] transition-opacity duration-[1400ms] group-hover:opacity-50"
                     style={{ opacity: isActive ? 0 : 0.6 }}
                   />
 
-                  {isActive && !reduceMotion && (
+                  {isActive && autoplay && (
                     <span
                       key={active}
                       aria-hidden="true"
-                      onAnimationEnd={() => go(1)}
+                      onAnimationEnd={next}
                       className="absolute inset-x-0 bottom-0 h-[2px] origin-left bg-[#d954d1]"
-                      style={{
-                        animation: `panel-progress ${SLIDE_SECONDS}s linear forwards`,
-                        animationPlayState: running ? 'running' : 'paused',
-                      }}
+                      style={progressStyle(inView && !hovering)}
                     />
                   )}
                 </button>
               )
             })}
           </div>
-        </Reveal>
-      </div>
+        </div>
+      </Reveal>
     </section>
   )
 }

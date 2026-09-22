@@ -301,11 +301,27 @@ function ConnectingLines({ activeCorner, box, center, cloudAnchors }) {
         const [ox, oy] = norm(outward[corner])
         const active = corner === activeCorner
 
-        const dist = Math.hypot(center.x - start.x, center.y - start.y)
-        const mid = { x: (start.x + center.x) / 2, y: (start.y + center.y) / 2 }
-        const bow = Math.min(dist * 0.28, 70)
-        const control = { x: mid.x + ox * bow, y: mid.y + oy * bow }
-        const rootPath = `M ${start.x} ${start.y} Q ${control.x} ${control.y} ${center.x} ${center.y}`
+        // sobe, desce, sobe de novo (perpendicular ao caminho) e afina até o centro —
+        // um caminho sinuoso de raiz em vez de uma curva única e quase reta
+        const dx = center.x - start.x
+        const dy = center.y - start.y
+        const dist = Math.hypot(dx, dy) || 1
+        const [px, py] = [-dy / dist, dx / dist] // perpendicular ao trajeto
+        const amp = Math.min(dist * 0.22, 60)
+        const lerp = (t) => ({ x: start.x + dx * t, y: start.y + dy * t })
+        const wig = (t, side) => {
+          const p = lerp(t)
+          return { x: p.x + px * side, y: p.y + py * side }
+        }
+        const p1 = wig(0.22, amp)
+        const p2 = wig(0.5, -amp * 0.75)
+        const p3 = wig(0.78, amp * 0.35)
+        const m1 = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 }
+        const m2 = { x: (p2.x + p3.x) / 2, y: (p2.y + p3.y) / 2 }
+        const rootPath =
+          `M ${start.x} ${start.y} Q ${p1.x} ${p1.y} ${m1.x} ${m1.y}` +
+          ` Q ${p2.x} ${p2.y} ${m2.x} ${m2.y}` +
+          ` Q ${p3.x} ${p3.y} ${center.x} ${center.y}`
 
         const fork = (deg, len) => {
           const [fx, fy] = rotate([ox, oy], deg)

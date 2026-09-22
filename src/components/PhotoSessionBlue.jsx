@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react'
+import { useLayoutEffect, useReducer, useRef, useState } from 'react'
 import { useInView } from 'framer-motion'
 import retratoSorriso from '../assets/photos/azul-retrato-sorriso.webp'
 import colunas1 from '../assets/photos/azul-colunas-1.webp'
@@ -33,16 +33,11 @@ const progressStyle = (running) => ({
 })
 
 // step só cresce a cada foto que passa (foto atual = step % total), então depois da última a
-// primeira simplesmente continua a sequência. start = primeira foto da faixa do computador:
-// ela vai rolando, a foto que sai encolhe pela esquerda e a próxima entra pela direita.
-function reducer(state, action) {
-  const { step, start } = state
-  if (action.type === 'next') {
-    const next = step + 1
-    return { step: next, prev: step, start: next > start + total - 1 ? start + 1 : start }
-  }
-  if (action.type === 'back') return { step: step - 1, prev: step, start: Math.min(start, step - 1) }
-  return { ...state, step: action.step, prev: step }
+// primeira simplesmente continua a sequência, sem rebobinar.
+function reducer({ step }, action) {
+  if (action.type === 'next') return { step: step + 1, prev: step }
+  if (action.type === 'back') return { step: step - 1, prev: step }
+  return { step: action.step, prev: step }
 }
 
 const EDGE = 24
@@ -150,82 +145,44 @@ function MobileCarousel({ step, prev, dispatch, inView }) {
   )
 }
 
-// Computador: painel que abre. Painéis novos entram com largura 0 pela direita e os que saem
-// encolhem até sumir pela esquerda (margem e flex animam juntos, então nada dá "pulo").
-function DesktopPanel({ n, photo, step, leaving, first, last, running, onSelect, onEnd }) {
-  const [entered, setEntered] = useState(n < total)
-  const isActive = n === step
-  const collapsed = leaving || !entered
-
-  useEffect(() => {
-    if (entered) return
-    let second
-    const firstFrame = requestAnimationFrame(() => {
-      second = requestAnimationFrame(() => setEntered(true))
-    })
-    return () => {
-      cancelAnimationFrame(firstFrame)
-      cancelAnimationFrame(second)
-    }
-  }, [entered])
+// Computador: uma foto por vez, ocupando a faixa inteira; a troca é um crossfade suave.
+function DesktopSlide({ step, running, onEnd, onAdvance }) {
+  const current = mod(step, total)
 
   return (
     <button
       type="button"
-      tabIndex={leaving ? -1 : 0}
-      aria-hidden={leaving || undefined}
-      onClick={() => onSelect(n)}
-      aria-label={`Foto ${mod(n, total) + 1} de ${total}`}
-      aria-current={isActive ? 'true' : undefined}
-      className={`group relative min-h-0 min-w-0 basis-0 overflow-hidden text-left outline-none transition-[flex-grow,margin,box-shadow,border-radius] duration-[1500ms] ease-[cubic-bezier(0.65,0,0.35,1)] focus-visible:ring-2 focus-visible:ring-[#4f7fd6] ${
-        leaving ? 'pointer-events-none' : ''
-      }`}
-      style={{
-        flexGrow: collapsed ? 0 : isActive ? 5 : 1,
-        marginRight: collapsed || last ? 0 : 12,
-        borderRadius: `${first ? 0 : 16}px ${last ? 0 : 16}px ${last ? 0 : 16}px ${first ? 0 : 16}px`,
-        boxShadow: isActive
-          ? '0 0 0 1px rgba(79,127,214,0.45), 0 0 70px -16px rgba(79,127,214,0.6)'
-          : '0 0 0 1px rgba(244,238,247,0.08)',
-      }}
+      onClick={onAdvance}
+      aria-label={`Foto ${current + 1} de ${total}. Clique para ver a próxima`}
+      className="relative block h-full w-full overflow-hidden text-left outline-none focus-visible:ring-2 focus-visible:ring-[#4f7fd6]"
     >
-      <img
-        src={photo.src}
-        alt={photo.alt}
-        loading="lazy"
-        decoding="async"
-        className={`absolute inset-0 h-full w-full object-cover transition-transform duration-[2000ms] ease-in-out ${
-          isActive ? 'scale-100' : 'scale-110'
-        }`}
-        style={{ objectPosition: photo.position }}
-      />
-      <span
-        aria-hidden="true"
-        className="absolute inset-0 bg-[#14122a] transition-opacity duration-[1400ms] group-hover:opacity-50"
-        style={{ opacity: isActive ? 0 : 0.6 }}
-      />
-      {isActive && (
-        <span
-          key={step}
-          aria-hidden="true"
-          onAnimationEnd={onEnd}
-          className="absolute inset-x-0 bottom-0 h-[2px] origin-left bg-[#4f7fd6]"
-          style={progressStyle(running)}
+      {photos.map((photo, i) => (
+        <img
+          key={photo.src}
+          src={photo.src}
+          alt={i === current ? photo.alt : ''}
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[900ms] ease-in-out"
+          style={{ objectPosition: photo.position, opacity: i === current ? 1 : 0 }}
         />
-      )}
+      ))}
+      <span
+        key={step}
+        aria-hidden="true"
+        onAnimationEnd={onEnd}
+        className="absolute inset-x-0 bottom-0 h-[2px] origin-left bg-[#4f7fd6]"
+        style={progressStyle(running)}
+      />
     </button>
   )
 }
 
 export default function PhotoSessionBlue() {
-  const [{ step, prev, start }, dispatch] = useReducer(reducer, { step: 0, prev: 0, start: 0 })
+  const [{ step, prev }, dispatch] = useReducer(reducer, { step: 0, prev: 0 })
   const [hovering, setHovering] = useState(false)
   const wrapRef = useRef(null)
   const inView = useInView(wrapRef, { margin: '-15% 0px' })
-
-  // painéis que aparecem: a foto que acabou de sair (encolhida) e as da faixa atual
-  const from = Math.max(start - 1, 0)
-  const panels = Array.from({ length: start + total - from }, (_, k) => from + k)
 
   return (
     <section id="ensaio-azul" className="relative pt-16 md:pt-24 pb-32 md:pb-56">
@@ -242,30 +199,22 @@ export default function PhotoSessionBlue() {
             <MobileCarousel step={step} prev={prev} dispatch={dispatch} inView={inView} />
           </div>
 
-          {/* computador: painéis que abrem, de ponta a ponta da tela */}
+          {/* computador: uma foto por vez, de ponta a ponta da tela */}
           <div
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}
-            className="relative hidden md:flex w-full h-[clamp(30rem,42vw,46rem)]"
+            className="relative hidden md:block w-full h-[clamp(30rem,42vw,46rem)]"
           >
             <div
               aria-hidden="true"
               className="pointer-events-none absolute inset-x-0 -bottom-16 h-56 bg-[radial-gradient(ellipse_at_center,rgba(79,127,214,0.2),transparent_65%)]"
             />
-            {panels.map((n) => (
-              <DesktopPanel
-                key={n}
-                n={n}
-                photo={photos[mod(n, total)]}
-                step={step}
-                leaving={n < start}
-                first={n === start}
-                last={n === start + total - 1}
-                running={inView && !hovering}
-                onSelect={(to) => dispatch({ type: 'to', step: to })}
-                onEnd={() => dispatch({ type: 'next' })}
-              />
-            ))}
+            <DesktopSlide
+              step={step}
+              running={inView && !hovering}
+              onEnd={() => dispatch({ type: 'next' })}
+              onAdvance={() => dispatch({ type: 'next' })}
+            />
           </div>
         </div>
       </Reveal>

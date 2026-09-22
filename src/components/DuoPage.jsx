@@ -191,12 +191,12 @@ function PageHero() {
     <header ref={ref} className="relative md:flex md:h-[100svh] md:min-h-[640px] md:items-end md:overflow-hidden">
       <div className="relative aspect-[4/5] overflow-hidden [-webkit-mask-image:linear-gradient(to_bottom,#000_48%,transparent_100%)] [mask-image:linear-gradient(to_bottom,#000_48%,transparent_100%)] md:absolute md:inset-0 md:aspect-auto md:[-webkit-mask-image:linear-gradient(to_bottom,#000_60%,transparent_100%)] md:[mask-image:linear-gradient(to_bottom,#000_60%,transparent_100%)]">
         <motion.img
-          src={fotoCantando}
-          alt="Giselli Cristina e Nicolas Henrique cantando juntos, ele ao violão"
+          src={azulClipe}
+          alt="Giselli Cristina cantando com o braço erguido e Nicolas Henrique ao teclado, sob luzes azuis"
           decoding="async"
           fetchPriority="high"
           style={isDesktop ? { y: imageY, scale: 1.15 } : undefined}
-          className="absolute inset-0 h-full w-full object-cover object-[50%_38%] md:object-center"
+          className="absolute inset-0 h-full w-full object-cover object-[62%_45%] md:object-center"
         />
       </div>
 
@@ -384,12 +384,11 @@ export default function DuoPage() {
             <div className="mx-auto mt-20 grid max-w-5xl grid-cols-2 items-start gap-3 md:mt-32 md:gap-8">
               <Reveal>
                 <img
-                  src={azulClipe}
-                  alt="Giselli Cristina cantando com o braço erguido e Nicolas Henrique ao teclado, sob luzes azuis"
+                  src={fotoCantando}
+                  alt="Giselli Cristina e Nicolas Henrique cantando juntos, ele ao violão"
                   loading="lazy"
                   decoding="async"
                   className="aspect-square w-full rounded-2xl object-cover shadow-[0_0_0_1px_rgba(244,238,247,0.1)]"
-                  style={{ objectPosition: '62% 40%' }}
                 />
               </Reveal>
               <Reveal delay={0.12} className="mt-10 md:mt-20">

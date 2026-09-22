@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import retratoSorriso from '../assets/photos/azul-retrato-sorriso.webp'
 import colunas1 from '../assets/photos/azul-colunas-1.webp'
@@ -220,23 +220,6 @@ const corners = Object.keys(cloudPhotos)
 const cornerOfIndex = {}
 corners.forEach((corner) => cloudPhotos[corner].forEach((i) => (cornerOfIndex[i] = corner)))
 
-// direção "pra fora" de cada canto, usada pra curvar a linha como uma raiz e pra
-// desenhar as raizinhas pequenas perto da nuvem
-const outward = {
-  'bottom-left': [-1, 1],
-  'bottom-right': [1, 1],
-  'top-left': [-1, -1],
-  'top-right': [1, -1],
-}
-const rotate = ([x, y], deg) => {
-  const rad = (deg * Math.PI) / 180
-  return [x * Math.cos(rad) - y * Math.sin(rad), x * Math.sin(rad) + y * Math.cos(rad)]
-}
-const norm = ([x, y]) => {
-  const len = Math.hypot(x, y) || 1
-  return [x / len, y / len]
-}
-
 function CloudCorner({ corner, current, registerThumb }) {
   const [vSide, hSide] = corner.split('-')
   const isLeft = hSide === 'left'
@@ -280,12 +263,98 @@ function CloudCorner({ corner, current, registerThumb }) {
   )
 }
 
-// Linhas que ligam cada nuvem ao centro do cartão, como raízes: curvam pra fora antes
-// de convergir no tronco (o cartão) e têm raizinhas menores perto da nuvem. As
-// coordenadas são medidas em pixels reais (box/center), por isso encostam certinho
-// na nuvem em vez de "flutuar" ao lado dela.
+// Gerador simples e determinístico (mesma semente sempre gera o mesmo desenho, então
+// as raízes não "embaralham" a cada re-render).
+function makeRand(seed) {
+  let s = seed
+  return () => {
+    s = (s * 9301 + 49297) % 233280
+    return s / 233280
+  }
+}
+
+// Um galho de raiz: sai de (x0,y0) na direção dir, ondula (perpendicular à direção,
+// afinando) e, se ainda tem profundidade sobrando, solta 1-2 galhos filhos no meio do
+// caminho — assim a árvore de raízes cresce sozinha a partir do tronco.
+function buildBranch(x0, y0, dir, len, depth, rand) {
+  const [dx, dy] = dir
+  const [px, py] = [-dy, dx]
+  const end = { x: x0 + dx * len, y: y0 + dy * len }
+  const amp = len * 0.16
+  const at = (t, side) => ({ x: x0 + dx * len * t + px * side, y: y0 + dy * len * t + py * side })
+  const p1 = at(0.35, amp)
+  const p2 = at(0.7, -amp * 0.6)
+  const mid = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 }
+  const path = `M ${x0} ${y0} Q ${p1.x} ${p1.y} ${mid.x} ${mid.y} Q ${p2.x} ${p2.y} ${end.x} ${end.y}`
+
+  const branches = [{ path, depth }]
+  if (depth < 3 && len > 34) {
+    const count = depth === 0 ? 3 : 2
+    for (let c = 0; c < count; c++) {
+      const t = 0.4 + rand() * 0.35
+      const from = { x: x0 + dx * len * t, y: y0 + dy * len * t }
+      const turn = (0.45 + rand() * 0.5) * (c % 2 === 0 ? 1 : -1)
+      const angle = Math.atan2(dy, dx) + turn
+      const childDir = [Math.cos(angle), Math.sin(angle)]
+      const childLen = len * (0.4 + rand() * 0.22)
+      branches.push(...buildBranch(from.x, from.y, childDir, childLen, depth + 1, rand))
+    }
+  }
+  return branches
+}
+
+// Sistema de raízes que nasce no cartão (o "tronco") e se espalha pela seção inteira,
+// como as referências de raiz de árvore — não são mais só 4 linhas até as nuvens.
+function useRootSystem(box, center) {
+  return useMemo(() => {
+    if (!box.w || !box.h) return []
+    const rand = makeRand(7)
+    const PRIMARY = 14
+    const roots = []
+    for (let i = 0; i < PRIMARY; i++) {
+      const angle = (i / PRIMARY) * Math.PI * 2 + (rand() - 0.5) * 0.3
+      const dir = [Math.cos(angle), Math.sin(angle)]
+      const edgeX = dir[0] > 0 ? box.w - center.x : center.x
+      const edgeY = dir[1] > 0 ? box.h - center.y : center.y
+      const edgeDist = Math.min(
+        dir[0] !== 0 ? Math.abs(edgeX / dir[0]) : Infinity,
+        dir[1] !== 0 ? Math.abs(edgeY / dir[1]) : Infinity,
+      )
+      const len = edgeDist * (0.72 + rand() * 0.24)
+      const angleDeg = (angle * 180) / Math.PI
+      buildBranch(center.x, center.y, dir, len, 0, rand).forEach((b) => roots.push({ ...b, angleDeg }))
+    }
+    return roots
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [box.w, box.h, center.x, center.y])
+}
+
+const branchWidth = [2.2, 1.3, 0.8]
+
+// A raiz cujo ângulo (a partir do centro) mais se aproxima do canto ativo acende; o
+// resto fica como textura de fundo, apagada.
 function ConnectingLines({ activeCorner, box, center, cloudAnchors }) {
-  if (!box.w || !box.h) return null
+  const roots = useRootSystem(box, center)
+  if (!roots.length) return null
+
+  const targetAngle = (() => {
+    const a = cloudAnchors[activeCorner]
+    if (!a) return null
+    return (Math.atan2(a.y - center.y, a.x - center.x) * 180) / Math.PI
+  })()
+
+  let closest = null
+  if (targetAngle != null) {
+    let best = Infinity
+    roots.forEach((r) => {
+      if (r.depth !== 0) return
+      const diff = Math.abs(((r.angleDeg - targetAngle + 540) % 360) - 180)
+      if (diff < best) {
+        best = diff
+        closest = r.angleDeg
+      }
+    })
+  }
 
   return (
     <svg
@@ -295,51 +364,22 @@ function ConnectingLines({ activeCorner, box, center, cloudAnchors }) {
       viewBox={`0 0 ${box.w} ${box.h}`}
       className="pointer-events-none absolute inset-0 hidden lg:block"
     >
-      {corners.map((corner) => {
-        const start = cloudAnchors[corner]
-        if (!start) return null
-        const [ox, oy] = norm(outward[corner])
-        const active = corner === activeCorner
-
-        // sobe, desce, sobe de novo (perpendicular ao caminho) e afina até o centro —
-        // um caminho sinuoso de raiz em vez de uma curva única e quase reta
-        const dx = center.x - start.x
-        const dy = center.y - start.y
-        const dist = Math.hypot(dx, dy) || 1
-        const [px, py] = [-dy / dist, dx / dist] // perpendicular ao trajeto
-        const amp = Math.min(dist * 0.22, 60)
-        const lerp = (t) => ({ x: start.x + dx * t, y: start.y + dy * t })
-        const wig = (t, side) => {
-          const p = lerp(t)
-          return { x: p.x + px * side, y: p.y + py * side }
-        }
-        const p1 = wig(0.22, amp)
-        const p2 = wig(0.5, -amp * 0.75)
-        const p3 = wig(0.78, amp * 0.35)
-        const m1 = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 }
-        const m2 = { x: (p2.x + p3.x) / 2, y: (p2.y + p3.y) / 2 }
-        const rootPath =
-          `M ${start.x} ${start.y} Q ${p1.x} ${p1.y} ${m1.x} ${m1.y}` +
-          ` Q ${p2.x} ${p2.y} ${m2.x} ${m2.y}` +
-          ` Q ${p3.x} ${p3.y} ${center.x} ${center.y}`
-
-        const fork = (deg, len) => {
-          const [fx, fy] = rotate([ox, oy], deg)
-          return `M ${start.x} ${start.y} L ${start.x + fx * len} ${start.y + fy * len}`
-        }
-
-        const style = {
-          opacity: active ? 0.9 : 0.14,
-          filter: active ? 'drop-shadow(0 0 6px rgba(79,127,214,0.9))' : 'none',
-          transition: 'opacity 700ms ease, stroke-width 700ms ease',
-        }
-
+      {roots.map((r, i) => {
+        const active = closest != null && r.angleDeg === closest
         return (
-          <g key={corner}>
-            <path d={rootPath} fill="none" stroke="#7fb0f7" strokeWidth={active ? 1.8 : 0.7} strokeLinecap="round" style={style} />
-            <path d={fork(28, 18)} stroke="#7fb0f7" strokeWidth={active ? 1.1 : 0.5} strokeLinecap="round" style={style} />
-            <path d={fork(-24, 14)} stroke="#7fb0f7" strokeWidth={active ? 1.1 : 0.5} strokeLinecap="round" style={style} />
-          </g>
+          <path
+            key={i}
+            d={r.path}
+            fill="none"
+            stroke="#7fb0f7"
+            strokeWidth={branchWidth[r.depth]}
+            strokeLinecap="round"
+            style={{
+              opacity: active ? 0.85 : 0.18,
+              filter: active ? 'drop-shadow(0 0 6px rgba(79,127,214,0.85))' : 'none',
+              transition: 'opacity 700ms ease',
+            }}
+          />
         )
       })}
     </svg>

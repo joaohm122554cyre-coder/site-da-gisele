@@ -156,6 +156,18 @@ function DesktopSlide({ step, running, onEnd, onAdvance }) {
       aria-label={`Foto ${current + 1} de ${total}. Clique para ver a próxima`}
       className="relative block h-full w-full overflow-hidden text-left outline-none focus-visible:ring-2 focus-visible:ring-[#4f7fd6]"
     >
+      {/* fundo desfocado preenche a faixa larga; a foto em si fica no formato original, sem esticar */}
+      {photos.map((photo, i) => (
+        <img
+          key={`bg-${photo.src}`}
+          aria-hidden="true"
+          src={photo.src}
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-0 h-full w-full scale-110 object-cover opacity-40 blur-2xl transition-opacity duration-[900ms] ease-in-out"
+          style={{ objectPosition: photo.position, opacity: i === current ? 0.4 : 0 }}
+        />
+      ))}
       {photos.map((photo, i) => (
         <img
           key={photo.src}
@@ -163,8 +175,8 @@ function DesktopSlide({ step, running, onEnd, onAdvance }) {
           alt={i === current ? photo.alt : ''}
           loading="lazy"
           decoding="async"
-          className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[900ms] ease-in-out"
-          style={{ objectPosition: photo.position, opacity: i === current ? 1 : 0 }}
+          className="absolute inset-0 h-full w-full object-contain transition-opacity duration-[900ms] ease-in-out"
+          style={{ opacity: i === current ? 1 : 0 }}
         />
       ))}
       <span

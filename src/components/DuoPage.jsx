@@ -8,7 +8,6 @@ import Link from './Link'
 import { goBack, isPlainClick } from '../lib/router'
 import logo from '../assets/logo/gc-monograma.png'
 import fundoVideo from '../assets/videos/stats-bg.mp4'
-import fotoRoxo from '../assets/photos/dupla-roxo.webp'
 import fotoCantando from '../assets/photos/dupla-cantando.webp'
 import fotoViolao from '../assets/photos/dupla-violao.webp'
 import azulClipe from '../assets/photos/azul-clipe.webp'
@@ -192,12 +191,12 @@ function PageHero() {
     <header ref={ref} className="relative md:flex md:h-[100svh] md:min-h-[640px] md:items-end md:overflow-hidden">
       <div className="relative aspect-[4/5] overflow-hidden [-webkit-mask-image:linear-gradient(to_bottom,#000_48%,transparent_100%)] [mask-image:linear-gradient(to_bottom,#000_48%,transparent_100%)] md:absolute md:inset-0 md:aspect-auto md:[-webkit-mask-image:linear-gradient(to_bottom,#000_60%,transparent_100%)] md:[mask-image:linear-gradient(to_bottom,#000_60%,transparent_100%)]">
         <motion.img
-          src={fotoRoxo}
-          alt="Nicolas Henrique ao teclado e Giselli Cristina, sorrindo, sob luzes roxas"
+          src={azulClipe}
+          alt="Giselli Cristina cantando com o braço erguido e Nicolas Henrique ao teclado, sob luzes azuis"
           decoding="async"
           fetchPriority="high"
           style={isDesktop ? { y: imageY, scale: 1.15 } : undefined}
-          className="absolute inset-0 h-full w-full object-cover object-[60%_50%] md:object-center"
+          className="absolute inset-0 h-full w-full object-cover object-[62%_45%] md:object-center"
         />
       </div>
 

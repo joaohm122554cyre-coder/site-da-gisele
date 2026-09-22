@@ -1,7 +1,10 @@
-import { useId } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
+import { isRootUnlocked, isVideoActive, subscribeRootUnlock, subscribeVideoActivity } from '../lib/root-growth'
 
-// Uma raiz orgânica e sinuosa que desce por uma seção, com pequenos galhos
-// saindo pro lado. A cor troca do topo pro fundo, acompanhando o vídeo local.
+// Uma raiz orgânica e sinuosa que cresce enquanto a página rola, com pequenos
+// galhos saindo pro lado. Só aparece depois que a semente da linha do tempo
+// chega ao fim, e pausa enquanto algum clipe está tocando.
 const W = 100
 const H = 1000
 const STEPS = 14
@@ -51,12 +54,27 @@ export default function RootLine({
   opacity = 0.4,
   className = '',
 }) {
-  const uid = useId().replace(/:/g, '')
-  const gradId = `root-grad-${uid}`
+  const wrapRef = useRef(null)
+  const reduceMotion = useReducedMotion()
+  const [unlocked, setUnlocked] = useState(isRootUnlocked)
+  const [videoActive, setVideoActiveState] = useState(isVideoActive)
   const { d: trunkD, pts } = buildTrunk()
+  const gradIdRef = useRef(`root-grad-${Math.random().toString(36).slice(2)}`)
+  const gradId = gradIdRef.current
+
+  useEffect(() => subscribeRootUnlock(setUnlocked), [])
+  useEffect(() => subscribeVideoActivity(setVideoActiveState), [])
+
+  const { scrollYProgress } = useScroll({ target: wrapRef, offset: ['start 88%', 'end 55%'] })
+  const spring = useSpring(scrollYProgress, { stiffness: 90, damping: 24, restDelta: 0.001 })
+  const grow = reduceMotion ? scrollYProgress : spring
+
+  const show = unlocked && !videoActive
+  const groupOpacity = show ? opacity / 0.4 : 0
 
   return (
     <div
+      ref={wrapRef}
       aria-hidden="true"
       className={`pointer-events-none absolute inset-y-0 left-1/2 w-14 -translate-x-1/2 md:w-20 ${className}`}
       style={{ WebkitMaskImage: EDGE_MASK, maskImage: EDGE_MASK }}
@@ -68,26 +86,42 @@ export default function RootLine({
             <stop offset="1" stopColor={to} />
           </linearGradient>
         </defs>
-        <path
-          d={trunkD}
-          fill="none"
-          stroke={`url(#${gradId})`}
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          opacity={opacity}
-        />
-        {branches.map((f, i) => (
-          <path
-            key={i}
-            d={buildBranch(pts, f, i % 2 === 0 ? 1 : -1, branchLength)}
+        <g style={{ opacity: groupOpacity, transition: 'opacity 700ms ease' }}>
+          <motion.path
+            d={trunkD}
             fill="none"
             stroke={`url(#${gradId})`}
-            strokeWidth="1"
+            strokeWidth="1.6"
             strokeLinecap="round"
-            opacity={opacity * 0.7}
+            opacity="0.4"
+            style={{ pathLength: grow }}
           />
-        ))}
+          {branches.map((f, i) => (
+            <BranchPath
+              key={i}
+              d={buildBranch(pts, f, i % 2 === 0 ? 1 : -1, branchLength)}
+              gradId={gradId}
+              grow={grow}
+              from={f}
+            />
+          ))}
+        </g>
       </svg>
     </div>
+  )
+}
+
+function BranchPath({ d, gradId, grow, from }) {
+  const branchGrow = useTransform(grow, [from, Math.min(from + 0.1, 1)], [0, 1])
+  return (
+    <motion.path
+      d={d}
+      fill="none"
+      stroke={`url(#${gradId})`}
+      strokeWidth="1"
+      strokeLinecap="round"
+      opacity="0.3"
+      style={{ pathLength: branchGrow }}
+    />
   )
 }

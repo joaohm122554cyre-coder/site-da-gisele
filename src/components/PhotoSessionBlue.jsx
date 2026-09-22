@@ -25,7 +25,6 @@ const photos = [
 const SLIDE_SECONDS = 3
 const DESKTOP_SLIDE_SECONDS = 1.5
 const SMOOTH = 'cubic-bezier(0.65,0,0.35,1)'
-const pad = (n) => String(n).padStart(2, '0')
 const mod = (a, n) => ((a % n) + n) % n
 const total = photos.length
 const progressStyle = (running, seconds = SLIDE_SECONDS) => ({
@@ -320,7 +319,7 @@ function useRootSystem(box, center) {
         dir[0] !== 0 ? Math.abs(edgeX / dir[0]) : Infinity,
         dir[1] !== 0 ? Math.abs(edgeY / dir[1]) : Infinity,
       )
-      const len = edgeDist * (0.72 + rand() * 0.24)
+      const len = edgeDist * (0.96 + rand() * 0.16)
       const angleDeg = (angle * 180) / Math.PI
       buildBranch(center.x, center.y, dir, len, 0, rand).forEach((b) => roots.push({ ...b, angleDeg }))
     }
@@ -487,11 +486,8 @@ export default function PhotoSessionBlue() {
       <Reveal>
         <div ref={wrapRef}>
           <div className="max-w-7xl md:max-w-none mx-auto px-6 md:px-12">
-            <div className="flex items-end justify-between mb-6 md:mb-8">
+            <div className="mb-6 md:mb-8">
               <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">Ensaio azul</span>
-              <span className="text-[11px] tabular-nums tracking-[0.3em] text-[#f4eef7]/45">
-                <span className="text-[#f4eef7]/90">{pad(mod(step, total) + 1)}</span> / {pad(total)}
-              </span>
             </div>
 
             <MobileCarousel step={step} prev={prev} dispatch={dispatch} inView={inView} />
@@ -502,7 +498,7 @@ export default function PhotoSessionBlue() {
             ref={deskWrapRef}
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}
-            className="relative hidden md:block max-w-7xl mx-auto px-12"
+            className="relative hidden md:block w-full px-8 lg:px-20"
           >
             <div
               aria-hidden="true"

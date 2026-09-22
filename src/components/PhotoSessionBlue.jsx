@@ -23,12 +23,13 @@ const photos = [
 ]
 
 const SLIDE_SECONDS = 3
+const DESKTOP_SLIDE_SECONDS = 1.5
 const SMOOTH = 'cubic-bezier(0.65,0,0.35,1)'
 const pad = (n) => String(n).padStart(2, '0')
 const mod = (a, n) => ((a % n) + n) % n
 const total = photos.length
-const progressStyle = (running) => ({
-  animation: `panel-progress ${SLIDE_SECONDS}s linear forwards`,
+const progressStyle = (running, seconds = SLIDE_SECONDS) => ({
+  animation: `panel-progress ${seconds}s linear forwards`,
   animationPlayState: running ? 'running' : 'paused',
 })
 
@@ -159,7 +160,7 @@ function DesktopSlide({ step, running, onEnd, onNext, onBack }) {
   const photo = photos[current]
 
   return (
-    <div className="relative mx-auto aspect-[3/2] w-full max-w-5xl overflow-hidden rounded-2xl shadow-[0_0_0_1px_rgba(79,127,214,0.2)]">
+    <div className="relative mx-auto aspect-[16/9] w-full max-w-5xl overflow-hidden rounded-2xl shadow-[0_0_0_1px_rgba(79,127,214,0.2)]">
       {photos.map((p, i) => (
         <img
           key={p.src}
@@ -194,7 +195,7 @@ function DesktopSlide({ step, running, onEnd, onNext, onBack }) {
         aria-hidden="true"
         onAnimationEnd={onEnd}
         className="absolute inset-x-0 bottom-0 h-[2px] origin-left bg-[#4f7fd6]"
-        style={progressStyle(running)}
+        style={progressStyle(running, DESKTOP_SLIDE_SECONDS)}
       />
       <span className="sr-only">
         Foto {current + 1} de {total}: {photo.alt}

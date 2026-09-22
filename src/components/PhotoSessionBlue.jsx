@@ -160,7 +160,7 @@ function DesktopSlide({ step, running, onEnd, onNext, onBack }) {
   const photo = photos[current]
 
   return (
-    <div className="relative mx-auto aspect-[16/9] w-full max-w-5xl overflow-hidden rounded-2xl shadow-[0_0_0_1px_rgba(79,127,214,0.2)]">
+    <div className="relative mx-auto aspect-[4/5] w-full max-w-xl overflow-hidden rounded-2xl shadow-[0_0_0_1px_rgba(79,127,214,0.2)]">
       {photos.map((p, i) => (
         <img
           key={p.src}

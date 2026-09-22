@@ -7,6 +7,7 @@ import photoDuo from '../assets/photos/dupla-cantando.webp'
 import { currentMoment } from '../lib/site-data'
 import Reveal from './Reveal'
 import Link from './Link'
+import RootLine from './RootLine'
 
 // Recortes dos rostos (fundo ampliado 3x, centrado em cada rosto).
 const faces = [
@@ -58,6 +59,9 @@ export default function CurrentMoment() {
               />
             </div>
           </div>
+        </div>
+        <div className="relative hidden md:col-span-1 md:col-start-7 md:block">
+          <RootLine from="#d954d1" to="#4f7fd6" branches={[0.35, 0.7]} className="w-full" />
         </div>
         <div className="md:col-span-5 md:col-start-8">
           <Reveal>

@@ -1,10 +1,12 @@
 import Reveal from './Reveal'
+import RootLine from './RootLine'
 
 const upcoming = []
 
 export default function Agenda() {
   return (
     <section id="agenda" className="relative py-28 md:py-40 bg-transparent">
+      <RootLine from="#4f7fd6" to="#4f7fd6" branches={[0.4]} />
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <Reveal>
           <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">

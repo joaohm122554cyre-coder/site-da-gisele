@@ -23,12 +23,13 @@ const photos = [
 ]
 
 const SLIDE_SECONDS = 3
+const DESKTOP_SLIDE_SECONDS = 1.5
 const SMOOTH = 'cubic-bezier(0.65,0,0.35,1)'
 const pad = (n) => String(n).padStart(2, '0')
 const mod = (a, n) => ((a % n) + n) % n
 const total = photos.length
-const progressStyle = (running) => ({
-  animation: `panel-progress ${SLIDE_SECONDS}s linear forwards`,
+const progressStyle = (running, seconds = SLIDE_SECONDS) => ({
+  animation: `panel-progress ${seconds}s linear forwards`,
   animationPlayState: running ? 'running' : 'paused',
 })
 
@@ -145,48 +146,106 @@ function MobileCarousel({ step, prev, dispatch, inView }) {
   )
 }
 
-// Computador: uma foto por vez, ocupando a faixa inteira; a troca é um crossfade suave.
-function DesktopSlide({ step, running, onEnd, onAdvance }) {
+const ArrowIcon = ({ flip }) => (
+  <svg viewBox="0 0 24 24" className={`h-4 w-4 ${flip ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+)
+
+// Computador: cartão único, sempre do mesmo tamanho — como um carrossel do Instagram.
+// A foto preenche o cartão inteiro (sem esticar, sem sobra desfocada); troca sozinha
+// a cada 3s ou pelas setas.
+function DesktopSlide({ step, running, onEnd, onNext, onBack }) {
   const current = mod(step, total)
+  const photo = photos[current]
 
   return (
-    <button
-      type="button"
-      onClick={onAdvance}
-      aria-label={`Foto ${current + 1} de ${total}. Clique para ver a próxima`}
-      className="relative block h-full w-full overflow-hidden text-left outline-none focus-visible:ring-2 focus-visible:ring-[#4f7fd6]"
-    >
-      {/* fundo desfocado preenche a faixa larga; a foto em si fica no formato original, sem esticar */}
-      {photos.map((photo, i) => (
+    <div className="relative mx-auto aspect-[4/5] w-full max-w-xl overflow-hidden rounded-2xl shadow-[0_0_0_1px_rgba(79,127,214,0.2)]">
+      {photos.map((p, i) => (
         <img
-          key={`bg-${photo.src}`}
-          aria-hidden="true"
-          src={photo.src}
+          key={p.src}
+          src={p.src}
+          alt={i === current ? p.alt : ''}
           loading="lazy"
           decoding="async"
-          className="absolute inset-0 h-full w-full scale-110 object-cover opacity-40 blur-2xl transition-opacity duration-[900ms] ease-in-out"
-          style={{ objectPosition: photo.position, opacity: i === current ? 0.4 : 0 }}
+          className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[900ms] ease-in-out"
+          style={{ objectPosition: p.position, opacity: i === current ? 1 : 0 }}
         />
       ))}
-      {photos.map((photo, i) => (
-        <img
-          key={photo.src}
-          src={photo.src}
-          alt={i === current ? photo.alt : ''}
-          loading="lazy"
-          decoding="async"
-          className="absolute inset-0 h-full w-full object-contain transition-opacity duration-[900ms] ease-in-out"
-          style={{ opacity: i === current ? 1 : 0 }}
-        />
-      ))}
+
+      <button
+        type="button"
+        onClick={onBack}
+        aria-label="Foto anterior"
+        className="absolute left-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full border border-white/25 bg-[#14122a]/55 text-white backdrop-blur-sm transition hover:border-white/60 hover:bg-[#14122a]/80"
+      >
+        <ArrowIcon flip />
+      </button>
+      <button
+        type="button"
+        onClick={onNext}
+        aria-label="Próxima foto"
+        className="absolute right-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full border border-white/25 bg-[#14122a]/55 text-white backdrop-blur-sm transition hover:border-white/60 hover:bg-[#14122a]/80"
+      >
+        <ArrowIcon />
+      </button>
+
       <span
         key={step}
         aria-hidden="true"
         onAnimationEnd={onEnd}
         className="absolute inset-x-0 bottom-0 h-[2px] origin-left bg-[#4f7fd6]"
-        style={progressStyle(running)}
+        style={progressStyle(running, DESKTOP_SLIDE_SECONDS)}
       />
-    </button>
+      <span className="sr-only">
+        Foto {current + 1} de {total}: {photo.alt}
+      </span>
+    </div>
+  )
+}
+
+// Nuvenzinha decorativa nos 4 cantos, com miniaturas dela espalhadas — uma referência
+// suave à fé cristã, sem disputar atenção com a foto principal.
+const cloudPhotos = {
+  'bottom-left': [photos[3], photos[6]],
+  'bottom-right': [photos[1], photos[4]],
+  'top-left': [photos[0], photos[5]],
+  'top-right': [photos[2], photos[7]],
+}
+
+function CloudCorner({ corner }) {
+  const [vSide, hSide] = corner.split('-')
+  const isLeft = hSide === 'left'
+  const isTop = vSide === 'top'
+  const vProp = isTop ? 'top' : 'bottom'
+  const hProp = isLeft ? 'left' : 'right'
+
+  return (
+    <div
+      aria-hidden="true"
+      className={`pointer-events-none absolute hidden lg:block ${isTop ? 'top-6' : 'bottom-6'} ${isLeft ? 'left-0' : 'right-0'}`}
+    >
+      <div
+        className="absolute h-40 w-56 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(244,238,247,0.16),rgba(79,127,214,0.1)_55%,transparent_75%)] blur-xl"
+        style={{ [hProp]: '-1.5rem', [vProp]: '-1rem' }}
+      />
+      {cloudPhotos[corner].map((photo, i) => (
+        <img
+          key={photo.src}
+          src={photo.src}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          className="absolute h-16 w-16 max-w-none rounded-2xl border border-white/20 object-cover opacity-70 shadow-[0_8px_24px_rgba(20,18,42,0.5)]"
+          style={{
+            objectPosition: photo.position,
+            [hProp]: i === 0 ? '0.5rem' : '3.25rem',
+            [vProp]: i === 0 ? '2.75rem' : '-0.5rem',
+            transform: `rotate(${isLeft ? -8 + i * 10 : 8 - i * 10}deg)`,
+          }}
+        />
+      ))}
+    </div>
   )
 }
 
@@ -211,21 +270,26 @@ export default function PhotoSessionBlue() {
             <MobileCarousel step={step} prev={prev} dispatch={dispatch} inView={inView} />
           </div>
 
-          {/* computador: uma foto por vez, de ponta a ponta da tela */}
+          {/* computador: um cartão só, sempre do mesmo tamanho */}
           <div
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}
-            className="relative hidden md:block w-full h-[clamp(30rem,42vw,46rem)]"
+            className="relative hidden md:block max-w-7xl mx-auto px-12"
           >
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-x-0 -bottom-16 h-56 bg-[radial-gradient(ellipse_at_center,rgba(79,127,214,0.2),transparent_65%)]"
+              className="pointer-events-none absolute inset-x-0 -bottom-10 h-56 bg-[radial-gradient(ellipse_at_center,rgba(79,127,214,0.2),transparent_65%)]"
             />
+            <CloudCorner corner="bottom-left" />
+            <CloudCorner corner="bottom-right" />
+            <CloudCorner corner="top-left" />
+            <CloudCorner corner="top-right" />
             <DesktopSlide
               step={step}
               running={inView && !hovering}
               onEnd={() => dispatch({ type: 'next' })}
-              onAdvance={() => dispatch({ type: 'next' })}
+              onNext={() => dispatch({ type: 'next' })}
+              onBack={() => dispatch({ type: 'back' })}
             />
           </div>
         </div>

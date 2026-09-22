@@ -498,7 +498,7 @@ export default function PhotoSessionBlue() {
             ref={deskWrapRef}
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}
-            className="relative hidden md:block max-w-7xl mx-auto px-12"
+            className="relative hidden md:block w-full px-8 lg:px-20"
           >
             <div
               aria-hidden="true"

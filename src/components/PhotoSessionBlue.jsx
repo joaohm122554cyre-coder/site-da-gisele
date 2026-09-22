@@ -1,5 +1,5 @@
-import { useLayoutEffect, useReducer, useRef, useState } from 'react'
-import { useInView } from 'framer-motion'
+import { useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react'
+import { motion, useInView } from 'framer-motion'
 import retratoSorriso from '../assets/photos/azul-retrato-sorriso.webp'
 import colunas1 from '../assets/photos/azul-colunas-1.webp'
 import emPe from '../assets/photos/azul-em-pe.webp'
@@ -155,12 +155,15 @@ const ArrowIcon = ({ flip }) => (
 // Computador: cartão único, sempre do mesmo tamanho — como um carrossel do Instagram.
 // A foto preenche o cartão inteiro (sem esticar, sem sobra desfocada); troca sozinha
 // a cada 3s ou pelas setas.
-function DesktopSlide({ step, running, onEnd, onNext, onBack }) {
+function DesktopSlide({ step, running, onEnd, onNext, onBack, frameRef }) {
   const current = mod(step, total)
   const photo = photos[current]
 
   return (
-    <div className="relative mx-auto aspect-[4/5] w-full max-w-xl overflow-hidden rounded-2xl shadow-[0_0_0_1px_rgba(79,127,214,0.2)]">
+    <div
+      ref={frameRef}
+      className="relative z-10 mx-auto aspect-[4/5] w-full max-w-xl overflow-hidden rounded-2xl shadow-[0_0_0_1px_rgba(79,127,214,0.2)]"
+    >
       {photos.map((p, i) => (
         <img
           key={p.src}
@@ -205,15 +208,28 @@ function DesktopSlide({ step, running, onEnd, onNext, onBack }) {
 }
 
 // Nuvenzinha decorativa nos 4 cantos, com miniaturas dela espalhadas — uma referência
-// suave à fé cristã, sem disputar atenção com a foto principal.
+// suave à fé cristã. Cada foto mora num canto fixo; quando ela vira a foto central, a
+// miniatura some do canto (ela "foi pro centro") e volta quando deixa de ser a atual.
 const cloudPhotos = {
-  'bottom-left': [photos[3], photos[6]],
-  'bottom-right': [photos[1], photos[4]],
-  'top-left': [photos[0], photos[5]],
-  'top-right': [photos[2], photos[7]],
+  'bottom-left': [3, 6],
+  'bottom-right': [1, 4],
+  'top-left': [0, 5],
+  'top-right': [2, 7],
+}
+const corners = Object.keys(cloudPhotos)
+const cornerOfIndex = {}
+corners.forEach((corner) => cloudPhotos[corner].forEach((i) => (cornerOfIndex[i] = corner)))
+
+// pontos aproximados (em %) de cada nuvem e do centro do cartão, usados tanto pelas
+// linhas (SVG, escala com o tamanho da seção) quanto pra guiar o olho até o cartão
+const anchors = {
+  'bottom-left': { x: 4, y: 88 },
+  'bottom-right': { x: 96, y: 88 },
+  'top-left': { x: 4, y: 12 },
+  'top-right': { x: 96, y: 12 },
 }
 
-function CloudCorner({ corner }) {
+function CloudCorner({ corner, current, registerThumb }) {
   const [vSide, hSide] = corner.split('-')
   const isLeft = hSide === 'left'
   const isTop = vSide === 'top'
@@ -226,34 +242,126 @@ function CloudCorner({ corner }) {
       className={`pointer-events-none absolute hidden lg:block ${isTop ? 'top-6' : 'bottom-6'} ${isLeft ? 'left-0' : 'right-0'}`}
     >
       <div
-        className="absolute h-40 w-56 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(244,238,247,0.16),rgba(79,127,214,0.1)_55%,transparent_75%)] blur-xl"
+        className="absolute h-44 w-60 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(244,238,247,0.16),rgba(79,127,214,0.1)_55%,transparent_75%)] blur-xl"
         style={{ [hProp]: '-1.5rem', [vProp]: '-1rem' }}
       />
-      {cloudPhotos[corner].map((photo, i) => (
-        <img
-          key={photo.src}
-          src={photo.src}
-          alt=""
-          loading="lazy"
-          decoding="async"
-          className="absolute h-16 w-16 max-w-none rounded-2xl border border-white/20 object-cover opacity-70 shadow-[0_8px_24px_rgba(20,18,42,0.5)]"
-          style={{
-            objectPosition: photo.position,
-            [hProp]: i === 0 ? '0.5rem' : '3.25rem',
-            [vProp]: i === 0 ? '2.75rem' : '-0.5rem',
-            transform: `rotate(${isLeft ? -8 + i * 10 : 8 - i * 10}deg)`,
-          }}
-        />
-      ))}
+      {/* a miniatura da foto atual fica com opacidade 0 (não removida), pra manter a
+          posição medível — é dela que a cópia voadora parte */}
+      {cloudPhotos[corner].map((i, k) => {
+        const photo = photos[i]
+        return (
+          <img
+            key={photo.src}
+            ref={(el) => registerThumb(i, el)}
+            src={photo.src}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            className="absolute h-20 w-20 max-w-none rounded-2xl border border-white/20 object-cover shadow-[0_8px_24px_rgba(20,18,42,0.5)] transition-opacity duration-300"
+            style={{
+              objectPosition: photo.position,
+              opacity: i === current ? 0 : 0.75,
+              [hProp]: k === 0 ? '0.5rem' : '4rem',
+              [vProp]: k === 0 ? '3.5rem' : '-0.5rem',
+              transform: `rotate(${isLeft ? -8 + k * 10 : 8 - k * 10}deg)`,
+            }}
+          />
+        )
+      })}
     </div>
+  )
+}
+
+// Linhas que ligam cada nuvem ao centro do cartão; a linha do canto de onde a foto
+// atual "veio" fica acesa, as outras ficam apagadas.
+function ConnectingLines({ activeCorner }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 100 100"
+      preserveAspectRatio="none"
+      className="pointer-events-none absolute inset-0 hidden h-full w-full lg:block"
+    >
+      {corners.map((corner) => {
+        const a = anchors[corner]
+        const active = corner === activeCorner
+        return (
+          <line
+            key={corner}
+            x1={a.x}
+            y1={a.y}
+            x2={50}
+            y2={50}
+            vectorEffect="non-scaling-stroke"
+            stroke="#7fb0f7"
+            strokeWidth={active ? 1.6 : 0.6}
+            strokeLinecap="round"
+            style={{
+              opacity: active ? 0.9 : 0.12,
+              filter: active ? 'drop-shadow(0 0 6px rgba(79,127,214,0.9))' : 'none',
+              transition: 'opacity 700ms ease, stroke-width 700ms ease',
+            }}
+          />
+        )
+      })}
+    </svg>
+  )
+}
+
+const FLIGHT_MS = 800
+
+// Miniatura que voa da nuvem até o cartão quando a foto atual muda.
+function FlyingPhoto({ flight }) {
+  if (!flight) return null
+  return (
+    <motion.img
+      key={flight.key}
+      src={flight.src}
+      alt=""
+      initial={{ x: flight.from.x, y: flight.from.y, width: flight.from.w, height: flight.from.h }}
+      animate={{ x: flight.to.x, y: flight.to.y, width: flight.to.w, height: flight.to.h }}
+      transition={{ duration: FLIGHT_MS / 1000, ease: [0.65, 0, 0.35, 1] }}
+      className="pointer-events-none absolute left-0 top-0 z-20 rounded-2xl object-cover shadow-[0_0_50px_rgba(79,127,214,0.7)]"
+      style={{ objectPosition: flight.position }}
+    />
   )
 }
 
 export default function PhotoSessionBlue() {
   const [{ step, prev }, dispatch] = useReducer(reducer, { step: 0, prev: 0 })
   const [hovering, setHovering] = useState(false)
+  const [flight, setFlight] = useState(null)
   const wrapRef = useRef(null)
+  const deskWrapRef = useRef(null)
+  const frameRef = useRef(null)
+  const thumbRefs = useRef({})
+  const registerThumb = (i, el) => {
+    thumbRefs.current[i] = el
+  }
   const inView = useInView(wrapRef, { margin: '-15% 0px' })
+  const current = mod(step, total)
+
+  // sempre que a foto atual muda, mede onde a miniatura estava (na nuvem) e onde o
+  // cartão está, e solta uma cópia voando de um ponto ao outro
+  useEffect(() => {
+    const thumbEl = thumbRefs.current[current]
+    const frameEl = frameRef.current
+    const wrapEl = deskWrapRef.current
+    if (!thumbEl || !frameEl || !wrapEl) return
+    const wrapRect = wrapEl.getBoundingClientRect()
+    const fromRect = thumbEl.getBoundingClientRect()
+    const toRect = frameEl.getBoundingClientRect()
+    setFlight({
+      key: step,
+      src: photos[current].src,
+      position: photos[current].position,
+      from: { x: fromRect.left - wrapRect.left, y: fromRect.top - wrapRect.top, w: fromRect.width, h: fromRect.height },
+      to: { x: toRect.left - wrapRect.left, y: toRect.top - wrapRect.top, w: toRect.width, h: toRect.height },
+    })
+    const timer = setTimeout(() => setFlight(null), FLIGHT_MS)
+    return () => clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step])
 
   return (
     <section id="ensaio-azul" className="relative pt-16 md:pt-24 pb-32 md:pb-56">
@@ -270,8 +378,9 @@ export default function PhotoSessionBlue() {
             <MobileCarousel step={step} prev={prev} dispatch={dispatch} inView={inView} />
           </div>
 
-          {/* computador: um cartão só, sempre do mesmo tamanho */}
+          {/* computador: um cartão só, ligado por linhas às nuvens de fotos nos cantos */}
           <div
+            ref={deskWrapRef}
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}
             className="relative hidden md:block max-w-7xl mx-auto px-12"
@@ -280,17 +389,19 @@ export default function PhotoSessionBlue() {
               aria-hidden="true"
               className="pointer-events-none absolute inset-x-0 -bottom-10 h-56 bg-[radial-gradient(ellipse_at_center,rgba(79,127,214,0.2),transparent_65%)]"
             />
-            <CloudCorner corner="bottom-left" />
-            <CloudCorner corner="bottom-right" />
-            <CloudCorner corner="top-left" />
-            <CloudCorner corner="top-right" />
+            <ConnectingLines activeCorner={cornerOfIndex[current]} />
+            {corners.map((corner) => (
+              <CloudCorner key={corner} corner={corner} current={current} registerThumb={registerThumb} />
+            ))}
             <DesktopSlide
               step={step}
               running={inView && !hovering}
               onEnd={() => dispatch({ type: 'next' })}
               onNext={() => dispatch({ type: 'next' })}
               onBack={() => dispatch({ type: 'back' })}
+              frameRef={frameRef}
             />
+            <FlyingPhoto flight={flight} />
           </div>
         </div>
       </Reveal>

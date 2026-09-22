@@ -188,11 +188,11 @@ export default function PhotoSessionPink() {
             <MobileCarousel active={active} setActive={setActive} inView={inView} autoplay={autoplay} />
           </div>
 
-          {/* computador: painéis que abrem, de ponta a ponta da tela */}
+          {/* computador: uma foto por vez, ocupando o espaço inteiro, trocando sozinha */}
           <div
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}
-            className="relative hidden md:flex w-full gap-3 h-[clamp(30rem,42vw,46rem)]"
+            className="relative hidden md:block w-full h-[clamp(30rem,42vw,46rem)] overflow-hidden rounded-2xl"
           >
             <div
               aria-hidden="true"
@@ -202,48 +202,38 @@ export default function PhotoSessionPink() {
             {photos.map((photo, i) => {
               const isActive = i === active
               return (
-                <button
+                <div
                   key={photo.src}
-                  type="button"
-                  onClick={() => setActive(i)}
-                  aria-label={`Foto ${i + 1} de ${total}`}
-                  aria-current={isActive ? 'true' : undefined}
-                  className="group relative min-h-0 min-w-0 basis-0 overflow-hidden rounded-2xl first-of-type:rounded-l-none last-of-type:rounded-r-none text-left outline-none transition-[flex-grow,box-shadow] duration-[1500ms] ease-[cubic-bezier(0.65,0,0.35,1)] focus-visible:ring-2 focus-visible:ring-[#d954d1]"
-                  style={{
-                    flexGrow: isActive ? 5 : 1,
-                    boxShadow: isActive
-                      ? '0 0 0 1px rgba(217,84,209,0.4), 0 0 70px -16px rgba(217,84,209,0.55)'
-                      : '0 0 0 1px rgba(244,238,247,0.08)',
-                  }}
+                  aria-hidden={isActive ? undefined : true}
+                  className="absolute inset-0 transition-opacity duration-[1400ms] ease-in-out"
+                  style={{ opacity: isActive ? 1 : 0 }}
                 >
                   <img
                     src={photo.src}
                     alt={photo.alt}
                     loading="lazy"
                     decoding="async"
-                    className={`absolute inset-0 h-full w-full object-cover transition-transform duration-[2000ms] ease-in-out ${
-                      isActive ? 'scale-100' : 'scale-110'
-                    }`}
+                    className="absolute inset-0 h-full w-full object-cover"
                     style={{ objectPosition: photo.position }}
                   />
-                  <span
-                    aria-hidden="true"
-                    className="absolute inset-0 bg-[#14122a] transition-opacity duration-[1400ms] group-hover:opacity-50"
-                    style={{ opacity: isActive ? 0 : 0.6 }}
-                  />
-
-                  {isActive && autoplay && (
-                    <span
-                      key={active}
-                      aria-hidden="true"
-                      onAnimationEnd={next}
-                      className="absolute inset-x-0 bottom-0 h-[2px] origin-left bg-[#d954d1]"
-                      style={progressStyle(inView && !hovering)}
-                    />
-                  )}
-                </button>
+                </div>
               )
             })}
+
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 shadow-[inset_0_0_0_1px_rgba(217,84,209,0.4),0_0_70px_-16px_rgba(217,84,209,0.55)]"
+            />
+
+            {autoplay && (
+              <span
+                key={active}
+                aria-hidden="true"
+                onAnimationEnd={next}
+                className="absolute inset-x-0 bottom-0 h-[2px] origin-left bg-[#d954d1]"
+                style={progressStyle(inView && !hovering)}
+              />
+            )}
           </div>
         </div>
       </Reveal>

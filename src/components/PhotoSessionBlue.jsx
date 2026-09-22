@@ -204,25 +204,32 @@ function DesktopSlide({ step, running, onEnd, onNext, onBack }) {
   )
 }
 
-// Nuvenzinha decorativa nos cantos, com miniaturas dela espalhadas — uma referência
+// Nuvenzinha decorativa nos 4 cantos, com miniaturas dela espalhadas — uma referência
 // suave à fé cristã, sem disputar atenção com a foto principal.
 const cloudPhotos = {
-  left: [photos[3], photos[6]],
-  right: [photos[1], photos[4]],
+  'bottom-left': [photos[3], photos[6]],
+  'bottom-right': [photos[1], photos[4]],
+  'top-left': [photos[0], photos[5]],
+  'top-right': [photos[2], photos[7]],
 }
 
-function CloudCorner({ side }) {
-  const isLeft = side === 'left'
+function CloudCorner({ corner }) {
+  const [vSide, hSide] = corner.split('-')
+  const isLeft = hSide === 'left'
+  const isTop = vSide === 'top'
+  const vProp = isTop ? 'top' : 'bottom'
+  const hProp = isLeft ? 'left' : 'right'
+
   return (
     <div
       aria-hidden="true"
-      className={`pointer-events-none absolute bottom-6 hidden lg:block ${isLeft ? 'left-0' : 'right-0'}`}
+      className={`pointer-events-none absolute hidden lg:block ${isTop ? 'top-6' : 'bottom-6'} ${isLeft ? 'left-0' : 'right-0'}`}
     >
       <div
         className="absolute h-40 w-56 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(244,238,247,0.16),rgba(79,127,214,0.1)_55%,transparent_75%)] blur-xl"
-        style={{ [isLeft ? 'left' : 'right']: '-1.5rem', bottom: '-1rem' }}
+        style={{ [hProp]: '-1.5rem', [vProp]: '-1rem' }}
       />
-      {cloudPhotos[side].map((photo, i) => (
+      {cloudPhotos[corner].map((photo, i) => (
         <img
           key={photo.src}
           src={photo.src}
@@ -232,8 +239,8 @@ function CloudCorner({ side }) {
           className="absolute h-16 w-16 max-w-none rounded-2xl border border-white/20 object-cover opacity-70 shadow-[0_8px_24px_rgba(20,18,42,0.5)]"
           style={{
             objectPosition: photo.position,
-            [isLeft ? 'left' : 'right']: i === 0 ? '0.5rem' : '3.25rem',
-            bottom: i === 0 ? '2.75rem' : '-0.5rem',
+            [hProp]: i === 0 ? '0.5rem' : '3.25rem',
+            [vProp]: i === 0 ? '2.75rem' : '-0.5rem',
             transform: `rotate(${isLeft ? -8 + i * 10 : 8 - i * 10}deg)`,
           }}
         />
@@ -273,8 +280,10 @@ export default function PhotoSessionBlue() {
               aria-hidden="true"
               className="pointer-events-none absolute inset-x-0 -bottom-10 h-56 bg-[radial-gradient(ellipse_at_center,rgba(79,127,214,0.2),transparent_65%)]"
             />
-            <CloudCorner side="left" />
-            <CloudCorner side="right" />
+            <CloudCorner corner="bottom-left" />
+            <CloudCorner corner="bottom-right" />
+            <CloudCorner corner="top-left" />
+            <CloudCorner corner="top-right" />
             <DesktopSlide
               step={step}
               running={inView && !hovering}

@@ -220,13 +220,21 @@ const corners = Object.keys(cloudPhotos)
 const cornerOfIndex = {}
 corners.forEach((corner) => cloudPhotos[corner].forEach((i) => (cornerOfIndex[i] = corner)))
 
-// pontos aproximados (em %) de cada nuvem e do centro do cartão, usados tanto pelas
-// linhas (SVG, escala com o tamanho da seção) quanto pra guiar o olho até o cartão
-const anchors = {
-  'bottom-left': { x: 4, y: 88 },
-  'bottom-right': { x: 96, y: 88 },
-  'top-left': { x: 4, y: 12 },
-  'top-right': { x: 96, y: 12 },
+// direção "pra fora" de cada canto, usada pra curvar a linha como uma raiz e pra
+// desenhar as raizinhas pequenas perto da nuvem
+const outward = {
+  'bottom-left': [-1, 1],
+  'bottom-right': [1, 1],
+  'top-left': [-1, -1],
+  'top-right': [1, -1],
+}
+const rotate = ([x, y], deg) => {
+  const rad = (deg * Math.PI) / 180
+  return [x * Math.cos(rad) - y * Math.sin(rad), x * Math.sin(rad) + y * Math.cos(rad)]
+}
+const norm = ([x, y]) => {
+  const len = Math.hypot(x, y) || 1
+  return [x / len, y / len]
 }
 
 function CloudCorner({ corner, current, registerThumb }) {
@@ -272,36 +280,50 @@ function CloudCorner({ corner, current, registerThumb }) {
   )
 }
 
-// Linhas que ligam cada nuvem ao centro do cartão; a linha do canto de onde a foto
-// atual "veio" fica acesa, as outras ficam apagadas.
-function ConnectingLines({ activeCorner }) {
+// Linhas que ligam cada nuvem ao centro do cartão, como raízes: curvam pra fora antes
+// de convergir no tronco (o cartão) e têm raizinhas menores perto da nuvem. As
+// coordenadas são medidas em pixels reais (box/center), por isso encostam certinho
+// na nuvem em vez de "flutuar" ao lado dela.
+function ConnectingLines({ activeCorner, box, center, cloudAnchors }) {
+  if (!box.w || !box.h) return null
+
   return (
     <svg
       aria-hidden="true"
-      viewBox="0 0 100 100"
-      preserveAspectRatio="none"
-      className="pointer-events-none absolute inset-0 hidden h-full w-full lg:block"
+      width={box.w}
+      height={box.h}
+      viewBox={`0 0 ${box.w} ${box.h}`}
+      className="pointer-events-none absolute inset-0 hidden lg:block"
     >
       {corners.map((corner) => {
-        const a = anchors[corner]
+        const start = cloudAnchors[corner]
+        if (!start) return null
+        const [ox, oy] = norm(outward[corner])
         const active = corner === activeCorner
+
+        const dist = Math.hypot(center.x - start.x, center.y - start.y)
+        const mid = { x: (start.x + center.x) / 2, y: (start.y + center.y) / 2 }
+        const bow = Math.min(dist * 0.28, 70)
+        const control = { x: mid.x + ox * bow, y: mid.y + oy * bow }
+        const rootPath = `M ${start.x} ${start.y} Q ${control.x} ${control.y} ${center.x} ${center.y}`
+
+        const fork = (deg, len) => {
+          const [fx, fy] = rotate([ox, oy], deg)
+          return `M ${start.x} ${start.y} L ${start.x + fx * len} ${start.y + fy * len}`
+        }
+
+        const style = {
+          opacity: active ? 0.9 : 0.14,
+          filter: active ? 'drop-shadow(0 0 6px rgba(79,127,214,0.9))' : 'none',
+          transition: 'opacity 700ms ease, stroke-width 700ms ease',
+        }
+
         return (
-          <line
-            key={corner}
-            x1={a.x}
-            y1={a.y}
-            x2={50}
-            y2={50}
-            vectorEffect="non-scaling-stroke"
-            stroke="#7fb0f7"
-            strokeWidth={active ? 1.6 : 0.6}
-            strokeLinecap="round"
-            style={{
-              opacity: active ? 0.9 : 0.12,
-              filter: active ? 'drop-shadow(0 0 6px rgba(79,127,214,0.9))' : 'none',
-              transition: 'opacity 700ms ease, stroke-width 700ms ease',
-            }}
-          />
+          <g key={corner}>
+            <path d={rootPath} fill="none" stroke="#7fb0f7" strokeWidth={active ? 1.8 : 0.7} strokeLinecap="round" style={style} />
+            <path d={fork(28, 18)} stroke="#7fb0f7" strokeWidth={active ? 1.1 : 0.5} strokeLinecap="round" style={style} />
+            <path d={fork(-24, 14)} stroke="#7fb0f7" strokeWidth={active ? 1.1 : 0.5} strokeLinecap="round" style={style} />
+          </g>
         )
       })}
     </svg>
@@ -340,6 +362,47 @@ export default function PhotoSessionBlue() {
   }
   const inView = useInView(wrapRef, { margin: '-15% 0px' })
   const current = mod(step, total)
+  const [box, setBox] = useState({ w: 0, h: 0 })
+  const [center, setCenter] = useState({ x: 0, y: 0 })
+  const [cloudAnchors, setCloudAnchors] = useState({})
+
+  // mede a faixa, o cartão e o centro de cada nuvem (a partir das miniaturas de
+  // verdade) pra desenhar as raízes com coordenadas reais, sem desalinhar
+  useLayoutEffect(() => {
+    const wrapEl = deskWrapRef.current
+    const frameEl = frameRef.current
+    if (!wrapEl || !frameEl) return
+    const measure = () => {
+      const wrapRect = wrapEl.getBoundingClientRect()
+      const frameRect = frameEl.getBoundingClientRect()
+      setBox({ w: wrapRect.width, h: wrapRect.height })
+      setCenter({
+        x: frameRect.left - wrapRect.left + frameRect.width / 2,
+        y: frameRect.top - wrapRect.top + frameRect.height / 2,
+      })
+      const nextAnchors = {}
+      corners.forEach((corner) => {
+        // ignora a miniatura que está invisível (é a foto atual) — senão a linha mira
+        // no meio do caminho entre as duas, incluindo o "buraco" que ninguém vê
+        const rects = cloudPhotos[corner]
+          .filter((i) => i !== current)
+          .map((i) => thumbRefs.current[i]?.getBoundingClientRect())
+          .filter(Boolean)
+        if (!rects.length) return
+        nextAnchors[corner] = {
+          x: rects.reduce((sum, r) => sum + r.left + r.width / 2, 0) / rects.length - wrapRect.left,
+          y: rects.reduce((sum, r) => sum + r.top + r.height / 2, 0) / rects.length - wrapRect.top,
+        }
+      })
+      setCloudAnchors(nextAnchors)
+    }
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(wrapEl)
+    observer.observe(frameEl)
+    return () => observer.disconnect()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [current])
 
   // sempre que a foto atual muda, mede onde a miniatura estava (na nuvem) e onde o
   // cartão está, e solta uma cópia voando de um ponto ao outro
@@ -389,7 +452,7 @@ export default function PhotoSessionBlue() {
               aria-hidden="true"
               className="pointer-events-none absolute inset-x-0 -bottom-10 h-56 bg-[radial-gradient(ellipse_at_center,rgba(79,127,214,0.2),transparent_65%)]"
             />
-            <ConnectingLines activeCorner={cornerOfIndex[current]} />
+            <ConnectingLines activeCorner={cornerOfIndex[current]} box={box} center={center} cloudAnchors={cloudAnchors} />
             {corners.map((corner) => (
               <CloudCorner key={corner} corner={corner} current={current} registerThumb={registerThumb} />
             ))}

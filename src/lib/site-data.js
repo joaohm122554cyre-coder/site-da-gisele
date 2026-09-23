@@ -109,7 +109,7 @@ export const press = {
   title: 'Imprensa',
   description:
     'Mídia kit, fotos oficiais e informações de divulgação para imprensa e parceiros.',
-  mediaKitUrl: null,
+  mediaKitUrl: '/midia-kit-giselli.pdf',
 }
 
 export const socials = [

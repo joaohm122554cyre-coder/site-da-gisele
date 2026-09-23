@@ -163,6 +163,12 @@ function MobileCarousel({ active, setActive, inView, autoplay }) {
   )
 }
 
+const ArrowIcon = ({ flip }) => (
+  <svg viewBox="0 0 24 24" className={`h-4 w-4 ${flip ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+)
+
 export default function PhotoSessionPink() {
   const [active, setActive] = useState(0)
   const [hovering, setHovering] = useState(false)
@@ -172,6 +178,7 @@ export default function PhotoSessionPink() {
   const total = photos.length
 
   const next = () => setActive((i) => (i + 1) % total)
+  const back = () => setActive((i) => (i - 1 + total) % total)
 
   return (
     <section id="ensaio-rosa" className="relative pt-4 md:pt-8 pb-20 md:pb-28">
@@ -188,52 +195,60 @@ export default function PhotoSessionPink() {
             <MobileCarousel active={active} setActive={setActive} inView={inView} autoplay={autoplay} />
           </div>
 
-          {/* computador: uma foto por vez, ocupando o espaço inteiro, trocando sozinha */}
+          {/* computador: cartão único, sempre do mesmo tamanho, tipo carrossel do Instagram */}
           <div
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}
-            className="relative hidden md:block w-full h-[clamp(30rem,42vw,46rem)] overflow-hidden rounded-2xl"
+            className="relative hidden md:block"
           >
             <div
               aria-hidden="true"
               className="pointer-events-none absolute inset-x-0 -bottom-16 h-56 bg-[radial-gradient(ellipse_at_center,rgba(217,84,209,0.18),transparent_65%)]"
             />
 
-            {photos.map((photo, i) => {
-              const isActive = i === active
-              return (
-                <div
-                  key={photo.src}
-                  aria-hidden={isActive ? undefined : true}
-                  className="absolute inset-0 transition-opacity duration-[1400ms] ease-in-out"
-                  style={{ opacity: isActive ? 1 : 0 }}
-                >
+            <div className="relative z-10 mx-auto aspect-[4/5] w-full max-w-xl overflow-hidden rounded-2xl shadow-[0_0_0_1px_rgba(217,84,209,0.2)]">
+              {photos.map((photo, i) => {
+                const isActive = i === active
+                return (
                   <img
+                    key={photo.src}
                     src={photo.src}
-                    alt={photo.alt}
+                    alt={isActive ? photo.alt : ''}
                     loading="lazy"
                     decoding="async"
-                    className="absolute inset-0 h-full w-full object-cover"
-                    style={{ objectPosition: photo.position }}
+                    className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[900ms] ease-in-out"
+                    style={{ objectPosition: photo.position, opacity: isActive ? 1 : 0 }}
                   />
-                </div>
-              )
-            })}
+                )
+              })}
 
-            <span
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 shadow-[inset_0_0_0_1px_rgba(217,84,209,0.4),0_0_70px_-16px_rgba(217,84,209,0.55)]"
-            />
+              <button
+                type="button"
+                onClick={back}
+                aria-label="Foto anterior"
+                className="absolute left-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full border border-white/25 bg-[#14122a]/55 text-white backdrop-blur-sm transition hover:border-white/60 hover:bg-[#14122a]/80"
+              >
+                <ArrowIcon flip />
+              </button>
+              <button
+                type="button"
+                onClick={next}
+                aria-label="Próxima foto"
+                className="absolute right-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full border border-white/25 bg-[#14122a]/55 text-white backdrop-blur-sm transition hover:border-white/60 hover:bg-[#14122a]/80"
+              >
+                <ArrowIcon />
+              </button>
 
-            {autoplay && (
-              <span
-                key={active}
-                aria-hidden="true"
-                onAnimationEnd={next}
-                className="absolute inset-x-0 bottom-0 h-[2px] origin-left bg-[#d954d1]"
-                style={progressStyle(inView && !hovering)}
-              />
-            )}
+              {autoplay && (
+                <span
+                  key={active}
+                  aria-hidden="true"
+                  onAnimationEnd={next}
+                  className="absolute inset-x-0 bottom-0 h-[2px] origin-left bg-[#d954d1]"
+                  style={progressStyle(inView && !hovering)}
+                />
+              )}
+            </div>
           </div>
         </div>
       </Reveal>

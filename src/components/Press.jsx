@@ -6,7 +6,7 @@ export default function Press() {
   return (
     <section id="imprensa" className="relative py-28 md:py-40">
       <RootLine from="#4f7fd6" to="#4f7fd6" branches={[0.5]} />
-      <div className="max-w-3xl mx-auto px-6 md:px-12 text-center">
+      <div className="relative z-10 max-w-3xl mx-auto px-6 md:px-12 text-center">
         <Reveal>
           <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">
             Imprensa

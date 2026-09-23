@@ -328,7 +328,7 @@ function useRootSystem(box, center) {
   }, [box.w, box.h, center.x, center.y])
 }
 
-const branchWidth = [2.2, 1.3, 0.8]
+const branchWidth = [2.6, 1.6, 1]
 
 // A raiz cujo ângulo (a partir do centro) mais se aproxima do canto ativo acende; o
 // resto fica como textura de fundo, apagada.
@@ -372,7 +372,7 @@ function ConnectingLines({ activeCorner, box, center, cloudAnchors, offset }) {
               strokeWidth={branchWidth[r.depth]}
               strokeLinecap="round"
               style={{
-                opacity: active ? 0.85 : 0.18,
+                opacity: active ? 0.9 : 0.38,
                 filter: active ? 'drop-shadow(0 0 6px rgba(79,127,214,0.85))' : 'none',
                 transition: 'opacity 700ms ease',
               }}

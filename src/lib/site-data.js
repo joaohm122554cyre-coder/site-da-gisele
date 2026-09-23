@@ -106,9 +106,10 @@ export const hire = {
 }
 
 export const press = {
-  title: 'Imprensa',
+  title: 'Pronta para contar essa história',
   description:
-    'Mídia kit, fotos oficiais e informações de divulgação para imprensa e parceiros.',
+    'Aqui está tudo que jornalista, produtor de rádio e TV ou organizador de evento precisa pra falar sobre Giselli Cristina: **fotos oficiais em alta resolução**, biografia completa e os números que sustentam **quase 30 anos de carreira** — reunidos num único arquivo, prontos pra usar.',
+  mediaKitNote: 'Um PDF só, com biografia, fotos e dados de divulgação.',
   mediaKitUrl: '/midia-kit-giselli.pdf',
 }
 

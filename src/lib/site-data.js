@@ -92,6 +92,10 @@ export const hire = {
     'Para igrejas, conferências, prefeituras e eventos, entre em contato com a assessoria oficial — Criative Music.',
   whatsapp: '5527981490178',
   email: 'atendimento3@grupocriative.com',
+  agency: {
+    name: 'Criative Music',
+    url: 'https://www.criativemusic.com.br/artista/gisellicristina',
+  },
 }
 
 export const press = {

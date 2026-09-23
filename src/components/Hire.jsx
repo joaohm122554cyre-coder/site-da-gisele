@@ -67,13 +67,12 @@ export default function Hire() {
               href={hire.agency.url}
               target="_blank"
               rel="noreferrer"
-              className="group mt-8 inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-[#f4eef7]/50 transition hover:text-[#f4eef7]/85"
+              className="group mt-6 inline-flex items-center gap-3 rounded-full border border-[#4f7fd6]/40 bg-[#14122a]/55 py-3.5 pl-5 pr-6 text-[11px] uppercase tracking-[0.28em] text-[#f4eef7]/90 backdrop-blur-md transition hover:border-[#4f7fd6]/80 hover:bg-[#14122a]/75 hover:text-[#f4eef7]"
             >
+              <span className="grid h-8 w-8 place-items-center rounded-full bg-[#4f7fd6]/15 text-[#4f7fd6] transition group-hover:bg-[#4f7fd6]/25">
+                <FiExternalLink className="text-base" aria-hidden="true" />
+              </span>
               Visitar site da {hire.agency.name}
-              <FiExternalLink
-                className="text-[13px] transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                aria-hidden="true"
-              />
             </a>
           </Reveal>
         )}

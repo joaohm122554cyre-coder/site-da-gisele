@@ -86,6 +86,13 @@ export const gallery = [
   { src: 'retrato-suave.png', alt: 'Retrato de Giselli Cristina' },
 ]
 
+export const agenda = {
+  description:
+    'As próximas datas ainda não foram divulgadas aqui, mas a agenda de Giselli Cristina já está em andamento. Para verificar disponibilidade e reservar uma data para o seu evento, fale diretamente com Elivelton, assessor responsável pela agenda de shows.',
+  contactName: 'Elivelton',
+  whatsapp: '5591991616758',
+}
+
 export const hire = {
   title: 'Contrate Giselli Cristina',
   description:

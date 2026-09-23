@@ -32,7 +32,8 @@ function Photo({ src, alt, ratio, delay = 0 }) {
 export default function CurrentMoment() {
   return (
     <section className="relative py-28 md:py-40 bg-transparent">
-      <div className="max-w-7xl mx-auto px-6 md:px-12 grid md:grid-cols-12 gap-10 md:gap-16">
+      <RootLine from="#d954d1" to="#4f7fd6" branches={[0.35, 0.7]} />
+      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 grid md:grid-cols-12 gap-10 md:gap-16">
         <div className="md:col-span-6">
           <div className="md:sticky md:top-28 grid grid-cols-[3fr_2fr] gap-3 md:gap-4 items-start">
             <div className="space-y-3 md:space-y-4">
@@ -60,10 +61,7 @@ export default function CurrentMoment() {
             </div>
           </div>
         </div>
-        <div className="relative hidden md:col-span-1 md:col-start-7 md:block">
-          <RootLine from="#d954d1" to="#4f7fd6" branches={[0.35, 0.7]} className="w-full" />
-        </div>
-        <div className="md:col-span-5 md:col-start-8">
+        <div className="md:col-span-6">
           <Reveal>
             <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">
               {currentMoment.title}

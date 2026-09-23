@@ -2,20 +2,25 @@ import { useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
 import { isRootUnlocked, isVideoActive, subscribeRootUnlock, subscribeVideoActivity } from '../lib/root-growth'
 
-// Uma raiz orgânica e sinuosa que cresce enquanto a página rola, com pequenos
-// galhos saindo pro lado. Só aparece depois que a semente da linha do tempo
-// chega ao fim, e pausa enquanto algum clipe está tocando.
+// Uma raiz orgânica e sinuosa que cresce enquanto a página rola, atravessando
+// a largura inteira da seção e soltando pontas que tocam as bordas. Só
+// aparece depois que a semente da linha do tempo chega ao fim, e pausa
+// enquanto algum clipe está tocando.
 const W = 100
 const H = 1000
-const STEPS = 14
-const AMPLITUDE = 16
+const STEPS = 24
+const CENTER = 50
+const AMPLITUDE = 34
+const EDGE_X = 2
 
 function buildTrunk() {
   const pts = []
   for (let i = 0; i <= STEPS; i++) {
     const t = i / STEPS
     const y = t * H
-    const x = i === 0 || i === STEPS ? W / 2 : W / 2 + AMPLITUDE * Math.sin(t * Math.PI * 2.4)
+    const sway =
+      Math.sin(t * Math.PI * 3.1) * AMPLITUDE + Math.sin(t * Math.PI * 5.3 + 1.4) * (AMPLITUDE * 0.22)
+    const x = i === 0 || i === STEPS ? CENTER : CENTER + sway
     pts.push([x, y])
   }
   let d = `M ${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`
@@ -28,18 +33,19 @@ function buildTrunk() {
   return { d, pts }
 }
 
-// Pequeno galho saindo do tronco no ponto de fração f (0 a 1), pro lado indicado.
-function buildBranch(pts, f, side, len) {
+// Ponta que sai do tronco no ponto de fração f (0 a 1) e vai até encostar na
+// borda da seção (esquerda ou direita, conforme o lado).
+function buildBranch(pts, f, side) {
   const idx = f * STEPS
   const i0 = Math.floor(idx)
   const i1 = Math.min(i0 + 1, STEPS)
   const lt = idx - i0
   const x = pts[i0][0] + (pts[i1][0] - pts[i0][0]) * lt
   const y = pts[i0][1] + (pts[i1][1] - pts[i0][1]) * lt
-  const endX = x + side * len
-  const endY = y + len * 0.6
-  const midX = x + side * len * 0.6
-  const midY = y + len * 0.18
+  const endX = side === 1 ? W - EDGE_X : EDGE_X
+  const endY = y + Math.abs(endX - x) * 0.4
+  const midX = x + (endX - x) * 0.55
+  const midY = y + (endY - y) * 0.25
   return `M ${x.toFixed(1)} ${y.toFixed(1)} Q ${midX.toFixed(1)} ${midY.toFixed(1)} ${endX.toFixed(1)} ${endY.toFixed(1)}`
 }
 
@@ -50,7 +56,6 @@ export default function RootLine({
   from = '#d954d1',
   to = '#4f7fd6',
   branches = [0.3, 0.62],
-  branchLength = 22,
   opacity = 0.4,
   className = '',
 }) {
@@ -76,7 +81,7 @@ export default function RootLine({
     <div
       ref={wrapRef}
       aria-hidden="true"
-      className={`pointer-events-none absolute inset-y-0 left-1/2 w-14 -translate-x-1/2 md:w-20 ${className}`}
+      className={`pointer-events-none absolute inset-0 ${className}`}
       style={{ WebkitMaskImage: EDGE_MASK, maskImage: EDGE_MASK }}
     >
       <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="h-full w-full overflow-visible">
@@ -93,13 +98,14 @@ export default function RootLine({
             stroke={`url(#${gradId})`}
             strokeWidth="1.6"
             strokeLinecap="round"
+            vectorEffect="non-scaling-stroke"
             opacity="0.4"
             style={{ pathLength: grow }}
           />
           {branches.map((f, i) => (
             <BranchPath
               key={i}
-              d={buildBranch(pts, f, i % 2 === 0 ? 1 : -1, branchLength)}
+              d={buildBranch(pts, f, i % 2 === 0 ? 1 : -1)}
               gradId={gradId}
               grow={grow}
               from={f}
@@ -120,6 +126,7 @@ function BranchPath({ d, gradId, grow, from }) {
       stroke={`url(#${gradId})`}
       strokeWidth="1"
       strokeLinecap="round"
+      vectorEffect="non-scaling-stroke"
       opacity="0.3"
       style={{ pathLength: branchGrow }}
     />

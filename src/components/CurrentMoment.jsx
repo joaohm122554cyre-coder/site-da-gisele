@@ -32,7 +32,7 @@ function Photo({ src, alt, ratio, delay = 0 }) {
 export default function CurrentMoment() {
   return (
     <section className="relative py-28 md:py-40 bg-transparent">
-      <RootLine from="#d954d1" to="#4f7fd6" branches={[0.35, 0.7]} />
+      <RootLine from="#d954d1" to="#4f7fd6" seed={7} />
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 grid md:grid-cols-12 gap-10 md:gap-16">
         <div className="md:col-span-6">
           <div className="md:sticky md:top-28 grid grid-cols-[3fr_2fr] gap-3 md:gap-4 items-start">

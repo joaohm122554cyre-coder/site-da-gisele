@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import { SiSpotify, SiApplemusic, SiYoutube, SiDeezer, SiInstagram } from 'react-icons/si'
 import { FaAmazon } from 'react-icons/fa'
 import { socials, streaming } from '../lib/site-data'
@@ -29,16 +30,23 @@ const hexToRgba = (hex, alpha) => {
   return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`
 }
 
-function Item({ name, label, url }) {
+// side: de que lado a pílula "vem" antes de encaixar no lugar — como um elo de uma
+// corrente de ímã se juntando no centro da fileira.
+function Item({ name, label, url, side, order }) {
   const Icon = icons[name]
   const color = colors[name]
+  const fromX = side === 'left' ? -90 : side === 'right' ? 90 : 0
 
   return (
-    <a
+    <motion.a
       href={url}
       target="_blank"
       rel="noreferrer"
-      className="group inline-flex items-center gap-2.5 rounded-full border border-[#f4eef7]/12 bg-[#14122a]/40 py-2 pl-2 pr-5 text-sm text-[#f4eef7]/75 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:text-[#f4eef7]"
+      initial={{ x: fromX, opacity: 0 }}
+      whileInView={{ x: 0, opacity: 1 }}
+      viewport={{ once: true, margin: '-10% 0px' }}
+      transition={{ type: 'spring', stiffness: 140, damping: 15, delay: 0.35 + order * 0.08 }}
+      className="group inline-flex items-center gap-2.5 rounded-full border border-[#f4eef7]/12 bg-[#14122a]/40 py-2 pl-2 pr-5 text-sm text-[#f4eef7]/75 backdrop-blur-sm transition-colors duration-300 hover:text-[#f4eef7]"
       style={{ '--hover-border': hexToRgba(color, 0.6) }}
       onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--hover-border)')}
       onMouseLeave={(e) => (e.currentTarget.style.borderColor = '')}
@@ -50,11 +58,30 @@ function Item({ name, label, url }) {
         <Icon className="h-3.5 w-3.5" style={{ color: name === 'Instagram' ? '#fff' : color }} aria-hidden="true" />
       </span>
       {label}
-    </a>
+    </motion.a>
+  )
+}
+
+// A fagulha que pisca no meio da fileira no instante em que os dois lados se encontram.
+function MeetSpark({ accent }) {
+  return (
+    <motion.span
+      aria-hidden="true"
+      initial={{ opacity: 0, scale: 0.4 }}
+      whileInView={{ opacity: [0, 1, 0], scale: [0.4, 1.6, 2.2] }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.7, delay: 0.55, ease: 'easeOut' }}
+      className="pointer-events-none absolute left-1/2 top-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full blur-md"
+      style={{ background: accent }}
+    />
   )
 }
 
 function Group({ word, accent, items, delay }) {
+  const n = items.length
+  const mid = Math.floor(n / 2)
+  const hasCenter = n % 2 === 1
+
   return (
     <Reveal delay={delay}>
       <div className="mb-6 flex items-center justify-center gap-4">
@@ -64,10 +91,16 @@ function Group({ word, accent, items, delay }) {
         </span>
         <span className="h-px w-10 bg-gradient-to-l from-transparent to-current opacity-30" style={{ color: accent }} />
       </div>
-      <div className="flex flex-wrap justify-center gap-3">
-        {items.map((s) => (
-          <Item key={s.name} name={s.name} label={s.handle ?? s.name} url={s.url} />
-        ))}
+      <div className="relative flex flex-wrap justify-center gap-3">
+        <MeetSpark accent={accent} />
+        {items.map((s, i) => {
+          const centerIndex = hasCenter ? mid : -1
+          const side = i === centerIndex ? 'center' : i < mid ? 'left' : 'right'
+          // as pontas da corrente saem primeiro; o elo mais perto do centro chega
+          // por último e "fecha" a conexão
+          const order = side === 'left' ? i : side === 'right' ? n - 1 - i : 0
+          return <Item key={s.name} name={s.name} label={s.handle ?? s.name} url={s.url} side={side} order={order} />
+        })}
       </div>
     </Reveal>
   )

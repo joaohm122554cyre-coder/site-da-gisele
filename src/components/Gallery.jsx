@@ -1,5 +1,6 @@
 import { gallery } from '../lib/site-data'
 import Reveal from './Reveal'
+import RootLine from './RootLine'
 
 const photoModules = import.meta.glob('../assets/photos/*', {
   eager: true,
@@ -49,7 +50,8 @@ function Photo({ index, delay, className = '' }) {
 export default function Gallery() {
   return (
     <section id="galeria" className="relative py-28 md:py-40">
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
+      <RootLine from="#d954d1" to="#4f7fd6" seed={9} />
+      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
         <Reveal className="mb-16">
           <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">
             Galeria

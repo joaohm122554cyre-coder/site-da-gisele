@@ -409,6 +409,7 @@ export default function PhotoSessionBlue() {
   const [hovering, setHovering] = useState(false)
   const [flight, setFlight] = useState(null)
   const wrapRef = useRef(null)
+  const sectionRef = useRef(null)
   const deskWrapRef = useRef(null)
   const frameRef = useRef(null)
   const thumbRefs = useRef({})
@@ -424,16 +425,18 @@ export default function PhotoSessionBlue() {
   // mede a faixa, o cartão e o centro de cada nuvem (a partir das miniaturas de
   // verdade) pra desenhar as raízes com coordenadas reais, sem desalinhar
   useLayoutEffect(() => {
-    const wrapEl = deskWrapRef.current
+    const sectionEl = sectionRef.current
     const frameEl = frameRef.current
-    if (!wrapEl || !frameEl) return
+    if (!sectionEl || !frameEl) return
+    // Mede a partir da seção inteira (não só da faixa do cartão), pra raiz ter espaço
+    // de sobra por baixo e conectar o topo (perto das nuvens) até a base da seção.
     const measure = () => {
-      const wrapRect = wrapEl.getBoundingClientRect()
+      const sectionRect = sectionEl.getBoundingClientRect()
       const frameRect = frameEl.getBoundingClientRect()
-      setBox({ w: wrapRect.width, h: wrapRect.height })
+      setBox({ w: sectionRect.width, h: sectionRect.height })
       setCenter({
-        x: frameRect.left - wrapRect.left + frameRect.width / 2,
-        y: frameRect.top - wrapRect.top + frameRect.height / 2,
+        x: frameRect.left - sectionRect.left + frameRect.width / 2,
+        y: frameRect.top - sectionRect.top + frameRect.height / 2,
       })
       const nextAnchors = {}
       corners.forEach((corner) => {
@@ -445,15 +448,15 @@ export default function PhotoSessionBlue() {
           .filter(Boolean)
         if (!rects.length) return
         nextAnchors[corner] = {
-          x: rects.reduce((sum, r) => sum + r.left + r.width / 2, 0) / rects.length - wrapRect.left,
-          y: rects.reduce((sum, r) => sum + r.top + r.height / 2, 0) / rects.length - wrapRect.top,
+          x: rects.reduce((sum, r) => sum + r.left + r.width / 2, 0) / rects.length - sectionRect.left,
+          y: rects.reduce((sum, r) => sum + r.top + r.height / 2, 0) / rects.length - sectionRect.top,
         }
       })
       setCloudAnchors(nextAnchors)
     }
     measure()
     const observer = new ResizeObserver(measure)
-    observer.observe(wrapEl)
+    observer.observe(sectionEl)
     observer.observe(frameEl)
     return () => observer.disconnect()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -482,8 +485,9 @@ export default function PhotoSessionBlue() {
   }, [step])
 
   return (
-    <section id="ensaio-azul" className="relative pt-16 md:pt-24 pb-32 md:pb-56">
-      <Reveal>
+    <section id="ensaio-azul" ref={sectionRef} className="relative pt-16 md:pt-24 pb-32 md:pb-56">
+      <ConnectingLines activeCorner={cornerOfIndex[current]} box={box} center={center} cloudAnchors={cloudAnchors} />
+      <Reveal className="relative z-10">
         <div ref={wrapRef}>
           <div className="max-w-7xl md:max-w-none mx-auto px-6 md:px-12">
             <div className="mb-6 md:mb-8">
@@ -504,7 +508,6 @@ export default function PhotoSessionBlue() {
               aria-hidden="true"
               className="pointer-events-none absolute inset-x-0 -bottom-10 h-56 bg-[radial-gradient(ellipse_at_center,rgba(79,127,214,0.2),transparent_65%)]"
             />
-            <ConnectingLines activeCorner={cornerOfIndex[current]} box={box} center={center} cloudAnchors={cloudAnchors} />
             {corners.map((corner) => (
               <CloudCorner key={corner} corner={corner} current={current} registerThumb={registerThumb} />
             ))}

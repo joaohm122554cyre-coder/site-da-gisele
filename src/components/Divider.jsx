@@ -9,7 +9,7 @@ const maskStyle = {
 
 export default function Divider() {
   return (
-    <div className="relative -mt-16 md:-mt-28 pb-6 md:pb-10 px-3 md:px-6 flex justify-center">
+    <div className="relative pt-6 md:pt-10 pb-6 md:pb-10 px-3 md:px-6 flex justify-center">
       <motion.div
         initial={{ clipPath: 'inset(-24px 50% -24px 50%)' }}
         whileInView={{ clipPath: 'inset(-24px -24px -24px -24px)' }}

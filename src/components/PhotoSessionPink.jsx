@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef, useState } from 'react'
-import { useInView, useReducedMotion } from 'framer-motion'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { motion, useInView } from 'framer-motion'
 import photoArco from '../assets/photos/sessao-rosa-1.webp'
 import cenaSentada from '../assets/photos/ensaio/dsc02660.webp'
 import cenaBracoErguido from '../assets/photos/ensaio/dsc02679.webp'
@@ -25,10 +25,11 @@ const photos = [
 ]
 
 const SLIDE_SECONDS = 3
+const DESKTOP_SLIDE_SECONDS = 1.5
 const SMOOTH = 'cubic-bezier(0.65,0,0.35,1)'
-const pad = (n) => String(n).padStart(2, '0')
-const progressStyle = (running) => ({
-  animation: `panel-progress ${SLIDE_SECONDS}s linear forwards`,
+const total = photos.length
+const progressStyle = (running, seconds = SLIDE_SECONDS) => ({
+  animation: `panel-progress ${seconds}s linear forwards`,
   animationPlayState: running ? 'running' : 'paused',
 })
 
@@ -163,77 +164,358 @@ function MobileCarousel({ active, setActive, inView, autoplay }) {
   )
 }
 
+const ArrowIcon = ({ flip }) => (
+  <svg viewBox="0 0 24 24" className={`h-4 w-4 ${flip ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+)
+
+// Nuvenzinha decorativa nos 4 cantos, com miniaturas dela espalhadas — uma referência
+// suave à fé cristã. Cada foto mora num canto fixo; quando ela vira a foto central, a
+// miniatura some do canto (ela "foi pro centro") e volta quando deixa de ser a atual.
+const cloudPhotos = {
+  'bottom-left': [3, 6],
+  'bottom-right': [1, 4, 7],
+  'top-left': [0, 5],
+  'top-right': [2, 8],
+}
+const corners = Object.keys(cloudPhotos)
+const cornerOfIndex = {}
+corners.forEach((corner) => cloudPhotos[corner].forEach((i) => (cornerOfIndex[i] = corner)))
+
+function CloudCorner({ corner, current, registerThumb }) {
+  const [vSide, hSide] = corner.split('-')
+  const isLeft = hSide === 'left'
+  const isTop = vSide === 'top'
+  const vProp = isTop ? 'top' : 'bottom'
+  const hProp = isLeft ? 'left' : 'right'
+
+  return (
+    <div
+      aria-hidden="true"
+      className={`pointer-events-none absolute hidden lg:block ${isTop ? 'top-6' : 'bottom-6'} ${isLeft ? 'left-16 xl:left-28' : 'right-16 xl:right-28'}`}
+    >
+      <div
+        className="absolute h-44 w-60 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(244,238,247,0.16),rgba(217,84,209,0.12)_55%,transparent_75%)] blur-xl"
+        style={{ [hProp]: '-1.5rem', [vProp]: '-1rem' }}
+      />
+      {/* a miniatura da foto atual fica com opacidade 0 (não removida), pra manter a
+          posição medível — é dela que a cópia voadora parte */}
+      {cloudPhotos[corner].map((i, k) => {
+        const photo = photos[i]
+        return (
+          <img
+            key={photo.src}
+            ref={(el) => registerThumb(i, el)}
+            src={photo.src}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            className="absolute h-20 w-20 max-w-none rounded-2xl border border-white/20 object-cover shadow-[0_8px_24px_rgba(20,18,42,0.5)] transition-opacity duration-300"
+            style={{
+              objectPosition: photo.position,
+              opacity: i === current ? 0 : 0.75,
+              [hProp]: k === 0 ? '0.5rem' : '4rem',
+              [vProp]: k === 0 ? '3.5rem' : '-0.5rem',
+              transform: `rotate(${isLeft ? -8 + k * 10 : 8 - k * 10}deg)`,
+            }}
+          />
+        )
+      })}
+    </div>
+  )
+}
+
+// Gerador simples e determinístico (mesma semente sempre gera o mesmo desenho, então
+// as raízes não "embaralham" a cada re-render).
+function makeRand(seed) {
+  let s = seed
+  return () => {
+    s = (s * 9301 + 49297) % 233280
+    return s / 233280
+  }
+}
+
+// Um galho de raiz: sai de (x0,y0) na direção dir, ondula (perpendicular à direção,
+// afinando) e, se ainda tem profundidade sobrando, solta 1-2 galhos filhos no meio do
+// caminho — assim a árvore de raízes cresce sozinha a partir do tronco.
+function buildBranch(x0, y0, dir, len, depth, rand) {
+  const [dx, dy] = dir
+  const [px, py] = [-dy, dx]
+  const end = { x: x0 + dx * len, y: y0 + dy * len }
+  const amp = len * 0.16
+  const at = (t, side) => ({ x: x0 + dx * len * t + px * side, y: y0 + dy * len * t + py * side })
+  const p1 = at(0.35, amp)
+  const p2 = at(0.7, -amp * 0.6)
+  const mid = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 }
+  const path = `M ${x0} ${y0} Q ${p1.x} ${p1.y} ${mid.x} ${mid.y} Q ${p2.x} ${p2.y} ${end.x} ${end.y}`
+
+  const branches = [{ path, depth }]
+  if (depth < 3 && len > 34) {
+    const count = depth === 0 ? 3 : 2
+    for (let c = 0; c < count; c++) {
+      const t = 0.4 + rand() * 0.35
+      const from = { x: x0 + dx * len * t, y: y0 + dy * len * t }
+      const turn = (0.45 + rand() * 0.5) * (c % 2 === 0 ? 1 : -1)
+      const angle = Math.atan2(dy, dx) + turn
+      const childDir = [Math.cos(angle), Math.sin(angle)]
+      const childLen = len * (0.4 + rand() * 0.22)
+      branches.push(...buildBranch(from.x, from.y, childDir, childLen, depth + 1, rand))
+    }
+  }
+  return branches
+}
+
+// Sistema de raízes que nasce no cartão (o "tronco") e se espalha pela seção inteira.
+function useRootSystem(box, center) {
+  return useMemo(() => {
+    if (!box.w || !box.h) return []
+    const rand = makeRand(11)
+    const PRIMARY = 14
+    const roots = []
+    for (let i = 0; i < PRIMARY; i++) {
+      const angle = (i / PRIMARY) * Math.PI * 2 + (rand() - 0.5) * 0.3
+      const dir = [Math.cos(angle), Math.sin(angle)]
+      const edgeX = dir[0] > 0 ? box.w - center.x : center.x
+      const edgeY = dir[1] > 0 ? box.h - center.y : center.y
+      const edgeDist = Math.min(
+        dir[0] !== 0 ? Math.abs(edgeX / dir[0]) : Infinity,
+        dir[1] !== 0 ? Math.abs(edgeY / dir[1]) : Infinity,
+      )
+      const len = edgeDist * (0.96 + rand() * 0.16)
+      const angleDeg = (angle * 180) / Math.PI
+      buildBranch(center.x, center.y, dir, len, 0, rand).forEach((b) => roots.push({ ...b, angleDeg }))
+    }
+    return roots
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [box.w, box.h, center.x, center.y])
+}
+
+const branchWidth = [2.2, 1.3, 0.8]
+
+// A raiz cujo ângulo (a partir do centro) mais se aproxima do canto ativo acende; o
+// resto fica como textura de fundo, apagada.
+function ConnectingLines({ activeCorner, box, center, cloudAnchors }) {
+  const roots = useRootSystem(box, center)
+  if (!roots.length) return null
+
+  const targetAngle = (() => {
+    const a = cloudAnchors[activeCorner]
+    if (!a) return null
+    return (Math.atan2(a.y - center.y, a.x - center.x) * 180) / Math.PI
+  })()
+
+  let closest = null
+  if (targetAngle != null) {
+    let best = Infinity
+    roots.forEach((r) => {
+      if (r.depth !== 0) return
+      const diff = Math.abs(((r.angleDeg - targetAngle + 540) % 360) - 180)
+      if (diff < best) {
+        best = diff
+        closest = r.angleDeg
+      }
+    })
+  }
+
+  return (
+    <svg
+      aria-hidden="true"
+      width={box.w}
+      height={box.h}
+      viewBox={`0 0 ${box.w} ${box.h}`}
+      className="pointer-events-none absolute inset-0 hidden lg:block"
+    >
+      {roots.map((r, i) => {
+        const active = closest != null && r.angleDeg === closest
+        return (
+          <path
+            key={i}
+            d={r.path}
+            fill="none"
+            stroke="#e79bde"
+            strokeWidth={branchWidth[r.depth]}
+            strokeLinecap="round"
+            style={{
+              opacity: active ? 0.85 : 0.18,
+              filter: active ? 'drop-shadow(0 0 6px rgba(217,84,209,0.85))' : 'none',
+              transition: 'opacity 700ms ease',
+            }}
+          />
+        )
+      })}
+    </svg>
+  )
+}
+
+const FLIGHT_MS = 800
+
+// Miniatura que voa da nuvem até o cartão quando a foto atual muda.
+function FlyingPhoto({ flight }) {
+  if (!flight) return null
+  return (
+    <motion.img
+      key={flight.key}
+      src={flight.src}
+      alt=""
+      initial={{ x: flight.from.x, y: flight.from.y, width: flight.from.w, height: flight.from.h }}
+      animate={{ x: flight.to.x, y: flight.to.y, width: flight.to.w, height: flight.to.h }}
+      transition={{ duration: FLIGHT_MS / 1000, ease: [0.65, 0, 0.35, 1] }}
+      className="pointer-events-none absolute left-0 top-0 z-20 rounded-2xl object-cover shadow-[0_0_50px_rgba(217,84,209,0.7)]"
+      style={{ objectPosition: flight.position }}
+    />
+  )
+}
+
 export default function PhotoSessionPink() {
   const [active, setActive] = useState(0)
   const [hovering, setHovering] = useState(false)
+  const [flight, setFlight] = useState(null)
   const wrapRef = useRef(null)
+  const deskWrapRef = useRef(null)
+  const frameRef = useRef(null)
+  const thumbRefs = useRef({})
+  const registerThumb = (i, el) => {
+    thumbRefs.current[i] = el
+  }
   const inView = useInView(wrapRef, { margin: '-15% 0px' })
-  const autoplay = !useReducedMotion()
-  const total = photos.length
+  const [box, setBox] = useState({ w: 0, h: 0 })
+  const [center, setCenter] = useState({ x: 0, y: 0 })
+  const [cloudAnchors, setCloudAnchors] = useState({})
 
   const next = () => setActive((i) => (i + 1) % total)
+  const back = () => setActive((i) => (i - 1 + total) % total)
+
+  // mede a faixa, o cartão e o centro de cada nuvem (a partir das miniaturas de
+  // verdade) pra desenhar as raízes com coordenadas reais, sem desalinhar
+  useLayoutEffect(() => {
+    const wrapEl = deskWrapRef.current
+    const frameEl = frameRef.current
+    if (!wrapEl || !frameEl) return
+    const measure = () => {
+      const wrapRect = wrapEl.getBoundingClientRect()
+      const frameRect = frameEl.getBoundingClientRect()
+      setBox({ w: wrapRect.width, h: wrapRect.height })
+      setCenter({
+        x: frameRect.left - wrapRect.left + frameRect.width / 2,
+        y: frameRect.top - wrapRect.top + frameRect.height / 2,
+      })
+      const nextAnchors = {}
+      corners.forEach((corner) => {
+        const rects = cloudPhotos[corner]
+          .filter((i) => i !== active)
+          .map((i) => thumbRefs.current[i]?.getBoundingClientRect())
+          .filter(Boolean)
+        if (!rects.length) return
+        nextAnchors[corner] = {
+          x: rects.reduce((sum, r) => sum + r.left + r.width / 2, 0) / rects.length - wrapRect.left,
+          y: rects.reduce((sum, r) => sum + r.top + r.height / 2, 0) / rects.length - wrapRect.top,
+        }
+      })
+      setCloudAnchors(nextAnchors)
+    }
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(wrapEl)
+    observer.observe(frameEl)
+    return () => observer.disconnect()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active])
+
+  // sempre que a foto atual muda, mede onde a miniatura estava (na nuvem) e onde o
+  // cartão está, e solta uma cópia voando de um ponto ao outro
+  useEffect(() => {
+    const thumbEl = thumbRefs.current[active]
+    const frameEl = frameRef.current
+    const wrapEl = deskWrapRef.current
+    if (!thumbEl || !frameEl || !wrapEl) return
+    const wrapRect = wrapEl.getBoundingClientRect()
+    const fromRect = thumbEl.getBoundingClientRect()
+    const toRect = frameEl.getBoundingClientRect()
+    setFlight({
+      key: active,
+      src: photos[active].src,
+      position: photos[active].position,
+      from: { x: fromRect.left - wrapRect.left, y: fromRect.top - wrapRect.top, w: fromRect.width, h: fromRect.height },
+      to: { x: toRect.left - wrapRect.left, y: toRect.top - wrapRect.top, w: toRect.width, h: toRect.height },
+    })
+    const timer = setTimeout(() => setFlight(null), FLIGHT_MS)
+    return () => clearTimeout(timer)
+  }, [active])
 
   return (
     <section id="ensaio-rosa" className="relative pt-4 md:pt-8 pb-20 md:pb-28">
       <Reveal>
         <div ref={wrapRef}>
           <div className="max-w-7xl md:max-w-none mx-auto px-6 md:px-12">
-            <div className="flex items-end justify-between mb-6 md:mb-8">
+            <div className="mb-6 md:mb-8">
               <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">Ensaio rosa</span>
-              <span className="text-[11px] tabular-nums tracking-[0.3em] text-[#f4eef7]/45">
-                <span className="text-[#f4eef7]/90">{pad(active + 1)}</span> / {pad(total)}
-              </span>
             </div>
 
-            <MobileCarousel active={active} setActive={setActive} inView={inView} autoplay={autoplay} />
+            <MobileCarousel active={active} setActive={setActive} inView={inView} autoplay />
           </div>
 
-          {/* computador: uma foto por vez, ocupando o espaço inteiro, trocando sozinha */}
+          {/* computador: cartão ligado por raízes às nuvens de fotos nos cantos */}
           <div
+            ref={deskWrapRef}
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}
-            className="relative hidden md:block w-full h-[clamp(30rem,42vw,46rem)] overflow-hidden rounded-2xl"
+            className="relative hidden md:block w-full px-8 lg:px-20"
           >
             <div
               aria-hidden="true"
               className="pointer-events-none absolute inset-x-0 -bottom-16 h-56 bg-[radial-gradient(ellipse_at_center,rgba(217,84,209,0.18),transparent_65%)]"
             />
+            <ConnectingLines activeCorner={cornerOfIndex[active]} box={box} center={center} cloudAnchors={cloudAnchors} />
+            {corners.map((corner) => (
+              <CloudCorner key={corner} corner={corner} current={active} registerThumb={registerThumb} />
+            ))}
 
-            {photos.map((photo, i) => {
-              const isActive = i === active
-              return (
-                <div
-                  key={photo.src}
-                  aria-hidden={isActive ? undefined : true}
-                  className="absolute inset-0 transition-opacity duration-[1400ms] ease-in-out"
-                  style={{ opacity: isActive ? 1 : 0 }}
-                >
+            <div
+              ref={frameRef}
+              className="relative z-10 mx-auto aspect-[4/5] w-full max-w-xl overflow-hidden rounded-2xl shadow-[0_0_0_1px_rgba(217,84,209,0.2)]"
+            >
+              {photos.map((photo, i) => {
+                const isActive = i === active
+                return (
                   <img
+                    key={photo.src}
                     src={photo.src}
-                    alt={photo.alt}
+                    alt={isActive ? photo.alt : ''}
                     loading="lazy"
                     decoding="async"
-                    className="absolute inset-0 h-full w-full object-cover"
-                    style={{ objectPosition: photo.position }}
+                    className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[900ms] ease-in-out"
+                    style={{ objectPosition: photo.position, opacity: isActive ? 1 : 0 }}
                   />
-                </div>
-              )
-            })}
+                )
+              })}
 
-            <span
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 shadow-[inset_0_0_0_1px_rgba(217,84,209,0.4),0_0_70px_-16px_rgba(217,84,209,0.55)]"
-            />
+              <button
+                type="button"
+                onClick={back}
+                aria-label="Foto anterior"
+                className="absolute left-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full border border-white/25 bg-[#14122a]/55 text-white backdrop-blur-sm transition hover:border-white/60 hover:bg-[#14122a]/80"
+              >
+                <ArrowIcon flip />
+              </button>
+              <button
+                type="button"
+                onClick={next}
+                aria-label="Próxima foto"
+                className="absolute right-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full border border-white/25 bg-[#14122a]/55 text-white backdrop-blur-sm transition hover:border-white/60 hover:bg-[#14122a]/80"
+              >
+                <ArrowIcon />
+              </button>
 
-            {autoplay && (
               <span
                 key={active}
                 aria-hidden="true"
                 onAnimationEnd={next}
                 className="absolute inset-x-0 bottom-0 h-[2px] origin-left bg-[#d954d1]"
-                style={progressStyle(inView && !hovering)}
+                style={progressStyle(inView && !hovering, DESKTOP_SLIDE_SECONDS)}
               />
-            )}
+            </div>
+            <FlyingPhoto flight={flight} />
           </div>
         </div>
       </Reveal>

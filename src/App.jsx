@@ -37,8 +37,8 @@ export default function App() {
         </div>
         <Videos />
         <Gallery />
-        <PhotoSessionBlue />
         <Divider />
+        <PhotoSessionBlue />
         <Agenda />
         <Hire />
         <Press />

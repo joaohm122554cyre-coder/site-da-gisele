@@ -52,10 +52,10 @@ function Item({ name, label, url, side, order }) {
       onMouseLeave={(e) => (e.currentTarget.style.borderColor = '')}
     >
       <span
-        className="grid h-7 w-7 place-items-center rounded-full transition group-hover:brightness-125"
+        className="grid h-8 w-8 place-items-center rounded-full transition group-hover:brightness-125"
         style={{ background: name === 'Instagram' ? instagramGradient : hexToRgba(color, 0.18) }}
       >
-        <Icon className="h-3.5 w-3.5" style={{ color: name === 'Instagram' ? '#fff' : color }} aria-hidden="true" />
+        <Icon className="h-3 w-3" style={{ color: name === 'Instagram' ? '#fff' : color }} aria-hidden="true" />
       </span>
       {label}
     </motion.a>

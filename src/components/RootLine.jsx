@@ -1,110 +1,62 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
 import { isRootUnlocked, isVideoActive, subscribeRootUnlock, subscribeVideoActivity } from '../lib/root-growth'
 
-// Um sistema de raízes de verdade: tronco tortuoso (não uma senoide lisa) que
-// solta ramos irregulares em ângulos variados, alguns curtos e outros indo
-// até a borda da seção, com sub-ramos mais finos bifurcando deles. Cresce com
-// o scroll, só aparece depois que a semente da linha do tempo chega ao fim, e
-// pausa enquanto algum clipe está tocando.
-const W = 100
-const H = 1000
+// Mesmo gerador de raízes do Ensaio Rosa/Azul (PhotoSessionPink/Blue), só que
+// crescendo verticalmente a partir do topo da seção em vez de irradiar de um
+// cartão. Curvas em S suaves + bifurcação recursiva = parece raiz de verdade,
+// não uma linha reta. Trabalha em pixels reais da seção (medida por
+// ResizeObserver) para os ângulos não ficarem distorcidos.
 
-function mulberry32(seed) {
-  let s = seed >>> 0
-  return function rng() {
-    s = (s + 0x6d2b79f5) | 0
-    let t = Math.imul(s ^ (s >>> 15), 1 | s)
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+function makeRand(seed) {
+  let s = seed
+  return () => {
+    s = (s * 9301 + 49297) % 233280
+    return s / 233280
   }
 }
 
-// Caminho torto: cada passo tem uma pequena guinada aleatória suavizada por
-// inércia (drift), o que dá o aspecto anguloso de uma raiz em vez de uma
-// curva perfeita.
-function walk(rng, x0, y0, y1, { steps, bias = 0, jitter = 5, drift = 0.35 }) {
-  const pts = [[x0, y0]]
-  let x = x0
-  let vx = bias
-  const dy = (y1 - y0) / steps
-  for (let i = 1; i <= steps; i++) {
-    vx = vx * (1 - drift) + (bias + (rng() - 0.5) * jitter) * drift
-    x += vx
-    pts.push([x, y0 + dy * i])
-  }
-  return pts
-}
+function buildBranch(x0, y0, dir, len, depth, rand, maxDepth) {
+  const [dx, dy] = dir
+  const [px, py] = [-dy, dx]
+  const end = { x: x0 + dx * len, y: y0 + dy * len }
+  const amp = len * 0.16
+  const at = (t, side) => ({ x: x0 + dx * len * t + px * side, y: y0 + dy * len * t + py * side })
+  const p1 = at(0.35, amp)
+  const p2 = at(0.7, -amp * 0.6)
+  const mid = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 }
+  const path = `M ${x0.toFixed(1)} ${y0.toFixed(1)} Q ${p1.x.toFixed(1)} ${p1.y.toFixed(1)} ${mid.x.toFixed(1)} ${mid.y.toFixed(1)} Q ${p2.x.toFixed(1)} ${p2.y.toFixed(1)} ${end.x.toFixed(1)} ${end.y.toFixed(1)}`
 
-function pathFromPoints(pts) {
-  let d = `M ${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`
-  for (let i = 1; i < pts.length; i++) {
-    d += ` L ${pts[i][0].toFixed(1)} ${pts[i][1].toFixed(1)}`
-  }
-  return d
-}
-
-function pointAt(pts, f) {
-  const idx = f * (pts.length - 1)
-  const i0 = Math.floor(idx)
-  const i1 = Math.min(i0 + 1, pts.length - 1)
-  const t = idx - i0
-  return [
-    pts[i0][0] + (pts[i1][0] - pts[i0][0]) * t,
-    pts[i0][1] + (pts[i1][1] - pts[i0][1]) * t,
-  ]
-}
-
-function buildRootSystem(seed) {
-  const rng = mulberry32(seed)
-  const trunkPts = walk(rng, 50, 0, H, { steps: 44, bias: 0, jitter: 8, drift: 0.28 })
-  const limbs = []
-
-  const limbCount = 5 + Math.floor(rng() * 2)
-  for (let i = 0; i < limbCount; i++) {
-    const f = 0.1 + (i / limbCount) * 0.85 + (rng() - 0.5) * 0.05
-    const [x, y] = pointAt(trunkPts, f)
-    const side = rng() < 0.5 ? -1 : 1
-    const reachesEdge = i % 3 === 0
-    const targetX = reachesEdge
-      ? side === 1
-        ? 95 - rng() * 5
-        : 5 + rng() * 5
-      : x + side * (12 + rng() * 24)
-    const limbSteps = 9 + Math.floor(rng() * 6)
-    const limbYEnd = y + Math.abs(targetX - x) * (0.35 + rng() * 0.35)
-    const bias = (targetX - x) / limbSteps
-    const limbPts = walk(rng, x, y, limbYEnd, { steps: limbSteps, bias, jitter: 4.5, drift: 0.4 })
-    limbs.push({
-      d: pathFromPoints(limbPts),
-      from: Math.max(0, Math.min(f, 0.95)),
-      width: reachesEdge ? 1.1 : 0.9,
-      opacity: 0.32,
-    })
-
-    if (rng() < 0.65) {
-      const sf = 0.3 + rng() * 0.5
-      const [sx, sy] = pointAt(limbPts, sf)
-      const sSide = rng() < 0.5 ? -1 : 1
-      const sTargetX = sx + sSide * (7 + rng() * 12)
-      const sSteps = 5 + Math.floor(rng() * 4)
-      const sYEnd = sy + Math.abs(sTargetX - sx) * (0.4 + rng() * 0.35)
-      const sBias = (sTargetX - sx) / sSteps
-      const subPts = walk(rng, sx, sy, sYEnd, { steps: sSteps, bias: sBias, jitter: 3.5, drift: 0.45 })
-      limbs.push({
-        d: pathFromPoints(subPts),
-        from: Math.max(0, Math.min(f + sf * 0.07, 0.97)),
-        width: 0.55,
-        opacity: 0.2,
-      })
+  const branches = [{ path, depth, midY: (y0 + end.y) / 2 }]
+  if (depth < maxDepth && len > 40) {
+    const count = depth === 0 ? 3 : 2
+    for (let c = 0; c < count; c++) {
+      const t = 0.4 + rand() * 0.35
+      const from = { x: x0 + dx * len * t, y: y0 + dy * len * t }
+      const turn = (0.5 + rand() * 0.55) * (c % 2 === 0 ? 1 : -1)
+      const angle = Math.atan2(dy, dx) + turn
+      const childDir = [Math.cos(angle), Math.sin(angle)]
+      const childLen = len * (0.38 + rand() * 0.22)
+      branches.push(...buildBranch(from.x, from.y, childDir, childLen, depth + 1, rand, maxDepth))
     }
   }
-
-  return { trunkD: pathFromPoints(trunkPts), limbs }
+  return branches
 }
 
+function useRootSystem(w, h, seed) {
+  return useMemo(() => {
+    if (!w || !h) return []
+    const rand = makeRand(seed)
+    return buildBranch(w / 2, 0, [0, 1], h * 1.04, 0, rand, 2)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [w, h, seed])
+}
+
+const BRANCH_WIDTH = [1.8, 1.1, 0.65]
+const BRANCH_OPACITY = [0.42, 0.3, 0.2]
+
 const EDGE_MASK =
-  'linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%)'
+  'linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%)'
 
 export default function RootLine({
   from = '#d954d1',
@@ -117,12 +69,24 @@ export default function RootLine({
   const reduceMotion = useReducedMotion()
   const [unlocked, setUnlocked] = useState(isRootUnlocked)
   const [videoActive, setVideoActiveState] = useState(isVideoActive)
-  const { trunkD, limbs } = useMemo(() => buildRootSystem(seed), [seed])
+  const [box, setBox] = useState({ w: 0, h: 0 })
   const gradIdRef = useRef(`root-grad-${Math.random().toString(36).slice(2)}`)
   const gradId = gradIdRef.current
 
   useEffect(() => subscribeRootUnlock(setUnlocked), [])
   useEffect(() => subscribeVideoActivity(setVideoActiveState), [])
+
+  useLayoutEffect(() => {
+    const el = wrapRef.current
+    if (!el) return
+    const measure = () => setBox({ w: el.clientWidth, h: el.clientHeight })
+    measure()
+    const ro = new ResizeObserver(measure)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+
+  const branches = useRootSystem(box.w, box.h, seed)
 
   const { scrollYProgress } = useScroll({ target: wrapRef, offset: ['start 88%', 'end 55%'] })
   const spring = useSpring(scrollYProgress, { stiffness: 90, damping: 24, restDelta: 0.001 })
@@ -138,47 +102,42 @@ export default function RootLine({
       className={`pointer-events-none absolute inset-0 ${className}`}
       style={{ WebkitMaskImage: EDGE_MASK, maskImage: EDGE_MASK }}
     >
-      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="h-full w-full overflow-visible">
-        <defs>
-          <linearGradient id={gradId} x1="0" y1="0" x2="0" y2={H} gradientUnits="userSpaceOnUse">
-            <stop offset="0" stopColor={from} />
-            <stop offset="1" stopColor={to} />
-          </linearGradient>
-        </defs>
-        <g style={{ opacity: groupOpacity, transition: 'opacity 700ms ease' }}>
-          <motion.path
-            d={trunkD}
-            fill="none"
-            stroke={`url(#${gradId})`}
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            vectorEffect="non-scaling-stroke"
-            opacity="0.42"
-            style={{ pathLength: grow }}
-          />
-          {limbs.map((limb, i) => (
-            <LimbPath key={i} limb={limb} gradId={gradId} grow={grow} />
-          ))}
-        </g>
-      </svg>
+      {box.w > 0 && box.h > 0 && (
+        <svg
+          width={box.w}
+          height={box.h}
+          viewBox={`0 0 ${box.w} ${box.h}`}
+          className="h-full w-full overflow-visible"
+        >
+          <defs>
+            <linearGradient id={gradId} x1="0" y1="0" x2="0" y2={box.h} gradientUnits="userSpaceOnUse">
+              <stop offset="0" stopColor={from} />
+              <stop offset="1" stopColor={to} />
+            </linearGradient>
+          </defs>
+          <g style={{ opacity: groupOpacity, transition: 'opacity 700ms ease' }}>
+            {branches.map((b, i) => (
+              <BranchPath key={i} branch={b} boxH={box.h} gradId={gradId} grow={grow} />
+            ))}
+          </g>
+        </svg>
+      )}
     </div>
   )
 }
 
-function LimbPath({ limb, gradId, grow }) {
-  const limbGrow = useTransform(grow, [limb.from, Math.min(limb.from + 0.12, 1)], [0, 1])
+function BranchPath({ branch, boxH, gradId, grow }) {
+  const startFrac = Math.max(0, Math.min(branch.midY / boxH - 0.08, 0.95))
+  const branchGrow = useTransform(grow, [startFrac, Math.min(startFrac + 0.14, 1)], [0, 1])
   return (
     <motion.path
-      d={limb.d}
+      d={branch.path}
       fill="none"
       stroke={`url(#${gradId})`}
-      strokeWidth={limb.width}
+      strokeWidth={BRANCH_WIDTH[branch.depth] ?? 0.5}
       strokeLinecap="round"
-      strokeLinejoin="round"
-      vectorEffect="non-scaling-stroke"
-      opacity={limb.opacity}
-      style={{ pathLength: limbGrow }}
+      opacity={BRANCH_OPACITY[branch.depth] ?? 0.15}
+      style={{ pathLength: branchGrow }}
     />
   )
 }

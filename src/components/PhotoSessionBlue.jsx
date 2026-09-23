@@ -229,7 +229,7 @@ function CloudCorner({ corner, current, registerThumb }) {
   return (
     <div
       aria-hidden="true"
-      className={`pointer-events-none absolute hidden lg:block ${isTop ? 'top-6' : 'bottom-6'} ${isLeft ? 'left-0' : 'right-0'}`}
+      className={`pointer-events-none absolute hidden lg:block ${isTop ? 'top-6' : 'bottom-6'} ${isLeft ? 'left-10 xl:left-16' : 'right-10 xl:right-16'}`}
     >
       <div
         className="absolute h-44 w-60 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(244,238,247,0.16),rgba(79,127,214,0.1)_55%,transparent_75%)] blur-xl"

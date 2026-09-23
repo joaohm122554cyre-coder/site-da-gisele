@@ -4,6 +4,7 @@ import { FaAmazon } from 'react-icons/fa'
 import { socials, streaming } from '../lib/site-data'
 import Reveal from './Reveal'
 import RootLine from './RootLine'
+import ChromaKeyVideo from './ChromaKeyVideo'
 import instagram3d from '../assets/icons/instagram-3d.mp4'
 
 const icons = {
@@ -56,14 +57,7 @@ function Item({ name, label, url, side, order }) {
         style={{ background: name === 'Instagram' ? instagramGradient : hexToRgba(color, 0.18) }}
       >
         {name === 'Instagram' ? (
-          <video
-            src={instagram3d}
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="h-full w-full scale-125 object-cover"
-          />
+          <ChromaKeyVideo src={instagram3d} size={64} className="h-full w-full scale-125" />
         ) : (
           <Icon className="h-3 w-3" style={{ color }} aria-hidden="true" />
         )}

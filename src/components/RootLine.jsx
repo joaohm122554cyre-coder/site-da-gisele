@@ -43,11 +43,30 @@ function buildBranch(x0, y0, dir, len, depth, rand, maxDepth) {
   return branches
 }
 
+// Irradia do centro da seção em todas as direções (igual ao Ensaio Rosa/Azul),
+// cada raiz primária mirando o próprio canto/borda que calha na sua direção -
+// é isso que garante que os quatro cantos da seção fiquem conectados.
 function useRootSystem(w, h, seed) {
   return useMemo(() => {
     if (!w || !h) return []
     const rand = makeRand(seed)
-    return buildBranch(w / 2, 0, [0, 1], h * 1.04, 0, rand, 2)
+    const cx = w / 2
+    const cy = h / 2
+    const PRIMARY = 7
+    const branches = []
+    for (let i = 0; i < PRIMARY; i++) {
+      const angle = (i / PRIMARY) * Math.PI * 2 + (rand() - 0.5) * 0.35
+      const dir = [Math.cos(angle), Math.sin(angle)]
+      const edgeX = dir[0] > 0 ? w - cx : cx
+      const edgeY = dir[1] > 0 ? h - cy : cy
+      const edgeDist = Math.min(
+        dir[0] !== 0 ? Math.abs(edgeX / dir[0]) : Infinity,
+        dir[1] !== 0 ? Math.abs(edgeY / dir[1]) : Infinity,
+      )
+      const len = edgeDist * (0.94 + rand() * 0.12)
+      branches.push(...buildBranch(cx, cy, dir, len, 0, rand, 1))
+    }
+    return branches
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [w, h, seed])
 }
@@ -56,7 +75,7 @@ const BRANCH_WIDTH = [1.8, 1.1, 0.65]
 const BRANCH_OPACITY = [0.42, 0.3, 0.2]
 
 const EDGE_MASK =
-  'linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%)'
+  'linear-gradient(to bottom, transparent 0%, #000 3%, #000 97%, transparent 100%)'
 
 export default function RootLine({
   from = '#d954d1',

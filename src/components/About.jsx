@@ -2,6 +2,31 @@ import { about } from '../lib/site-data'
 import Reveal from './Reveal'
 import PhotoSessionPink from './PhotoSessionPink'
 
+const MARKUP = /(\*\*[^*]+\*\*|\[[^\]]+\])/g
+
+function Rich({ text }) {
+  return text.split(MARKUP).map((part, i) => {
+    if (part.startsWith('**')) {
+      return (
+        <strong
+          key={i}
+          className="px-[0.1em] font-semibold text-white [-webkit-box-decoration-break:clone] [background:linear-gradient(transparent_62%,rgba(217,84,209,0.42)_62%,rgba(217,84,209,0.42)_94%,transparent_94%)] [box-decoration-break:clone]"
+        >
+          {part.slice(2, -2)}
+        </strong>
+      )
+    }
+    if (part.startsWith('[')) {
+      return (
+        <em key={i} className="font-display text-[1.1em] italic text-[#f2a8ee] [text-shadow:0_0_22px_rgba(217,84,209,0.55)]">
+          {part.slice(1, -1)}
+        </em>
+      )
+    }
+    return part
+  })
+}
+
 export default function About() {
   return (
     <section id="sobre" className="relative py-28 md:py-40">
@@ -26,10 +51,12 @@ export default function About() {
 
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="grid md:grid-cols-12 gap-6">
-          <div className="md:col-span-7 md:col-start-6 space-y-7 font-serif text-lg md:text-xl text-[#f4eef7]/75 leading-relaxed">
+          <div className="md:col-span-7 md:col-start-6 space-y-7 font-fraunces text-lg leading-[1.8] text-[#f4eef7]/95 [text-shadow:0_1px_14px_rgba(20,18,42,0.85)] md:text-xl">
             {about.paragraphs.map((p, i) => (
               <Reveal key={i} delay={i * 0.08}>
-                <p className={i === 0 ? 'drop-cap' : ''}>{p}</p>
+                <p className={i === 0 ? 'drop-cap' : ''}>
+                  <Rich text={p} />
+                </p>
               </Reveal>
             ))}
           </div>

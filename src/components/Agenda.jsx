@@ -1,3 +1,5 @@
+import { SiWhatsapp } from 'react-icons/si'
+import { agenda } from '../lib/site-data'
 import Reveal from './Reveal'
 import RootLine from './RootLine'
 
@@ -19,16 +21,19 @@ export default function Agenda() {
 
         {upcoming.length === 0 ? (
           <Reveal delay={0.15}>
-            <p className="mt-10 text-sm md:text-base text-[#f4eef7]/55 max-w-md">
-              Novas datas em breve. Para contratação de shows e eventos,
-              entre em contato com a assessoria.
+            <p className="mt-10 max-w-lg font-fraunces text-lg leading-[1.8] text-[#f4eef7]/90 md:text-xl">
+              {agenda.description}
             </p>
             <a
-              href="#contato"
-              className="group inline-flex items-center gap-3 mt-10 text-[11px] tracking-[0.3em] uppercase text-[#f4eef7]/75 hover:text-[#f4eef7] transition-colors"
+              href={`https://wa.me/${agenda.whatsapp}`}
+              target="_blank"
+              rel="noreferrer"
+              className="group mt-8 inline-flex items-center gap-3 rounded-full border border-[#25d366]/40 bg-[#14122a]/55 py-3.5 pl-5 pr-6 text-[11px] uppercase tracking-[0.28em] text-[#f4eef7]/90 backdrop-blur-md transition hover:border-[#25d366]/80 hover:bg-[#14122a]/75 hover:text-[#f4eef7]"
             >
-              Falar com a assessoria
-              <span className="w-10 h-px bg-[#4f7fd6] group-hover:w-16 transition-all duration-500" />
+              <span className="grid h-8 w-8 place-items-center rounded-full bg-[#25d366]/15 text-[#25d366] transition group-hover:bg-[#25d366]/25">
+                <SiWhatsapp className="text-base" aria-hidden="true" />
+              </span>
+              Falar com {agenda.contactName} no WhatsApp
             </a>
           </Reveal>
         ) : (

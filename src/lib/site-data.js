@@ -89,9 +89,13 @@ export const gallery = [
 export const hire = {
   title: 'Contrate Giselli Cristina',
   description:
-    'Para igrejas, conferências e eventos, entre em contato com a assessoria oficial.',
-  whatsapp: null,
-  email: null,
+    'Para igrejas, conferências, prefeituras e eventos, entre em contato com a assessoria oficial — Criative Music.',
+  whatsapp: '5527981490178',
+  email: 'atendimento3@grupocriative.com',
+  agency: {
+    name: 'Criative Music',
+    url: 'https://www.criativemusic.com.br/artista/gisellicristina',
+  },
 }
 
 export const press = {

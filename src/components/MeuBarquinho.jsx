@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import Reveal from './Reveal'
 import VinylPlayer from './VinylPlayer'
 import SongMarquee from './SongMarquee'
@@ -129,12 +129,27 @@ const tracks = [
 
 const EDGE_MASK = 'linear-gradient(to bottom, transparent 0, #000 7rem, #000 calc(100% - 7rem), transparent 100%)'
 
+function useIsDesktop() {
+  return useSyncExternalStore(
+    (onChange) => {
+      const query = window.matchMedia('(min-width: 768px)')
+      query.addEventListener('change', onChange)
+      return () => query.removeEventListener('change', onChange)
+    },
+    () => window.matchMedia('(min-width: 768px)').matches,
+    () => false,
+  )
+}
+
 export default function MeuBarquinho() {
   const [index, setIndex] = useState(0)
   const [playing, setPlaying] = useState(false)
   const [current, setCurrent] = useState(0)
   const [duration, setDuration] = useState(tracks[0].duration)
+  const isDesktop = useIsDesktop()
   const mediaRef = useRef(null)
+  // no celular, enquanto toca, o disco vira um mini player no cantinho pra não tapar o clipe
+  const mini = playing && !isDesktop
   const sectionRef = useRef(null)
   const track = tracks[index]
 
@@ -241,16 +256,18 @@ export default function MeuBarquinho() {
 
         <div className="md:col-span-5 flex justify-center">
           <div className="relative flex items-center gap-3 md:gap-5">
-            <button
-              type="button"
-              onClick={() => go(-1)}
-              aria-label="Música anterior"
-              className="shrink-0 w-9 h-9 rounded-full border border-[#f4eef7]/20 flex items-center justify-center text-[#f4eef7]/60 hover:text-[#f4eef7] hover:border-[#f4eef7]/50 transition-colors"
-            >
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-                <path d="M10 2 4 8l6 6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
+            {!mini && (
+              <button
+                type="button"
+                onClick={() => go(-1)}
+                aria-label="Música anterior"
+                className="shrink-0 w-9 h-9 rounded-full border border-[#f4eef7]/20 flex items-center justify-center text-[#f4eef7]/60 hover:text-[#f4eef7] hover:border-[#f4eef7]/50 transition-colors"
+              >
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <path d="M10 2 4 8l6 6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            )}
 
             <Reveal key={track.key}>
               <VinylPlayer
@@ -264,19 +281,22 @@ export default function MeuBarquinho() {
                 duration={duration}
                 meta={track.meta}
                 youtubeUrl={track.youtubeUrl}
+                mini={mini}
               />
             </Reveal>
 
-            <button
-              type="button"
-              onClick={() => go(1)}
-              aria-label="Próxima música"
-              className="shrink-0 w-9 h-9 rounded-full border border-[#f4eef7]/20 flex items-center justify-center text-[#f4eef7]/60 hover:text-[#f4eef7] hover:border-[#f4eef7]/50 transition-colors"
-            >
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-                <path d="M6 2l6 6-6 6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
+            {!mini && (
+              <button
+                type="button"
+                onClick={() => go(1)}
+                aria-label="Próxima música"
+                className="shrink-0 w-9 h-9 rounded-full border border-[#f4eef7]/20 flex items-center justify-center text-[#f4eef7]/60 hover:text-[#f4eef7] hover:border-[#f4eef7]/50 transition-colors"
+              >
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <path d="M6 2l6 6-6 6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            )}
           </div>
         </div>
 

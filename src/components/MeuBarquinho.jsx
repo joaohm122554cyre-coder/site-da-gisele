@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import Reveal from './Reveal'
 import VinylPlayer from './VinylPlayer'
 import SongMarquee from './SongMarquee'
+import { setVideoActive } from '../lib/root-growth'
 import barquinhoLabel from '../assets/photos/meu-barquinho-capa.jpg'
 import barquinhoAudio from '../assets/audio/meu-barquinho-preview.mp3'
 import barquinhoAlbum from '../assets/photos/meu-barquinho-album.jpg'
@@ -164,6 +165,12 @@ export default function MeuBarquinho() {
       media.pause()
     }
   }, [index])
+
+  // a raiz decorativa pausa de crescer enquanto um clipe está tocando
+  useEffect(() => {
+    setVideoActive(playing)
+    return () => setVideoActive(false)
+  }, [playing])
 
   useEffect(() => {
     const el = sectionRef.current

@@ -1,6 +1,7 @@
 import { useRef } from 'react'
-import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
+import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
 import Reveal from './Reveal'
+import { unlockRoot } from '../lib/root-growth'
 import barquinhoAlbum from '../assets/photos/meu-barquinho-album.jpg'
 import bondadeCena from '../assets/photos/bondade-de-deus-cena.jpg'
 import discoDeOuro from '../assets/photos/disco-de-ouro-adorar.jpg'
@@ -117,6 +118,11 @@ export default function Timeline() {
   const progress = reduce ? scrollYProgress : spring
   const headTop = useTransform(progress, (v) => `${(v * 100).toFixed(3)}%`)
   const headOpacity = useTransform(progress, [0, 0.015, 0.985, 1], [0, 1, 1, 0])
+
+  // a semente planta e a raiz nasce quando a luz chega ao fim da linha
+  useMotionValueEvent(progress, 'change', (v) => {
+    if (v >= 0.97) unlockRoot()
+  })
 
   return (
     <section id="historia" className="relative py-28 md:py-40">

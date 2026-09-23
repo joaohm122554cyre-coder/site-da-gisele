@@ -2,10 +2,12 @@ import { stats } from '../lib/site-data'
 import Reveal from './Reveal'
 import AnimatedNumber from './AnimatedNumber'
 import AnimatedCompactNumber from './AnimatedCompactNumber'
+import RootLine from './RootLine'
 
 export default function Stats() {
   return (
     <section className="relative py-28 md:py-40">
+      <RootLine from="#d954d1" to="#e07de8" />
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
         <Reveal>
           <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">

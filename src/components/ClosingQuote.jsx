@@ -1,8 +1,10 @@
 import Reveal from './Reveal'
+import RootLine from './RootLine'
 
 export default function ClosingQuote() {
   return (
     <section className="relative pb-24 md:pb-32">
+      <RootLine from="#4f7fd6" to="#4f7fd6" opacity={0.3} branches={[0.45]} />
       <div className="max-w-4xl mx-auto px-6 md:px-12 text-center">
         <Reveal>
           <span className="mx-auto mb-10 block h-px w-16 bg-gradient-to-r from-transparent via-[#4f7fd6] to-transparent" />

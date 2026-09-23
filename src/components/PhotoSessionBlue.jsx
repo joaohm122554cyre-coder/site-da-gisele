@@ -332,7 +332,7 @@ const branchWidth = [2.2, 1.3, 0.8]
 
 // A raiz cujo ângulo (a partir do centro) mais se aproxima do canto ativo acende; o
 // resto fica como textura de fundo, apagada.
-function ConnectingLines({ activeCorner, box, center, cloudAnchors }) {
+function ConnectingLines({ activeCorner, box, center, cloudAnchors, offset }) {
   const roots = useRootSystem(box, center)
   if (!roots.length) return null
 
@@ -356,32 +356,31 @@ function ConnectingLines({ activeCorner, box, center, cloudAnchors }) {
   }
 
   return (
-    <svg
-      aria-hidden="true"
-      width={box.w}
-      height={box.h}
-      viewBox={`0 0 ${box.w} ${box.h}`}
-      className="pointer-events-none absolute inset-0 hidden lg:block"
+    <div
+      className="pointer-events-none absolute hidden lg:block"
+      style={{ top: offset.y, left: offset.x, width: box.w, height: box.h }}
     >
-      {roots.map((r, i) => {
-        const active = closest != null && r.angleDeg === closest
-        return (
-          <path
-            key={i}
-            d={r.path}
-            fill="none"
-            stroke="#7fb0f7"
-            strokeWidth={branchWidth[r.depth]}
-            strokeLinecap="round"
-            style={{
-              opacity: active ? 0.85 : 0.18,
-              filter: active ? 'drop-shadow(0 0 6px rgba(79,127,214,0.85))' : 'none',
-              transition: 'opacity 700ms ease',
-            }}
-          />
-        )
-      })}
-    </svg>
+      <svg aria-hidden="true" width={box.w} height={box.h} viewBox={`0 0 ${box.w} ${box.h}`}>
+        {roots.map((r, i) => {
+          const active = closest != null && r.angleDeg === closest
+          return (
+            <path
+              key={i}
+              d={r.path}
+              fill="none"
+              stroke="#7fb0f7"
+              strokeWidth={branchWidth[r.depth]}
+              strokeLinecap="round"
+              style={{
+                opacity: active ? 0.85 : 0.18,
+                filter: active ? 'drop-shadow(0 0 6px rgba(79,127,214,0.85))' : 'none',
+                transition: 'opacity 700ms ease',
+              }}
+            />
+          )
+        })}
+      </svg>
+    </div>
   )
 }
 
@@ -420,23 +419,29 @@ export default function PhotoSessionBlue() {
   const current = mod(step, total)
   const [box, setBox] = useState({ w: 0, h: 0 })
   const [center, setCenter] = useState({ x: 0, y: 0 })
+  const [offset, setOffset] = useState({ x: 0, y: 0 })
   const [cloudAnchors, setCloudAnchors] = useState({})
 
   // mede a faixa, o cartão e o centro de cada nuvem (a partir das miniaturas de
-  // verdade) pra desenhar as raízes com coordenadas reais, sem desalinhar
+  // verdade) pra desenhar as raízes com coordenadas reais, sem desalinhar. O
+  // alcance pra cima/lados fica igual ao da faixa do cartão (senão a raiz cruza
+  // por cima do vídeo de fundo, onde não tem foto pra esconder a linha); só pra
+  // baixo ela ganha o espaço extra até o rodapé da seção, pra conectar até lá.
   useLayoutEffect(() => {
     const sectionEl = sectionRef.current
+    const wrapEl = deskWrapRef.current
     const frameEl = frameRef.current
-    if (!sectionEl || !frameEl) return
-    // Mede a partir da seção inteira (não só da faixa do cartão), pra raiz ter espaço
-    // de sobra por baixo e conectar o topo (perto das nuvens) até a base da seção.
+    if (!sectionEl || !wrapEl || !frameEl) return
     const measure = () => {
       const sectionRect = sectionEl.getBoundingClientRect()
+      const wrapRect = wrapEl.getBoundingClientRect()
       const frameRect = frameEl.getBoundingClientRect()
-      setBox({ w: sectionRect.width, h: sectionRect.height })
+      const extraBottom = Math.max(0, sectionRect.bottom - wrapRect.bottom)
+      setBox({ w: wrapRect.width, h: wrapRect.height + extraBottom })
+      setOffset({ x: wrapRect.left - sectionRect.left, y: wrapRect.top - sectionRect.top })
       setCenter({
-        x: frameRect.left - sectionRect.left + frameRect.width / 2,
-        y: frameRect.top - sectionRect.top + frameRect.height / 2,
+        x: frameRect.left - wrapRect.left + frameRect.width / 2,
+        y: frameRect.top - wrapRect.top + frameRect.height / 2,
       })
       const nextAnchors = {}
       corners.forEach((corner) => {
@@ -448,8 +453,8 @@ export default function PhotoSessionBlue() {
           .filter(Boolean)
         if (!rects.length) return
         nextAnchors[corner] = {
-          x: rects.reduce((sum, r) => sum + r.left + r.width / 2, 0) / rects.length - sectionRect.left,
-          y: rects.reduce((sum, r) => sum + r.top + r.height / 2, 0) / rects.length - sectionRect.top,
+          x: rects.reduce((sum, r) => sum + r.left + r.width / 2, 0) / rects.length - wrapRect.left,
+          y: rects.reduce((sum, r) => sum + r.top + r.height / 2, 0) / rects.length - wrapRect.top,
         }
       })
       setCloudAnchors(nextAnchors)
@@ -457,6 +462,7 @@ export default function PhotoSessionBlue() {
     measure()
     const observer = new ResizeObserver(measure)
     observer.observe(sectionEl)
+    observer.observe(wrapEl)
     observer.observe(frameEl)
     return () => observer.disconnect()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -486,7 +492,13 @@ export default function PhotoSessionBlue() {
 
   return (
     <section id="ensaio-azul" ref={sectionRef} className="relative pt-16 md:pt-24 pb-32 md:pb-56">
-      <ConnectingLines activeCorner={cornerOfIndex[current]} box={box} center={center} cloudAnchors={cloudAnchors} />
+      <ConnectingLines
+        activeCorner={cornerOfIndex[current]}
+        box={box}
+        center={center}
+        cloudAnchors={cloudAnchors}
+        offset={offset}
+      />
       <Reveal className="relative z-10">
         <div ref={wrapRef}>
           <div className="max-w-7xl md:max-w-none mx-auto px-6 md:px-12">

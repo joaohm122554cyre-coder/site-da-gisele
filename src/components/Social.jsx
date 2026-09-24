@@ -1,6 +1,6 @@
-import { motion } from 'framer-motion'
 import { socials, streaming } from '../lib/site-data'
 import AnimatedCompactNumber from './AnimatedCompactNumber'
+import Marquee from './Marquee'
 import Reveal from './Reveal'
 import spotifyLogo from '../assets/icons/spotify.svg'
 import appleMusicLogo from '../assets/icons/apple-music.svg'
@@ -40,51 +40,51 @@ const socialStats = [
   { name: 'Instagram', value: 481000, label: 'seguidores' },
   { name: 'YouTube', value: 918000, label: 'inscritos' },
 ]
-const hexToRgba = (hex, alpha) => {
-  const n = parseInt(hex.slice(1), 16)
-  return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`
-}
+// Todas as redes numa lista só, sem repetir o YouTube (que aparece nas duas listas
+// originais — como rede pra seguir e como plataforma pra ouvir).
+const platforms = [
+  ...socials,
+  ...streaming.filter((s) => !socials.some((soc) => soc.name === s.name)),
+]
 
-// side: de que lado a pílula "vem" antes de encaixar no lugar — como um elo de uma
-// corrente de ímã se juntando no centro da fileira.
-function Item({ name, label, url, side, order }) {
-  const color = colors[name]
-  const fromX = side === 'left' ? -90 : side === 'right' ? 90 : 0
-
+function PlatformPill({ name, label, url }) {
   return (
-    <motion.a
+    <a
       href={url}
       target="_blank"
       rel="noreferrer"
-      initial={{ x: fromX, opacity: 0 }}
-      whileInView={{ x: 0, opacity: 1 }}
-      viewport={{ once: true, margin: '-10% 0px' }}
-      transition={{ type: 'spring', stiffness: 140, damping: 15, delay: 0.35 + order * 0.08 }}
-      className="group inline-flex items-center gap-2.5 rounded-full border border-[#f4eef7]/12 bg-[#14122a]/40 py-2 pl-2 pr-5 text-sm text-[#f4eef7]/75 backdrop-blur-sm transition-colors duration-300 hover:text-[#f4eef7]"
-      style={{ '--hover-border': hexToRgba(color, 0.6) }}
-      onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--hover-border)')}
-      onMouseLeave={(e) => (e.currentTarget.style.borderColor = '')}
+      className="group mx-3 inline-flex shrink-0 items-center gap-2.5 rounded-full border border-[#f4eef7]/12 bg-[#14122a]/40 py-2 pl-2 pr-5 text-sm text-[#f4eef7]/75 backdrop-blur-sm transition-colors duration-300 hover:border-[#f4eef7]/30 hover:text-[#f4eef7] md:mx-4"
     >
       <span className="grid h-8 shrink-0 place-items-center rounded-full bg-white px-2 shadow-sm">
         <img src={logos[name]} alt="" className="h-4 w-auto max-w-[3.25rem] object-contain" />
       </span>
       {label}
-    </motion.a>
+    </a>
   )
 }
 
-// A fagulha que pisca no meio da fileira no instante em que os dois lados se encontram.
-function MeetSpark({ accent }) {
+// Duas fileiras, cada uma correndo pra um lado, de ponta a ponta da tela — mesmo
+// recurso do carrossel de músicas, aplicado nas redes.
+function PlatformMarquee() {
+  const reversed = [...platforms].reverse()
   return (
-    <motion.span
-      aria-hidden="true"
-      initial={{ opacity: 0, scale: 0.4 }}
-      whileInView={{ opacity: [0, 1, 0], scale: [0.4, 1.6, 2.2] }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.7, delay: 0.55, ease: 'easeOut' }}
-      className="pointer-events-none absolute left-1/2 top-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full blur-md"
-      style={{ background: accent }}
-    />
+    <Reveal delay={0.1} className="relative py-2">
+      <div
+        className="space-y-3"
+        style={{ maskImage: 'linear-gradient(to right, transparent, black 6%, black 94%, transparent)' }}
+      >
+        <Marquee duration={30} pauseOnHover>
+          {platforms.map((p) => (
+            <PlatformPill key={p.name} name={p.name} label={p.handle ?? p.name} url={p.url} />
+          ))}
+        </Marquee>
+        <Marquee duration={34} reverse pauseOnHover>
+          {reversed.map((p) => (
+            <PlatformPill key={p.name} name={p.name} label={p.handle ?? p.name} url={p.url} />
+          ))}
+        </Marquee>
+      </div>
+    </Reveal>
   )
 }
 
@@ -115,42 +115,13 @@ function SocialStats() {
   )
 }
 
-function Group({ word, accent, items, delay }) {
-  const n = items.length
-  const mid = Math.floor(n / 2)
-  const hasCenter = n % 2 === 1
-
-  return (
-    <Reveal delay={delay}>
-      <div className="mb-6 flex items-center justify-center gap-4">
-        <span className="h-px w-10 bg-gradient-to-r from-transparent to-current opacity-30" style={{ color: accent }} />
-        <span className="font-display text-2xl italic md:text-3xl" style={{ color: accent }}>
-          {word}
-        </span>
-        <span className="h-px w-10 bg-gradient-to-l from-transparent to-current opacity-30" style={{ color: accent }} />
-      </div>
-      <div className="relative flex flex-wrap justify-center gap-3">
-        <MeetSpark accent={accent} />
-        {items.map((s, i) => {
-          const centerIndex = hasCenter ? mid : -1
-          const side = i === centerIndex ? 'center' : i < mid ? 'left' : 'right'
-          // as pontas da corrente saem primeiro; o elo mais perto do centro chega
-          // por último e "fecha" a conexão
-          const order = side === 'left' ? i : side === 'right' ? n - 1 - i : 0
-          return <Item key={s.name} name={s.name} label={s.handle ?? s.name} url={s.url} side={side} order={order} />
-        })}
-      </div>
-    </Reveal>
-  )
-}
-
 export default function Social() {
   return (
     <section id="redes" className="relative py-28 md:py-40">
       <div className="relative z-10 max-w-4xl mx-auto px-6 md:px-12 text-center">
         <Reveal>
           <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">
-            Siga e ouça
+            Redes sociais
           </span>
           <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-[#f4eef7] mt-4 mb-10">
             Redes <span className="italic text-[#4f7fd6]">e plataformas</span>
@@ -158,15 +129,9 @@ export default function Social() {
         </Reveal>
 
         <SocialStats />
-
-        <Group word="Siga" accent="#d954d1" items={socials} delay={0.1} />
-
-        <div className="my-12 flex justify-center">
-          <span className="h-px w-16 bg-[#f4eef7]/15" />
-        </div>
-
-        <Group word="Ouça" accent="#4f7fd6" items={streaming} delay={0.15} />
       </div>
+
+      <PlatformMarquee />
     </section>
   )
 }

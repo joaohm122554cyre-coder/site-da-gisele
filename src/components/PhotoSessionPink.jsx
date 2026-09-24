@@ -109,28 +109,43 @@ function MobileCarousel({ step, prev, dispatch, inView }) {
                 onClick={() => (isActive || offset > 0 ? next() : back())}
                 aria-label={isActive ? `Foto ${i + 1} de ${total}. Toque para ver a próxima` : `Ir para a foto ${i + 1}`}
                 aria-current={isActive ? 'true' : undefined}
-                className="absolute left-0 top-0 h-full overflow-hidden rounded-2xl text-left outline-none focus-visible:ring-2 focus-visible:ring-[#d954d1]"
+                className="absolute left-0 top-0 h-full rounded-2xl text-left outline-none focus-visible:ring-2 focus-visible:ring-[#d954d1]"
                 style={{
                   width: slideW,
-                  transform: `translate3d(${anchor + offset * stepPx}px,0,0)`,
-                  transition: wraps ? 'none' : `transform 1200ms ${SMOOTH}`,
+                  zIndex: isActive ? 10 : 0,
+                  transform: `translate3d(${anchor + offset * stepPx}px,0,0) scale(${isActive ? 1.05 : 1})`,
+                  transition: wraps ? 'none' : `transform 1200ms ${SMOOTH}, box-shadow 500ms ease`,
                   boxShadow: isActive
-                    ? '0 0 0 1px rgba(217,84,209,0.4), 0 0 60px -14px rgba(217,84,209,0.55)'
+                    ? '0 24px 48px -18px rgba(217,84,209,0.65), 0 0 0 1px rgba(217,84,209,0.4)'
                     : '0 0 0 1px rgba(244,238,247,0.1)',
                 }}
               >
-                <img
-                  src={photo.src}
-                  alt={photo.alt}
-                  loading="lazy"
-                  decoding="async"
-                  draggable="false"
-                  className="absolute inset-0 h-full w-full select-none object-cover"
-                  style={{ objectPosition: photo.position }}
-                />
+                {isActive ? (
+                  <div className="glow-ring h-full w-full rounded-2xl" style={{ '--glow-color': ACCENT }}>
+                    <img
+                      src={photo.src}
+                      alt={photo.alt}
+                      loading="lazy"
+                      decoding="async"
+                      draggable="false"
+                      className="select-none rounded-[13px] object-cover"
+                      style={{ objectPosition: photo.position }}
+                    />
+                  </div>
+                ) : (
+                  <img
+                    src={photo.src}
+                    alt={photo.alt}
+                    loading="lazy"
+                    decoding="async"
+                    draggable="false"
+                    className="absolute inset-0 h-full w-full select-none rounded-2xl object-cover"
+                    style={{ objectPosition: photo.position }}
+                  />
+                )}
                 <span
                   aria-hidden="true"
-                  className="absolute inset-0 bg-[#14122a] transition-opacity duration-[1200ms]"
+                  className="absolute inset-0 rounded-2xl bg-[#14122a] transition-opacity duration-[1200ms]"
                   style={{ opacity: isActive ? 0 : 0.5 }}
                 />
                 {isActive && (

@@ -2,12 +2,10 @@ import { FiExternalLink } from 'react-icons/fi'
 import { hire } from '../lib/site-data'
 import Reveal from './Reveal'
 import ZigzagLine from './ZigzagLine'
-import RootLine from './RootLine'
 
 export default function Hire() {
   return (
     <section id="contrate" className="relative py-32 md:py-48">
-      <RootLine from="#4f7fd6" to="#4f7fd6" seed={3} />
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 text-center">
         <Reveal>
           <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">

@@ -1,7 +1,6 @@
 import { useRef } from 'react'
 import { videos } from '../lib/site-data'
 import Reveal from './Reveal'
-import RootLine from './RootLine'
 
 function VideoCarousel({ items }) {
   const trackRef = useRef(null)
@@ -61,7 +60,6 @@ function VideoCarousel({ items }) {
 export default function Videos() {
   return (
     <section id="videos" className="relative py-28 md:py-40">
-      <RootLine from="#4f7fd6" to="#d954d1" seed={8} />
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
         <Reveal className="text-center max-w-lg mx-auto mb-16">
           <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">

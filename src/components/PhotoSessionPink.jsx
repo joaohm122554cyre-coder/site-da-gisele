@@ -46,7 +46,6 @@ function reducer({ step }, action) {
   return { step: action.step, prev: step }
 }
 
-const EDGE = 24
 const GAP = 12
 
 // Celular: carrossel que desliza pro lado, com um pedacinho da foto vizinha aparecendo.
@@ -67,9 +66,9 @@ function MobileCarousel({ step, prev, dispatch, inView }) {
 
   const slideW = width * 0.78
   const stepPx = slideW + GAP
-  const anchor = step === 0 ? EDGE : (width - slideW) / 2
+  const anchor = (width - slideW) / 2
   const half = Math.floor(total / 2)
-  const offsetOf = (i, s) => (s === 0 ? i : mod(i - s + half, total) - half)
+  const offsetOf = (i, s) => mod(i - s + half, total) - half
   const current = mod(step, total)
   const next = () => dispatch({ type: 'next' })
   const back = () => step > 0 && dispatch({ type: 'back' })

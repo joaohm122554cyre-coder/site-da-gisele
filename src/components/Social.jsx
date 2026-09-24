@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion'
-import { SiSpotify, SiApplemusic, SiYoutube, SiDeezer, SiInstagram } from 'react-icons/si'
+import { SiSpotify, SiApplemusic, SiYoutube, SiDeezer, SiInstagram, SiFacebook } from 'react-icons/si'
 import { FaAmazon } from 'react-icons/fa'
 import { socials, streaming } from '../lib/site-data'
+import AnimatedCompactNumber from './AnimatedCompactNumber'
 import Reveal from './Reveal'
 
 const icons = {
@@ -11,6 +12,7 @@ const icons = {
   'Amazon Music': FaAmazon,
   Deezer: SiDeezer,
   Instagram: SiInstagram,
+  Facebook: SiFacebook,
 }
 
 // Cor de marca de cada plataforma — é o que tira a cara de "molde" das pílulas.
@@ -21,7 +23,16 @@ const colors = {
   'Amazon Music': '#00A8E1',
   Deezer: '#A238FF',
   Instagram: '#E1306C',
+  Facebook: '#1877F2',
 }
+
+// Números reais, conferidos direto nas páginas oficiais (Facebook, Instagram e
+// YouTube) — nada estimado.
+const socialStats = [
+  { name: 'Facebook', value: 78169, label: 'curtidas' },
+  { name: 'Instagram', value: 481000, label: 'seguidores' },
+  { name: 'YouTube', value: 918000, label: 'inscritos' },
+]
 const instagramGradient = 'linear-gradient(135deg, #FEDA75, #D62976 55%, #4F5BD5)'
 
 const hexToRgba = (hex, alpha) => {
@@ -76,6 +87,37 @@ function MeetSpark({ accent }) {
   )
 }
 
+function SocialStats() {
+  return (
+    <Reveal delay={0.05} className="mb-16 flex flex-wrap items-center justify-center gap-x-12 gap-y-8">
+      {socialStats.map((s) => {
+        const Icon = icons[s.name]
+        const color = colors[s.name]
+        return (
+          <div key={s.name} className="flex items-center gap-3">
+            <span
+              className="grid h-11 w-11 shrink-0 place-items-center rounded-full"
+              style={{ background: hexToRgba(color, 0.18) }}
+            >
+              <Icon className="h-[18px] w-[18px]" style={{ color }} aria-hidden="true" />
+            </span>
+            <div className="text-left">
+              <p
+                translate="no"
+                className="notranslate font-display text-3xl italic font-semibold leading-none md:text-4xl"
+                style={{ color }}
+              >
+                <AnimatedCompactNumber value={s.value} />
+              </p>
+              <p className="mt-1.5 text-[10px] uppercase tracking-[0.25em] text-[#f4eef7]/50">{s.label}</p>
+            </div>
+          </div>
+        )
+      })}
+    </Reveal>
+  )
+}
+
 function Group({ word, accent, items, delay }) {
   const n = items.length
   const mid = Math.floor(n / 2)
@@ -113,10 +155,12 @@ export default function Social() {
           <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">
             Siga e ouça
           </span>
-          <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-[#f4eef7] mt-4 mb-16">
+          <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-[#f4eef7] mt-4 mb-10">
             Redes <span className="italic text-[#4f7fd6]">e plataformas</span>
           </h2>
         </Reveal>
+
+        <SocialStats />
 
         <Group word="Siga" accent="#d954d1" items={socials} delay={0.1} />
 

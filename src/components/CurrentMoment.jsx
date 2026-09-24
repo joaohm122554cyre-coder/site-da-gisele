@@ -63,14 +63,19 @@ export default function CurrentMoment() {
         </div>
         <div className="md:col-span-6">
           <Reveal>
-            <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">
+            <span className="font-script text-4xl md:text-5xl text-[#d954d1] leading-none">
               {currentMoment.title}
             </span>
+            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-[#f4eef7] mt-3 leading-[1.05]">
+              A maré está
+              <br />
+              <span className="italic text-[#d954d1]">cheia</span>
+            </h2>
           </Reveal>
-          <div className="mt-6 space-y-8">
+          <div className="mt-8 space-y-6">
             {currentMoment.paragraphs.map((p, i) => (
               <Reveal key={i} delay={i * 0.1}>
-                <p className="text-sm md:text-base text-[#f4eef7]/65 leading-relaxed">
+                <p className="font-fraunces text-base md:text-lg leading-[1.75] text-[#f4eef7]/90">
                   {p}
                 </p>
               </Reveal>

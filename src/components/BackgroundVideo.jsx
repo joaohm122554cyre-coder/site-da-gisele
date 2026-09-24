@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import heroVideoHd from '../assets/videos/hero-bg.mp4'
 import heroVideoSm from '../assets/videos/hero-bg-sm.mp4'
@@ -64,9 +64,34 @@ function useForceAutoplay() {
   return ref
 }
 
+// O vídeo de fundo da seção "Momento Atual" só é visto bem mais embaixo na página —
+// baixá-lo junto com o vídeo do hero, logo na entrada, disputa banda com ele à toa e
+// deixa a entrada mais lenta. Aqui ele só começa a carregar quando a pessoa rola a
+// página (ou depois de um tempinho parada), nunca antes disso.
+function useDeferredLoad(scrollThreshold = 0.6, idleDelay = 4000) {
+  const [ready, setReady] = useState(false)
+
+  useEffect(() => {
+    if (ready) return
+    const onScroll = () => {
+      if (window.scrollY > window.innerHeight * scrollThreshold) setReady(true)
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    const timer = setTimeout(() => setReady(true), idleDelay)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      clearTimeout(timer)
+    }
+  }, [ready, scrollThreshold, idleDelay])
+
+  return ready
+}
+
 export default function BackgroundVideo({ switchRef }) {
   const heroRef = useForceAutoplay()
   const statsRef = useForceAutoplay()
+  const statsReady = useDeferredLoad()
 
   const { scrollY } = useScroll()
   const heroFilter = useTransform(
@@ -107,13 +132,13 @@ export default function BackgroundVideo({ switchRef }) {
       />
       <motion.video
         ref={statsRef}
-        src={statsVideo}
+        src={statsReady ? statsVideo : undefined}
         autoPlay
         loop
         muted
         playsInline
         webkit-playsinline="true"
-        preload="auto"
+        preload={statsReady ? 'auto' : 'none'}
         disableRemotePlayback
         controlsList="nodownload noplaybackrate"
         style={{ opacity: statsOpacity, filter: 'blur(1.5px) brightness(0.5) saturate(0.9)' }}

@@ -26,7 +26,7 @@ const photos = [
 ]
 
 const SLIDE_SECONDS = 3
-const DESKTOP_SLIDE_SECONDS = 4
+const DESKTOP_SLIDE_SECONDS = 2
 const KENBURNS_SECONDS = DESKTOP_SLIDE_SECONDS + 1
 const SMOOTH = 'cubic-bezier(0.65,0,0.35,1)'
 const mod = (a, n) => ((a % n) + n) % n
@@ -193,11 +193,28 @@ function StoryDots({ current, onJump, running, onFill, accent }) {
 // e a palavra do momento moram fora do cartão, embaixo.
 function DesktopSlide({ step, current, running, onEnd, onNext, onBack, onJump }) {
   const photo = photos[current]
-  const peek = photos[mod(step + 1, total)]
+  const peekNext = photos[mod(step + 1, total)]
+  const peekPrev = photos[mod(step - 1, total)]
 
   return (
     <>
       <div className="relative flex items-stretch justify-center gap-4">
+        <button
+          type="button"
+          onClick={onBack}
+          aria-label="Ver foto anterior"
+          className="group relative hidden w-20 shrink-0 overflow-hidden rounded-2xl lg:block xl:w-28"
+        >
+          <img
+            src={peekPrev.src}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover opacity-55 transition duration-500 group-hover:opacity-90"
+            style={{ objectPosition: peekPrev.position }}
+          />
+        </button>
+
         <div className="relative aspect-[4/5] w-full max-w-xl overflow-hidden rounded-2xl shadow-[0_0_0_1px_rgba(79,127,214,0.2)]">
           {photos.map((p, i) => {
             const isActive = i === current
@@ -243,12 +260,12 @@ function DesktopSlide({ step, current, running, onEnd, onNext, onBack, onJump })
           className="group relative hidden w-20 shrink-0 overflow-hidden rounded-2xl lg:block xl:w-28"
         >
           <img
-            src={peek.src}
+            src={peekNext.src}
             alt=""
             loading="lazy"
             decoding="async"
             className="h-full w-full object-cover opacity-55 transition duration-500 group-hover:opacity-90"
-            style={{ objectPosition: peek.position }}
+            style={{ objectPosition: peekNext.position }}
           />
         </button>
       </div>

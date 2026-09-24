@@ -28,7 +28,7 @@ const photos = [
 ]
 
 const SLIDE_SECONDS = 3
-const DESKTOP_SLIDE_SECONDS = 4
+const DESKTOP_SLIDE_SECONDS = 2
 const KENBURNS_SECONDS = DESKTOP_SLIDE_SECONDS + 1
 const SMOOTH = 'cubic-bezier(0.65,0,0.35,1)'
 const total = photos.length
@@ -213,7 +213,8 @@ export default function PhotoSessionPink() {
   const wrapRef = useRef(null)
   const inView = useInView(wrapRef, { margin: '-15% 0px' })
   const photo = photos[active]
-  const peek = photos[(active + 1) % total]
+  const peekNext = photos[(active + 1) % total]
+  const peekPrev = photos[(active - 1 + total) % total]
 
   const next = () => setActive((i) => (i + 1) % total)
   const back = () => setActive((i) => (i - 1 + total) % total)
@@ -241,6 +242,22 @@ export default function PhotoSessionPink() {
               onMouseLeave={() => setHovering(false)}
               className="relative z-10 flex items-stretch justify-center gap-4"
             >
+              <button
+                type="button"
+                onClick={back}
+                aria-label="Ver foto anterior"
+                className="group relative hidden w-20 shrink-0 overflow-hidden rounded-2xl lg:block xl:w-28"
+              >
+                <img
+                  src={peekPrev.src}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  className="h-full w-full object-cover opacity-55 transition duration-500 group-hover:opacity-90"
+                  style={{ objectPosition: peekPrev.position }}
+                />
+              </button>
+
               <div className="relative aspect-[4/5] w-full max-w-xl overflow-hidden rounded-2xl shadow-[0_0_0_1px_rgba(217,84,209,0.2)]">
                 {photos.map((p, i) => {
                   const isActive = i === active
@@ -286,12 +303,12 @@ export default function PhotoSessionPink() {
                 className="group relative hidden w-20 shrink-0 overflow-hidden rounded-2xl lg:block xl:w-28"
               >
                 <img
-                  src={peek.src}
+                  src={peekNext.src}
                   alt=""
                   loading="lazy"
                   decoding="async"
                   className="h-full w-full object-cover opacity-55 transition duration-500 group-hover:opacity-90"
-                  style={{ objectPosition: peek.position }}
+                  style={{ objectPosition: peekNext.position }}
                 />
               </button>
             </div>

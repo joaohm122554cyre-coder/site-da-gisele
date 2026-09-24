@@ -10,20 +10,24 @@ import clipe from '../assets/photos/azul-clipe.webp'
 import colunas3 from '../assets/photos/azul-colunas-3.webp'
 import Reveal from './Reveal'
 
+const ACCENT = '#4f7fd6'
+
 // Ordem da expressão: começa com sorrisos limpos e suaves e vai ficando mais intensa.
+// "mood" é a palavra que aparece embaixo do cartão no computador, dando alma pra cada foto.
 const photos = [
-  { src: retratoSorriso, alt: 'Giselli Cristina sorrindo diante de flores em tons de azul e lilás', position: '50% 22%' },
-  { src: retrato2, alt: 'Retrato de Giselli Cristina sorrindo com fundo azul', position: '50% 14%' },
-  { src: emPe, alt: 'Giselli Cristina em pé, sorrindo, segurando o microfone sob luzes azuis', position: '50% 12%' },
-  { src: colunasPiano, alt: 'Giselli Cristina cantando com suavidade ao lado de um piano branco, com colunas azuis ao fundo', position: '88% 50%' },
-  { src: colunas1, alt: 'Giselli Cristina cantando de olhos fechados e braço aberto diante de colunas iluminadas em azul', position: '50% 50%' },
-  { src: colunas2, alt: 'Giselli Cristina cantando com o braço estendido, sob colunas de luz azul', position: '42% 50%' },
-  { src: colunas3, alt: 'Giselli Cristina cantando com a mão erguida diante de colunas iluminadas em azul', position: '90% 50%' },
-  { src: clipe, alt: 'Giselli Cristina de braço erguido no clipe de Eu Só Quero Adorar, com o Nicolas Henrique ao teclado', position: '62% 50%' },
+  { src: retratoSorriso, alt: 'Giselli Cristina sorrindo diante de flores em tons de azul e lilás', position: '50% 22%', mood: 'Sorriso' },
+  { src: retrato2, alt: 'Retrato de Giselli Cristina sorrindo com fundo azul', position: '50% 14%', mood: 'Doçura' },
+  { src: emPe, alt: 'Giselli Cristina em pé, sorrindo, segurando o microfone sob luzes azuis', position: '50% 12%', mood: 'Presença' },
+  { src: colunasPiano, alt: 'Giselli Cristina cantando com suavidade ao lado de um piano branco, com colunas azuis ao fundo', position: '88% 50%', mood: 'Suavidade' },
+  { src: colunas1, alt: 'Giselli Cristina cantando de olhos fechados e braço aberto diante de colunas iluminadas em azul', position: '50% 50%', mood: 'Entrega' },
+  { src: colunas2, alt: 'Giselli Cristina cantando com o braço estendido, sob colunas de luz azul', position: '42% 50%', mood: 'Intensidade' },
+  { src: colunas3, alt: 'Giselli Cristina cantando com a mão erguida diante de colunas iluminadas em azul', position: '90% 50%', mood: 'Louvor' },
+  { src: clipe, alt: 'Giselli Cristina de braço erguido no clipe de Eu Só Quero Adorar, com o Nicolas Henrique ao teclado', position: '62% 50%', mood: 'Família' },
 ]
 
 const SLIDE_SECONDS = 3
-const DESKTOP_SLIDE_SECONDS = 1.5
+const DESKTOP_SLIDE_SECONDS = 4
+const KENBURNS_SECONDS = DESKTOP_SLIDE_SECONDS + 1
 const SMOOTH = 'cubic-bezier(0.65,0,0.35,1)'
 const mod = (a, n) => ((a % n) + n) % n
 const total = photos.length
@@ -151,55 +155,111 @@ const ArrowIcon = ({ flip }) => (
   </svg>
 )
 
-// Computador: cartão único, sempre do mesmo tamanho — como um carrossel do Instagram.
-// A foto preenche o cartão inteiro (sem esticar, sem sobra desfocada); troca sozinha
-// a cada 3s ou pelas setas.
-function DesktopSlide({ step, running, onEnd, onNext, onBack }) {
-  const current = mod(step, total)
+// Trilha de barrinhas tipo Stories do Instagram: a ativa preenche sozinha com o
+// tempo do slide (é o que avança pra próxima foto) e dá pra clicar em qualquer uma.
+function StoryDots({ current, onJump, running, onFill, accent }) {
+  return (
+    <div className="flex items-center gap-1.5">
+      {photos.map((p, i) => {
+        const isActive = i === current
+        return (
+          <button
+            key={p.src}
+            type="button"
+            onClick={() => onJump(i)}
+            aria-label={`Ir para a foto ${i + 1} de ${total}`}
+            aria-current={isActive ? 'true' : undefined}
+            className="relative h-1.5 overflow-hidden rounded-full bg-[#f4eef7]/15 transition-[width] duration-500"
+            style={{ width: isActive ? '2rem' : '0.375rem' }}
+          >
+            {isActive && (
+              <span
+                key={current}
+                aria-hidden="true"
+                onAnimationEnd={onFill}
+                className="absolute inset-0 origin-left rounded-full"
+                style={{ background: accent, ...progressStyle(running, DESKTOP_SLIDE_SECONDS) }}
+              />
+            )}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
+// Computador: cartão principal com zoom lento (Ken Burns), uma espiadinha da
+// próxima foto do lado e a barrinha de progresso somem — a barra de posição
+// e a palavra do momento moram fora do cartão, embaixo.
+function DesktopSlide({ step, current, running, onEnd, onNext, onBack, onJump }) {
   const photo = photos[current]
+  const peek = photos[mod(step + 1, total)]
 
   return (
-    <div className="relative z-10 mx-auto aspect-[4/5] w-full max-w-xl overflow-hidden rounded-2xl shadow-[0_0_0_1px_rgba(79,127,214,0.2)]">
-      {photos.map((p, i) => (
-        <img
-          key={p.src}
-          src={p.src}
-          alt={i === current ? p.alt : ''}
-          loading="lazy"
-          decoding="async"
-          className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[900ms] ease-in-out"
-          style={{ objectPosition: p.position, opacity: i === current ? 1 : 0 }}
-        />
-      ))}
+    <>
+      <div className="relative mx-auto flex w-fit max-w-full items-stretch justify-center gap-4">
+        <div className="relative aspect-[4/5] w-full max-w-xl overflow-hidden rounded-2xl shadow-[0_0_0_1px_rgba(79,127,214,0.2)]">
+          {photos.map((p, i) => {
+            const isActive = i === current
+            return (
+              <img
+                key={isActive ? `${p.src}-zoom-${current}` : p.src}
+                src={p.src}
+                alt={isActive ? p.alt : ''}
+                loading="lazy"
+                decoding="async"
+                className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[900ms] ease-in-out"
+                style={{
+                  objectPosition: p.position,
+                  opacity: isActive ? 1 : 0,
+                  animation: isActive ? `kenburns ${KENBURNS_SECONDS}s ease-out forwards` : 'none',
+                }}
+              />
+            )
+          })}
 
-      <button
-        type="button"
-        onClick={onBack}
-        aria-label="Foto anterior"
-        className="absolute left-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full border border-white/25 bg-[#14122a]/55 text-white backdrop-blur-sm transition hover:border-white/60 hover:bg-[#14122a]/80"
-      >
-        <ArrowIcon flip />
-      </button>
-      <button
-        type="button"
-        onClick={onNext}
-        aria-label="Próxima foto"
-        className="absolute right-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full border border-white/25 bg-[#14122a]/55 text-white backdrop-blur-sm transition hover:border-white/60 hover:bg-[#14122a]/80"
-      >
-        <ArrowIcon />
-      </button>
+          <button
+            type="button"
+            onClick={onBack}
+            aria-label="Foto anterior"
+            className="absolute left-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full border border-white/25 bg-[#14122a]/55 text-white backdrop-blur-sm transition hover:border-white/60 hover:bg-[#14122a]/80"
+          >
+            <ArrowIcon flip />
+          </button>
+          <button
+            type="button"
+            onClick={onNext}
+            aria-label="Próxima foto"
+            className="absolute right-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full border border-white/25 bg-[#14122a]/55 text-white backdrop-blur-sm transition hover:border-white/60 hover:bg-[#14122a]/80"
+          >
+            <ArrowIcon />
+          </button>
+        </div>
 
-      <span
-        key={step}
-        aria-hidden="true"
-        onAnimationEnd={onEnd}
-        className="absolute inset-x-0 bottom-0 h-[2px] origin-left bg-[#4f7fd6]"
-        style={progressStyle(running, DESKTOP_SLIDE_SECONDS)}
-      />
-      <span className="sr-only">
-        Foto {current + 1} de {total}: {photo.alt}
-      </span>
-    </div>
+        <button
+          type="button"
+          onClick={onNext}
+          aria-label="Ver próxima foto"
+          className="group relative hidden w-20 shrink-0 overflow-hidden rounded-2xl lg:block xl:w-28"
+        >
+          <img
+            src={peek.src}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover opacity-55 transition duration-500 group-hover:opacity-90"
+            style={{ objectPosition: peek.position }}
+          />
+        </button>
+      </div>
+
+      <div className="relative z-10 mt-6 flex flex-col items-center gap-4">
+        <span key={`mood-${current}`} className="font-display text-xl italic md:text-2xl" style={{ color: ACCENT }}>
+          {photo.mood}
+        </span>
+        <StoryDots current={current} onJump={onJump} running={running} onFill={onEnd} accent={ACCENT} />
+      </div>
+    </>
   )
 }
 
@@ -208,6 +268,7 @@ export default function PhotoSessionBlue() {
   const [hovering, setHovering] = useState(false)
   const wrapRef = useRef(null)
   const inView = useInView(wrapRef, { margin: '-15% 0px' })
+  const current = mod(step, total)
 
   return (
     <section id="ensaio-azul" className="relative pt-16 md:pt-24 pb-32 md:pb-56">
@@ -221,7 +282,7 @@ export default function PhotoSessionBlue() {
             <MobileCarousel step={step} prev={prev} dispatch={dispatch} inView={inView} />
           </div>
 
-          {/* computador: cartão único de tamanho fixo, tipo carrossel do Instagram */}
+          {/* computador: cartão principal com zoom lento + espiadinha da próxima foto */}
           <div
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}
@@ -233,10 +294,12 @@ export default function PhotoSessionBlue() {
             />
             <DesktopSlide
               step={step}
+              current={current}
               running={inView && !hovering}
               onEnd={() => dispatch({ type: 'next' })}
               onNext={() => dispatch({ type: 'next' })}
               onBack={() => dispatch({ type: 'back' })}
+              onJump={(i) => dispatch({ type: 'set', step: i })}
             />
           </div>
         </div>

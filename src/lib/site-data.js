@@ -77,6 +77,19 @@ export const videos = {
   items: [],
 }
 
+export const goldRecord = {
+  eyebrow: 'Eu Só Quero Adorar',
+  ctaLabel: 'Conheça o Disco de Ouro',
+  song: 'Eu Só Quero Adorar',
+  year: '2025',
+  views: 17_993_828,
+  paragraphs: [
+    'Em 2025, [Eu Só Quero Adorar] virou o retrato mais recente da força de Giselli Cristina nas plataformas digitais. Gravada ao lado do filho, Nicolas Henrique (ele ao teclado, ela na voz), a canção ultrapassou 17 milhões de visualizações no clipe oficial e se tornou um dos grandes fenômenos da música gospel no streaming.',
+    'Foi esse alcance que rendeu à dupla o **Disco de Ouro**, entregue pela Maximus Records: um reconhecimento reservado a poucas faixas, que marca o momento em que uma canção deixa de pertencer só à artista e passa a pertencer ao público que a levou tão longe.',
+    'Mais do que um troféu na parede, o disco emoldurado registra um marco pouco comum: mãe e filho, juntos na mesma gravação, recebendo pelo mesmo trabalho o reconhecimento máximo do mercado fonográfico gospel.',
+  ],
+}
+
 export const gallery = [
   { src: 'palco-microfone-1.png', alt: 'Giselli Cristina no palco' },
   { src: 'palco-microfone-3.png', alt: 'Giselli Cristina no palco' },

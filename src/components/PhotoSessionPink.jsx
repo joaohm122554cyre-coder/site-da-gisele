@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useLayoutEffect, useReducer, useRef, useState } from 'react'
 import { useInView } from 'framer-motion'
 import photoArco from '../assets/photos/sessao-rosa-1.webp'
 import cenaSentada from '../assets/photos/ensaio/dsc02660.webp'
@@ -31,21 +31,30 @@ const SLIDE_SECONDS = 3
 const DESKTOP_SLIDE_SECONDS = 2
 const KENBURNS_SECONDS = DESKTOP_SLIDE_SECONDS + 1
 const SMOOTH = 'cubic-bezier(0.65,0,0.35,1)'
+const mod = (a, n) => ((a % n) + n) % n
 const total = photos.length
 const progressStyle = (running, seconds = SLIDE_SECONDS) => ({
   animation: `panel-progress ${seconds}s linear forwards`,
   animationPlayState: running ? 'running' : 'paused',
 })
 
+// step só cresce a cada foto que passa (foto atual = step % total), então depois da última a
+// primeira simplesmente continua a sequência, sem rebobinar — loop infinito de verdade.
+function reducer({ step }, action) {
+  if (action.type === 'next') return { step: step + 1, prev: step }
+  if (action.type === 'back') return { step: step - 1, prev: step }
+  return { step: action.step, prev: step }
+}
+
+const EDGE = 24
+const GAP = 12
+
 // Celular: carrossel que desliza pro lado, com um pedacinho da foto vizinha aparecendo.
-// Na primeira foto não existe "anterior"; a partir da segunda dá pra voltar.
-function MobileCarousel({ active, setActive, inView, autoplay }) {
-  const total = photos.length
+// Na primeira foto não existe "anterior"; depois que dá a volta, a última passa a ser a anterior.
+function MobileCarousel({ step, prev, dispatch, inView }) {
   const wrapRef = useRef(null)
   const touchX = useRef(null)
   const [width, setWidth] = useState(0)
-  const [fading, setFading] = useState(false)
-  const [jumping, setJumping] = useState(false)
 
   useLayoutEffect(() => {
     const el = wrapRef.current
@@ -56,37 +65,21 @@ function MobileCarousel({ active, setActive, inView, autoplay }) {
     return () => observer.disconnect()
   }, [])
 
-  const EDGE = 24
-  const GAP = 12
   const slideW = width * 0.78
-  const step = slideW + GAP
-  const trackW = EDGE * 2 + total * slideW + (total - 1) * GAP
-  const maxShift = Math.max(trackW - width, 0)
-  const shift = Math.min(Math.max(EDGE + active * step - (width - slideW) / 2, 0), maxShift)
-
-  const advance = () => {
-    if (active < total - 1) {
-      setActive(active + 1)
-      return
-    }
-    // depois da última foto, some suave e recomeça pela primeira (sem "rebobinar")
-    setFading(true)
-    setTimeout(() => {
-      setJumping(true)
-      setActive(0)
-      setTimeout(() => {
-        setJumping(false)
-        setFading(false)
-      }, 60)
-    }, 520)
-  }
+  const stepPx = slideW + GAP
+  const anchor = step === 0 ? EDGE : (width - slideW) / 2
+  const half = Math.floor(total / 2)
+  const offsetOf = (i, s) => (s === 0 ? i : mod(i - s + half, total) - half)
+  const current = mod(step, total)
+  const next = () => dispatch({ type: 'next' })
+  const back = () => step > 0 && dispatch({ type: 'back' })
 
   const onTouchEnd = (e) => {
     if (touchX.current == null) return
     const dx = e.changedTouches[0].clientX - touchX.current
     touchX.current = null
-    if (dx < -40) advance()
-    else if (dx > 40 && active > 0) setActive(active - 1)
+    if (dx < -40) next()
+    else if (dx > 40) back()
   }
 
   return (
@@ -97,72 +90,62 @@ function MobileCarousel({ active, setActive, inView, autoplay }) {
       />
       <div
         ref={wrapRef}
-        className="relative overflow-hidden"
+        className="relative h-[26rem] overflow-hidden"
         style={{ touchAction: 'pan-y' }}
         onTouchStart={(e) => {
           touchX.current = e.touches[0].clientX
         }}
         onTouchEnd={onTouchEnd}
       >
-        {width > 0 && (
-          <div
-            className="flex h-[26rem]"
-            style={{
-              width: trackW,
-              paddingInline: EDGE,
-              gap: GAP,
-              transform: `translate3d(${-shift}px,0,0)`,
-              transition: `${jumping ? 'none' : `transform 1200ms ${SMOOTH}`}, opacity 500ms ease`,
-              opacity: fading ? 0 : 1,
-            }}
-          >
-            {photos.map((photo, i) => {
-              const isActive = i === active
-              return (
-                <button
-                  key={photo.src}
-                  type="button"
-                  onClick={() => (isActive ? advance() : setActive(i))}
-                  aria-label={
-                    isActive ? `Foto ${i + 1} de ${total}. Toque para ver a próxima` : `Ir para a foto ${i + 1}`
-                  }
-                  aria-current={isActive ? 'true' : undefined}
-                  className="relative h-full shrink-0 overflow-hidden rounded-2xl text-left outline-none focus-visible:ring-2 focus-visible:ring-[#d954d1]"
-                  style={{
-                    width: slideW,
-                    boxShadow: isActive
-                      ? '0 0 0 1px rgba(217,84,209,0.4), 0 0 60px -14px rgba(217,84,209,0.55)'
-                      : '0 0 0 1px rgba(244,238,247,0.1)',
-                  }}
-                >
-                  <img
-                    src={photo.src}
-                    alt={photo.alt}
-                    loading="lazy"
-                    decoding="async"
-                    draggable="false"
-                    className="absolute inset-0 h-full w-full select-none object-cover"
-                    style={{ objectPosition: photo.position }}
-                  />
+        {width > 0 &&
+          photos.map((photo, i) => {
+            const offset = offsetOf(i, step)
+            // a foto que dá a volta atravessa a tela por fora, então ela "teletransporta" sem animar
+            const wraps = Math.abs(offset - offsetOf(i, prev)) > 1.5
+            const isActive = i === current
+            return (
+              <button
+                key={photo.src}
+                type="button"
+                onClick={() => (isActive || offset > 0 ? next() : back())}
+                aria-label={isActive ? `Foto ${i + 1} de ${total}. Toque para ver a próxima` : `Ir para a foto ${i + 1}`}
+                aria-current={isActive ? 'true' : undefined}
+                className="absolute left-0 top-0 h-full overflow-hidden rounded-2xl text-left outline-none focus-visible:ring-2 focus-visible:ring-[#d954d1]"
+                style={{
+                  width: slideW,
+                  transform: `translate3d(${anchor + offset * stepPx}px,0,0)`,
+                  transition: wraps ? 'none' : `transform 1200ms ${SMOOTH}`,
+                  boxShadow: isActive
+                    ? '0 0 0 1px rgba(217,84,209,0.4), 0 0 60px -14px rgba(217,84,209,0.55)'
+                    : '0 0 0 1px rgba(244,238,247,0.1)',
+                }}
+              >
+                <img
+                  src={photo.src}
+                  alt={photo.alt}
+                  loading="lazy"
+                  decoding="async"
+                  draggable="false"
+                  className="absolute inset-0 h-full w-full select-none object-cover"
+                  style={{ objectPosition: photo.position }}
+                />
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-0 bg-[#14122a] transition-opacity duration-[1200ms]"
+                  style={{ opacity: isActive ? 0 : 0.5 }}
+                />
+                {isActive && (
                   <span
+                    key={step}
                     aria-hidden="true"
-                    className="absolute inset-0 bg-[#14122a] transition-opacity duration-[1200ms]"
-                    style={{ opacity: isActive ? 0 : 0.5 }}
+                    onAnimationEnd={next}
+                    className="absolute inset-x-0 bottom-0 h-[2px] origin-left bg-[#d954d1]"
+                    style={progressStyle(inView)}
                   />
-                  {isActive && autoplay && (
-                    <span
-                      key={active}
-                      aria-hidden="true"
-                      onAnimationEnd={advance}
-                      className="absolute inset-x-0 bottom-0 h-[2px] origin-left bg-[#d954d1]"
-                      style={progressStyle(inView && !fading)}
-                    />
-                  )}
-                </button>
-              )
-            })}
-          </div>
-        )}
+                )}
+              </button>
+            )
+          })}
       </div>
     </div>
   )
@@ -176,16 +159,16 @@ const ArrowIcon = ({ flip }) => (
 
 // Trilha de barrinhas tipo Stories do Instagram: a ativa preenche sozinha com o
 // tempo do slide (é o que avança pra próxima foto) e dá pra clicar em qualquer uma.
-function StoryDots({ active, setActive, running, onFill, accent }) {
+function StoryDots({ current, onJump, running, onFill, accent }) {
   return (
     <div className="flex items-center gap-1.5">
       {photos.map((p, i) => {
-        const isActive = i === active
+        const isActive = i === current
         return (
           <button
             key={p.src}
             type="button"
-            onClick={() => setActive(i)}
+            onClick={() => onJump(i)}
             aria-label={`Ir para a foto ${i + 1} de ${total}`}
             aria-current={isActive ? 'true' : undefined}
             className="relative h-1.5 overflow-hidden rounded-full bg-[#f4eef7]/15 transition-[width] duration-500"
@@ -193,7 +176,7 @@ function StoryDots({ active, setActive, running, onFill, accent }) {
           >
             {isActive && (
               <span
-                key={active}
+                key={current}
                 aria-hidden="true"
                 onAnimationEnd={onFill}
                 className="absolute inset-0 origin-left rounded-full"
@@ -208,16 +191,17 @@ function StoryDots({ active, setActive, running, onFill, accent }) {
 }
 
 export default function PhotoSessionPink() {
-  const [active, setActive] = useState(0)
+  const [{ step, prev }, dispatch] = useReducer(reducer, { step: 0, prev: 0 })
   const [hovering, setHovering] = useState(false)
   const wrapRef = useRef(null)
   const inView = useInView(wrapRef, { margin: '-15% 0px' })
-  const photo = photos[active]
-  const peekNext = photos[(active + 1) % total]
-  const peekPrev = photos[(active - 1 + total) % total]
+  const current = mod(step, total)
+  const photo = photos[current]
+  const peekNext = photos[mod(step + 1, total)]
+  const peekPrev = photos[mod(step - 1, total)]
 
-  const next = () => setActive((i) => (i + 1) % total)
-  const back = () => setActive((i) => (i - 1 + total) % total)
+  const next = () => dispatch({ type: 'next' })
+  const back = () => dispatch({ type: 'back' })
 
   return (
     <section id="ensaio-rosa" className="relative pt-4 md:pt-8 pb-20 md:pb-28">
@@ -228,10 +212,10 @@ export default function PhotoSessionPink() {
               <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">Ensaio rosa</span>
             </div>
 
-            <MobileCarousel active={active} setActive={setActive} inView={inView} autoplay />
+            <MobileCarousel step={step} prev={prev} dispatch={dispatch} inView={inView} />
           </div>
 
-          {/* computador: cartão principal com zoom lento + espiadinha da próxima foto */}
+          {/* computador: cartão principal com zoom lento + espiadinha dos dois lados */}
           <div className="relative hidden md:block w-full max-w-7xl mx-auto px-6 md:px-12">
             <div
               aria-hidden="true"
@@ -260,10 +244,10 @@ export default function PhotoSessionPink() {
 
               <div className="relative aspect-[4/5] w-full max-w-xl overflow-hidden rounded-2xl shadow-[0_0_0_1px_rgba(217,84,209,0.2)]">
                 {photos.map((p, i) => {
-                  const isActive = i === active
+                  const isActive = i === current
                   return (
                     <img
-                      key={isActive ? `${p.src}-zoom-${active}` : p.src}
+                      key={isActive ? `${p.src}-zoom-${current}` : p.src}
                       src={p.src}
                       alt={isActive ? p.alt : ''}
                       loading="lazy"
@@ -314,10 +298,16 @@ export default function PhotoSessionPink() {
             </div>
 
             <div className="relative z-10 mt-6 flex flex-col items-center gap-4">
-              <span key={`mood-${active}`} className="font-display text-xl italic md:text-2xl" style={{ color: ACCENT }}>
+              <span key={`mood-${current}`} className="font-display text-xl italic md:text-2xl" style={{ color: ACCENT }}>
                 {photo.mood}
               </span>
-              <StoryDots active={active} setActive={setActive} running={inView && !hovering} onFill={next} accent={ACCENT} />
+              <StoryDots
+                current={current}
+                onJump={(i) => dispatch({ type: 'set', step: i })}
+                running={inView && !hovering}
+                onFill={next}
+                accent={ACCENT}
+              />
             </div>
           </div>
         </div>

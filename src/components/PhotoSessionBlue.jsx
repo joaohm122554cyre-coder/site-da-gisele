@@ -197,7 +197,7 @@ function DesktopSlide({ step, current, running, onEnd, onNext, onBack, onJump })
 
   return (
     <>
-      <div className="relative mx-auto flex w-fit max-w-full items-stretch justify-center gap-4">
+      <div className="relative flex items-stretch justify-center gap-4">
         <div className="relative aspect-[4/5] w-full max-w-xl overflow-hidden rounded-2xl shadow-[0_0_0_1px_rgba(79,127,214,0.2)]">
           {photos.map((p, i) => {
             const isActive = i === current

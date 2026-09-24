@@ -239,7 +239,7 @@ export default function PhotoSessionPink() {
             <div
               onMouseEnter={() => setHovering(true)}
               onMouseLeave={() => setHovering(false)}
-              className="relative z-10 mx-auto flex w-fit max-w-full items-stretch justify-center gap-4"
+              className="relative z-10 flex items-stretch justify-center gap-4"
             >
               <div className="relative aspect-[4/5] w-full max-w-xl overflow-hidden rounded-2xl shadow-[0_0_0_1px_rgba(217,84,209,0.2)]">
                 {photos.map((p, i) => {

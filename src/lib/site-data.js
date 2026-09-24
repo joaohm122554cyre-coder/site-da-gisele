@@ -11,13 +11,13 @@ export const artist = {
 export const about = {
   title: 'Sobre Giselli Cristina',
   paragraphs: [
-    'Com **quase 30 anos de carreira**, Giselli Cristina construiu uma trajetória marcada por grandes sucessos, milhões de ouvintes e uma conexão genuína com o público cristão. Reconhecida em todo o Brasil por sua voz marcante, a artista consolidou seu espaço como **referência na música gospel**.',
-    'Conhecida nacionalmente pelo clássico [Meu Barquinho], canção que a projetou para todo o país e se tornou uma das mais lembradas da música gospel brasileira, Giselli Cristina construiu um repertório que continua impactando vidas.',
-    'Durante os **anos de ouro** do mercado fonográfico gospel, destacou-se como um dos **grandes fenômenos de vendas físicas** do segmento, consolidando uma carreira sólida em todo o território nacional.',
-    'Sua discografia ultrapassa a marca de **1 bilhão de streams** nas plataformas digitais, resultado de uma carreira construída com excelência, autenticidade e uma forte identificação com o público.',
+    'Há quase 30 anos a voz de Giselli Cristina segue como maré: nunca para, sempre volta. Uma trajetória de grandes sucessos, milhões de ouvintes e uma conexão genuína com o público cristão fez dela uma referência da música gospel no Brasil.',
+    'Foi em [Meu Barquinho] que essa voz ganhou o país inteiro: a canção virou porto seguro pra quem ouve, uma das mais lembradas do gospel brasileiro, e segue guiando um repertório que atravessa gerações.',
+    'Nos anos de ouro do mercado fonográfico gospel, Giselli foi um dos grandes fenômenos de vendas físicas do segmento: uma carreira construída disco a disco, show a show, em todo o território nacional.',
+    'Hoje a discografia passa de **1 bilhão de streams**, resultado de uma carreira feita de excelência, autenticidade e uma identificação genuína com quem ouve.',
   ],
   closing:
-    'Mais do que uma cantora, Giselli Cristina representa uma geração da música gospel brasileira. Sua trajetória é marcada por fé, excelência, credibilidade e canções que continuam emocionando pessoas em todo o país.',
+    'Mais do que uma cantora, Giselli Cristina é maré, é porto, é bondade cantada: uma geração inteira da música gospel brasileira marcada por fé, excelência e canções que continuam emocionando o país.',
 }
 
 export const stats = [
@@ -108,7 +108,7 @@ export const hire = {
 export const press = {
   title: 'Pronta para contar essa história',
   description:
-    'Aqui está tudo que jornalista, produtor de rádio e TV ou organizador de evento precisa pra falar sobre Giselli Cristina: **fotos oficiais em alta resolução**, biografia completa e os números que sustentam **quase 30 anos de carreira** — reunidos num único arquivo, prontos pra usar.',
+    'Aqui está tudo que jornalista, produtor de rádio e TV ou organizador de evento precisa pra contar essa história: fotos oficiais em alta resolução, biografia completa e os números que sustentam **quase 30 anos de carreira**, reunidos num único arquivo, prontos pra usar.',
   mediaKitNote: 'Um PDF só, com biografia, fotos e dados de divulgação.',
   mediaKitUrl: '/midia-kit-giselli.pdf',
 }

@@ -24,7 +24,7 @@ const songs = [
     key: 'quero-adora-lo',
     month: 'Fevereiro de 2025',
     title: 'Quero Adorá-lo',
-    text: 'Registro ao vivo na Assembleia de Deus em Ponta Grossa, com o **coral de mulheres da UFADPG** e a participação dos filhos Rafaelli Cristina e Nicolas Henrique.',
+    text: 'Registro ao vivo na Assembleia de Deus em Ponta Grossa, com o coral de mulheres da UFADPG e a participação dos filhos Rafaelli Cristina e Nicolas Henrique.',
     views: 9699384,
     image: queroAdoraLoCena,
     alt: 'Giselli Cristina cantando ao vivo em “Quero Adorá-lo”',
@@ -46,7 +46,7 @@ const songs = [
     key: 'pensando-bem',
     month: 'Setembro de 2025',
     title: 'Pensando Bem',
-    text: 'Um dueto intimista, de **mãe e filho**, em versão acústica.',
+    text: 'Um dueto intimista, de mãe e filho, em versão acústica.',
     views: 2459514,
     image: pensandoBemCena,
     alt: 'Nicolas Henrique ao violão e Giselli Cristina em “Pensando Bem”',
@@ -60,9 +60,9 @@ const millions = (n) => `${(Math.floor(n / 1e5) / 10).toLocaleString('pt-BR')} m
 
 // Marcação simples: **frase** vira ênfase (branco, marca-texto rosa); [Nome] vira destaque grande em rosa.
 const paragraphs = [
-  'Giselli Cristina construiu, ao longo de **quase três décadas**, uma das trajetórias mais respeitadas da música gospel brasileira. Em 2025, essa história ganhou **uma voz a mais**: a do filho, [Nicolas Henrique], que esteve ao lado dela em **três registros** que marcaram o ano.',
-  'Ele canta e toca teclado e violão; ela, na voz. Juntos, gravaram o clipe de [Eu Só Quero Adorar], que rendeu o **Single de Ouro**, participaram do registro ao vivo de [Quero Adorá-lo], com o coral de mulheres da UFADPG, e se encontraram num dueto acústico, [Pensando Bem].',
-  'Foi na música que os dois se encontraram diante do público. E **o público respondeu**: só nesses três registros, são **mais de 30 milhões de visualizações**.',
+  'Giselli Cristina construiu, ao longo de quase três décadas, uma das trajetórias mais respeitadas da música gospel brasileira. Em 2025, essa história ganhou uma voz a mais: a do filho, [Nicolas Henrique], ao lado dela em três registros que marcaram o ano.',
+  'Ele canta e toca teclado e violão; ela, na voz. Juntos, gravaram o clipe de [Eu Só Quero Adorar], que rendeu o Single de Ouro, participaram do registro ao vivo de [Quero Adorá-lo], com o coral de mulheres da UFADPG, e se encontraram num dueto acústico, [Pensando Bem].',
+  'Foi na música que os dois se encontraram diante do público, e o público respondeu: só nesses três registros, são **mais de 30 milhões de visualizações**.',
 ]
 
 const MARKUP = /(\*\*[^*]+\*\*|\[[^\]]+\])/g

@@ -1,21 +1,28 @@
 import { motion } from 'framer-motion'
-import { SiSpotify, SiApplemusic, SiYoutube, SiDeezer, SiInstagram, SiFacebook } from 'react-icons/si'
-import { FaAmazon } from 'react-icons/fa'
 import { socials, streaming } from '../lib/site-data'
 import AnimatedCompactNumber from './AnimatedCompactNumber'
 import Reveal from './Reveal'
+import spotifyLogo from '../assets/icons/spotify.svg'
+import appleMusicLogo from '../assets/icons/apple-music.svg'
+import youtubeLogo from '../assets/icons/youtube.svg'
+import instagramLogo from '../assets/icons/instagram.svg'
+import facebookLogo from '../assets/icons/facebook.svg'
+import deezerLogo from '../assets/icons/deezer.svg'
+import amazonMusicLogo from '../assets/icons/amazon-music.svg'
 
-const icons = {
-  Spotify: SiSpotify,
-  'Apple Music': SiApplemusic,
-  YouTube: SiYoutube,
-  'Amazon Music': FaAmazon,
-  Deezer: SiDeezer,
-  Instagram: SiInstagram,
-  Facebook: SiFacebook,
+// Logos originais de cada plataforma (não ícone genérico) — pedido explícito pra não
+// parecer "desenho".
+const logos = {
+  Spotify: spotifyLogo,
+  'Apple Music': appleMusicLogo,
+  YouTube: youtubeLogo,
+  'Amazon Music': amazonMusicLogo,
+  Deezer: deezerLogo,
+  Instagram: instagramLogo,
+  Facebook: facebookLogo,
 }
 
-// Cor de marca de cada plataforma — é o que tira a cara de "molde" das pílulas.
+// Cor de marca de cada plataforma, usada só no contorno/brilho da pílula.
 const colors = {
   Spotify: '#1DB954',
   'Apple Music': '#FA2D48',
@@ -33,8 +40,6 @@ const socialStats = [
   { name: 'Instagram', value: 481000, label: 'seguidores' },
   { name: 'YouTube', value: 918000, label: 'inscritos' },
 ]
-const instagramGradient = 'linear-gradient(135deg, #FEDA75, #D62976 55%, #4F5BD5)'
-
 const hexToRgba = (hex, alpha) => {
   const n = parseInt(hex.slice(1), 16)
   return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`
@@ -43,7 +48,6 @@ const hexToRgba = (hex, alpha) => {
 // side: de que lado a pílula "vem" antes de encaixar no lugar — como um elo de uma
 // corrente de ímã se juntando no centro da fileira.
 function Item({ name, label, url, side, order }) {
-  const Icon = icons[name]
   const color = colors[name]
   const fromX = side === 'left' ? -90 : side === 'right' ? 90 : 0
 
@@ -61,11 +65,8 @@ function Item({ name, label, url, side, order }) {
       onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--hover-border)')}
       onMouseLeave={(e) => (e.currentTarget.style.borderColor = '')}
     >
-      <span
-        className="grid h-8 w-8 place-items-center rounded-full transition group-hover:brightness-125"
-        style={{ background: name === 'Instagram' ? instagramGradient : hexToRgba(color, 0.18) }}
-      >
-        <Icon className="h-3 w-3" style={{ color: name === 'Instagram' ? '#fff' : color }} aria-hidden="true" />
+      <span className="grid h-8 shrink-0 place-items-center rounded-full bg-white px-2 shadow-sm">
+        <img src={logos[name]} alt="" className="h-4 w-auto max-w-[3.25rem] object-contain" />
       </span>
       {label}
     </motion.a>
@@ -91,15 +92,11 @@ function SocialStats() {
   return (
     <Reveal delay={0.05} className="mb-16 flex flex-wrap items-center justify-center gap-x-12 gap-y-8">
       {socialStats.map((s) => {
-        const Icon = icons[s.name]
         const color = colors[s.name]
         return (
           <div key={s.name} className="flex items-center gap-3">
-            <span
-              className="grid h-11 w-11 shrink-0 place-items-center rounded-full"
-              style={{ background: hexToRgba(color, 0.18) }}
-            >
-              <Icon className="h-[18px] w-[18px]" style={{ color }} aria-hidden="true" />
+            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white p-2 shadow-sm">
+              <img src={logos[s.name]} alt="" className="h-full w-full object-contain" />
             </span>
             <div className="text-left">
               <p

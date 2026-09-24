@@ -1,3 +1,9 @@
+import videoCuraJesus from '../assets/photos/video-cura-jesus.webp'
+import videoFases from '../assets/photos/video-fases.webp'
+import videoSanto from '../assets/photos/video-santo-pra-sempre.webp'
+import videoLouvarei from '../assets/photos/video-te-louvarei.webp'
+import videoVemJesus from '../assets/photos/video-vem-jesus-vem.webp'
+
 export const artist = {
   name: 'Giselli Cristina',
   tagline: 'A voz por trás de Meu Barquinho',
@@ -73,8 +79,27 @@ export const meuBarquinho = {
 export const videos = {
   title: 'Vídeos',
   description: 'Apresentações, clipes e conteúdos oficiais.',
-  main: null,
-  items: [],
+  main: 'https://www.youtube.com/embed/dfRye5vYGI8',
+  mainTitle: 'Cura Jesus',
+  mainThumbnail: videoCuraJesus,
+  items: [
+    { title: 'Fases', thumbnail: videoFases, url: 'https://www.youtube.com/watch?v=G_bzLfdmryM' },
+    {
+      title: 'Santo Pra Sempre — feat. Nicolas Henrique',
+      thumbnail: videoSanto,
+      url: 'https://www.youtube.com/watch?v=8zcx613PHLE',
+    },
+    {
+      title: 'Te Louvarei — feat. Nicolas Henrique',
+      thumbnail: videoLouvarei,
+      url: 'https://www.youtube.com/watch?v=Dxelc3yHVQQ',
+    },
+    {
+      title: 'Vem Jesus Vem — feat. CeCe Winans',
+      thumbnail: videoVemJesus,
+      url: 'https://www.youtube.com/watch?v=X4QFSafyzJ0',
+    },
+  ],
 }
 
 export const goldRecord = {

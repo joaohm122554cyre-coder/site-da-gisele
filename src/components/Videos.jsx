@@ -1,6 +1,52 @@
-import { useRef } from 'react'
+import { useState, useRef } from 'react'
 import { videos } from '../lib/site-data'
 import Reveal from './Reveal'
+
+// Cartaz clicável: mostra a foto (leve) em vez do player do YouTube já carregado.
+// O iframe (bem mais pesado) só entra depois que a pessoa clica em assistir.
+function MainVideo() {
+  const [playing, setPlaying] = useState(false)
+
+  if (playing) {
+    return (
+      <iframe
+        src={`${videos.main}?autoplay=1`}
+        title={videos.mainTitle ?? videos.title}
+        className="h-full w-full"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+      />
+    )
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={() => setPlaying(true)}
+      aria-label={`Assistir ${videos.mainTitle ?? videos.title}`}
+      className="group relative h-full w-full"
+    >
+      <img
+        src={videos.mainThumbnail}
+        alt=""
+        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+      />
+      <span className="absolute inset-0 bg-[#14122a]/25 transition-colors duration-300 group-hover:bg-[#14122a]/10" />
+      <span className="absolute inset-0 flex items-center justify-center">
+        <span className="grid h-16 w-16 place-items-center rounded-full bg-[#14122a]/60 backdrop-blur-sm ring-1 ring-[#f4eef7]/30 transition-transform duration-300 group-hover:scale-110 md:h-20 md:w-20">
+          <svg width="22" height="22" viewBox="0 0 16 16" fill="#f4eef7">
+            <path d="M4 2.5v11l10-5.5-10-5.5z" />
+          </svg>
+        </span>
+      </span>
+      {videos.mainTitle && (
+        <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#14122a]/85 to-transparent px-6 pb-5 pt-10 text-left">
+          <span className="font-display text-xl italic text-[#f4eef7] md:text-2xl">{videos.mainTitle}</span>
+        </span>
+      )}
+    </button>
+  )
+}
 
 function VideoCarousel({ items }) {
   const trackRef = useRef(null)
@@ -76,13 +122,7 @@ export default function Videos() {
         <Reveal delay={0.1}>
           {videos.main ? (
             <div className="aspect-video max-w-4xl mx-auto overflow-hidden rounded-xl">
-              <iframe
-                src={videos.main}
-                title={videos.title}
-                className="w-full h-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
+              <MainVideo />
             </div>
           ) : (
             <div className="max-w-4xl mx-auto aspect-video border border-[#a9a0d8]/60 rounded-xl flex items-center justify-center">

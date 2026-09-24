@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import heroVideoHd from '../assets/videos/hero-bg.mp4'
 import heroVideoSm from '../assets/videos/hero-bg-sm.mp4'
+import heroPoster from '../assets/videos/hero-poster.webp'
 import statsVideoHd from '../assets/videos/stats-bg-hd.mp4'
 import statsVideoSm from '../assets/videos/stats-bg.mp4'
 
@@ -23,25 +24,53 @@ function useForceAutoplay() {
     video.muted = true
     video.defaultMuted = true
     video.setAttribute('muted', '')
+    video.setAttribute('autoplay', '')
     video.setAttribute('playsinline', '')
     video.setAttribute('webkit-playsinline', '')
 
     const tryPlay = () => {
+      video.muted = true
       if (video.paused) video.play().catch(() => {})
     }
 
     video.load()
     tryPlay()
+    // iOS/Android às vezes só liberam o play() depois do metadata carregar —
+    // insistir nos primeiros frames via requestAnimationFrame pega esse instante
+    // sem esperar o intervalo de 300ms.
+    let rafId
+    let rafTries = 0
+    const rafLoop = () => {
+      if (!video.paused || rafTries > 90) return
+      tryPlay()
+      rafTries += 1
+      rafId = requestAnimationFrame(rafLoop)
+    }
+    rafId = requestAnimationFrame(rafLoop)
 
-    const gestureEvents = ['touchstart', 'touchend', 'pointerdown', 'click', 'scroll']
+    // Qualquer sinal de interação ou de a página voltar a ficar visível conta
+    // como "gesto" pro navegador liberar o autoplay que ficou preso.
+    const gestureEvents = [
+      'touchstart',
+      'touchmove',
+      'touchend',
+      'pointerdown',
+      'click',
+      'scroll',
+      'wheel',
+    ]
     gestureEvents.forEach((evt) =>
       document.addEventListener(evt, tryPlay, { passive: true })
     )
 
-    const dataEvents = ['loadeddata', 'canplay', 'canplaythrough']
+    const dataEvents = ['loadedmetadata', 'loadeddata', 'canplay', 'canplaythrough']
     dataEvents.forEach((evt) => video.addEventListener(evt, tryPlay))
 
     document.addEventListener('visibilitychange', tryPlay)
+    // pageshow cobre o Safari restaurando a página do cache (voltar de outro
+    // app/aba), caso em que o vídeo volta pausado sem disparar mais nada.
+    window.addEventListener('pageshow', tryPlay)
+    window.addEventListener('focus', tryPlay)
 
     const retryInterval = setInterval(() => {
       if (video.paused) {
@@ -49,13 +78,16 @@ function useForceAutoplay() {
       } else {
         clearInterval(retryInterval)
       }
-    }, 500)
-    const stopRetrying = setTimeout(() => clearInterval(retryInterval), 8000)
+    }, 300)
+    const stopRetrying = setTimeout(() => clearInterval(retryInterval), 12000)
 
     return () => {
       gestureEvents.forEach((evt) => document.removeEventListener(evt, tryPlay))
       dataEvents.forEach((evt) => video.removeEventListener(evt, tryPlay))
       document.removeEventListener('visibilitychange', tryPlay)
+      window.removeEventListener('pageshow', tryPlay)
+      window.removeEventListener('focus', tryPlay)
+      cancelAnimationFrame(rafId)
       clearInterval(retryInterval)
       clearTimeout(stopRetrying)
     }
@@ -116,6 +148,7 @@ export default function BackgroundVideo({ switchRef }) {
       <motion.video
         ref={heroRef}
         src={heroVideo}
+        poster={heroPoster}
         autoPlay
         loop
         muted

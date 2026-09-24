@@ -79,7 +79,7 @@ function Entry({ item, index }) {
         <p className="font-display text-3xl italic lining-nums text-[#d954d1] md:text-4xl">{item.year}</p>
         <h3 className="mt-2 font-display text-2xl text-[#f4eef7] md:text-3xl">{item.title}</h3>
         <p
-          className={`mt-4 max-w-md font-serif text-lg lining-nums leading-relaxed text-[#f4eef7]/75 md:text-xl ${
+          className={`mt-4 max-w-md font-fraunces text-lg lining-nums leading-relaxed text-[#f4eef7]/75 md:text-xl ${
             textOnLeft ? 'md:ml-auto' : ''
           }`}
         >

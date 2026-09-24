@@ -1,6 +1,6 @@
 export const artist = {
   name: 'Giselli Cristina',
-  tagline: 'Uma das vozes mais importantes da música gospel brasileira',
+  tagline: 'A voz por trás de Meu Barquinho',
   instagram: '@gisellicristinacantora',
   youtube: 'Giselli Cristina',
   label: 'Maximus Records',

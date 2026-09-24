@@ -8,7 +8,7 @@ export default function ClosingQuote() {
       <div className="relative z-10 max-w-4xl mx-auto px-6 md:px-12 text-center">
         <Reveal>
           <span className="mx-auto mb-10 block h-px w-16 bg-gradient-to-r from-transparent via-[#4f7fd6] to-transparent" />
-          <p className="font-serif italic text-2xl sm:text-3xl md:text-4xl text-[#f4eef7]/85 leading-snug [text-shadow:0_1px_18px_rgba(10,8,25,0.85)]">
+          <p className="font-fraunces italic text-2xl sm:text-3xl md:text-4xl text-[#f4eef7]/85 leading-snug [text-shadow:0_1px_18px_rgba(10,8,25,0.85)]">
             &ldquo;Mais do que uma cantora,{' '}
             <span className="not-italic font-semibold text-[#4f7fd6] text-[1.15em]">
               Giselli Cristina

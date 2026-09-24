@@ -59,7 +59,7 @@ export default function Hero() {
             className="mt-10 flex flex-col md:flex-row md:items-end md:justify-between gap-6"
           >
             <p className="max-w-sm text-sm md:text-base text-white/90 leading-relaxed [text-shadow:0_1px_14px_rgba(10,8,25,0.85)]">
-              {artist.tagline}. Quase 30 anos construindo a trilha sonora da
+              {artist.tagline}, quase 30 anos construindo a trilha sonora da
               fé de milhões de brasileiros.
             </p>
             <a

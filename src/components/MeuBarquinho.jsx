@@ -254,7 +254,7 @@ export default function MeuBarquinho() {
           </h2>
         </Reveal>
 
-        <div className="md:col-span-5 flex justify-center min-h-64 md:min-h-80">
+        <div className="md:col-span-5 flex justify-center min-h-[428px] md:min-h-0">
           <div className="relative flex items-center gap-3 md:gap-5">
             {!mini && (
               <button

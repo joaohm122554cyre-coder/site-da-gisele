@@ -120,6 +120,22 @@ body {
   text-shadow: 0 0 32px rgba(79, 127, 214, 0.65), 0 0 3px rgba(79, 127, 214, 0.6);
 }
 
+/* Pulso + anel que se expande, pra chamar o olho pros botões "conheça" mesmo
+   parado (sem precisar de hover) — a pessoa rolando a página não pode passar
+   direto sem notar. */
+@keyframes cta-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(217, 84, 209, 0.55), 0 0 16px 1px rgba(217, 84, 209, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(217, 84, 209, 0), 0 0 34px 6px rgba(217, 84, 209, 0.75);
+  }
+}
+
+.cta-glow {
+  animation: cta-pulse 2.4s ease-in-out infinite;
+}
+
 /* Luz que percorre o contorno do enfeite, do centro para as laterais */
 .ornament-shine {
   position: absolute;

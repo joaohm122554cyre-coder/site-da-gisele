@@ -87,7 +87,7 @@ export default function CurrentMoment() {
               to="/dupla"
               id="conheca-dupla"
               returnTo="conheca-dupla"
-              className="group inline-flex items-center gap-4 rounded-full border border-[#d954d1]/45 bg-[#d954d1]/10 py-2 pl-2 pr-3 backdrop-blur-sm transition-all duration-500 hover:border-[#d954d1] hover:bg-[#d954d1]/20 hover:shadow-[0_0_40px_-8px_rgba(217,84,209,0.7)]"
+              className="cta-glow group inline-flex items-center gap-4 rounded-full border border-[#d954d1]/45 bg-[#d954d1]/10 py-2 pl-2 pr-3 backdrop-blur-sm transition-all duration-500 hover:border-[#d954d1] hover:bg-[#d954d1]/20"
             >
               <span className="flex -space-x-3" aria-hidden="true">
                 {faces.map((face) => (

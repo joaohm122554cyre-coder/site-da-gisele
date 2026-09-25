@@ -111,7 +111,7 @@ function Entry({ item, index }) {
               to={item.cta.to}
               id="conheca-disco-ouro"
               returnTo="conheca-disco-ouro"
-              className={`group mt-4 inline-flex items-center gap-2.5 rounded-full border border-[#d954d1]/45 bg-[#d954d1]/10 py-1.5 pl-1.5 pr-4 backdrop-blur-sm transition-all duration-500 hover:border-[#d954d1] hover:bg-[#d954d1]/20 hover:shadow-[0_0_30px_-8px_rgba(217,84,209,0.7)] ${
+              className={`cta-glow group mt-4 inline-flex items-center gap-2.5 rounded-full border border-[#d954d1]/45 bg-[#d954d1]/10 py-1.5 pl-1.5 pr-4 backdrop-blur-sm transition-all duration-500 hover:border-[#d954d1] hover:bg-[#d954d1]/20 ${
                 item.wide ? 'max-w-[340px]' : 'max-w-[260px]'
               }`}
             >

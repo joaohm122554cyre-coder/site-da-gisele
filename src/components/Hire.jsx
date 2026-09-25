@@ -18,14 +18,14 @@ export default function Hire() {
             </h2>
             <ZigzagLine side="right" />
           </div>
-          <p className="mt-6 text-sm md:text-base text-[#f4eef7]/65 max-w-md mx-auto">
+          <p className="mt-6 max-w-md mx-auto font-fraunces text-lg leading-[1.7] text-[#f4eef7]/95 [text-shadow:0_1px_14px_rgba(20,18,42,0.85)] md:text-xl">
             {hire.description}
           </p>
         </Reveal>
 
         {hire.agency ? (
           <Reveal delay={0.15}>
-            <p className="mt-2 text-[13px] text-[#f4eef7]/50 max-w-sm mx-auto">
+            <p className="mt-3 text-[13px] text-[#f4eef7]/70 max-w-sm mx-auto">
               Lá você fala direto com quem organiza a agenda dela e fecha a data do seu evento.
             </p>
             <a

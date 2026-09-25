@@ -114,9 +114,10 @@ function MobileCarousel({ step, prev, dispatch, inView }) {
                   width: slideW,
                   zIndex: isActive ? 10 : 0,
                   transform: `translate3d(${anchor + offset * stepPx}px,0,0)`,
-                  transition: wraps ? 'none' : `transform 1200ms ${SMOOTH}, box-shadow 500ms ease`,
+                  transition: wraps ? 'none' : `transform 1200ms ${SMOOTH}, box-shadow 500ms ease, filter 500ms ease`,
+                  filter: isActive ? 'none' : 'blur(1.5px) brightness(0.72) saturate(0.9)',
                   boxShadow: isActive
-                    ? '0 24px 48px -18px rgba(217,84,209,0.65), 0 0 0 1px rgba(217,84,209,0.4)'
+                    ? '0 34px 60px -16px rgba(217,84,209,0.55), 0 14px 26px -10px rgba(0,0,0,0.55), 0 0 0 1px rgba(217,84,209,0.4)'
                     : '0 0 0 1px rgba(244,238,247,0.1)',
                 }}
               >

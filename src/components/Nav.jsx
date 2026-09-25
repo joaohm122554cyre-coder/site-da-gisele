@@ -8,7 +8,6 @@ const links = [
   { id: 'historia', href: '#historia', label: 'História' },
   { id: 'musicas', href: '#musicas', label: 'Músicas' },
   { id: 'videos', href: '#videos', label: 'Vídeos' },
-  { id: 'galeria', href: '#galeria', label: 'Galeria' },
   { id: 'agenda', href: '#agenda', label: 'Agenda' },
   { id: 'contrate', href: '#contrate', label: 'Contrate' },
   { id: 'redes', href: '#redes', label: 'Redes' },

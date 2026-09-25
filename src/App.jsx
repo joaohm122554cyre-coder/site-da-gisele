@@ -8,7 +8,6 @@ import Stats from './components/Stats'
 import MeuBarquinho from './components/MeuBarquinho'
 import CurrentMoment from './components/CurrentMoment'
 import Videos from './components/Videos'
-import Gallery from './components/Gallery'
 import PhotoSessionBlue from './components/PhotoSessionBlue'
 import Divider from './components/Divider'
 import Agenda from './components/Agenda'
@@ -36,7 +35,6 @@ export default function App() {
           <CurrentMoment />
         </div>
         <Videos />
-        <Gallery />
         <Divider />
         <PhotoSessionBlue />
         <Agenda />

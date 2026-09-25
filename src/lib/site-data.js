@@ -115,15 +115,6 @@ export const goldRecord = {
   ],
 }
 
-export const gallery = [
-  { src: 'palco-microfone-1.png', alt: 'Giselli Cristina no palco' },
-  { src: 'palco-microfone-3.png', alt: 'Giselli Cristina no palco' },
-  { src: 'bastidores.png', alt: 'Bastidores com Giselli Cristina' },
-  { src: 'show-banda.png', alt: 'Giselli Cristina com a banda' },
-  { src: 'retrato-casual.png', alt: 'Retrato de Giselli Cristina' },
-  { src: 'retrato-suave.png', alt: 'Retrato de Giselli Cristina' },
-]
-
 export const agenda = {
   description:
     'As próximas datas ainda não foram divulgadas aqui, mas a agenda de Giselli Cristina já está em andamento. Para verificar disponibilidade e reservar uma data para o seu evento, fale diretamente com Elivelton, assessor responsável pela agenda de shows.',

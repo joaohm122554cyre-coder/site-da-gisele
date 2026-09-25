@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { createPortal } from 'react-dom'
 import Reveal from './Reveal'
 import VinylPlayer from './VinylPlayer'
 import SongMarquee from './SongMarquee'
@@ -351,6 +352,24 @@ export default function MeuBarquinho() {
       <div className="relative z-10 mt-16 md:mt-24">
         <SongMarquee />
       </div>
+
+      {mini &&
+        createPortal(
+          <div className="fixed inset-x-0 top-0 z-30 flex justify-center px-4 pt-[calc(0.75rem+env(safe-area-inset-top))]">
+            <div className="max-w-sm rounded-2xl border border-[#f4eef7]/15 bg-[#14122a]/85 px-4 py-3 text-center shadow-lg shadow-black/40 backdrop-blur-md">
+              <span className="block text-[10px] uppercase tracking-[0.3em] text-[#e9c968]/80">
+                {track.eyebrow}
+              </span>
+              <span className="mt-0.5 block font-display text-lg italic text-[#f4eef7]">
+                {track.title}
+              </span>
+              <p className="mt-1.5 line-clamp-2 text-xs leading-snug text-[#f4eef7]/75">
+                {track.description}
+              </p>
+            </div>
+          </div>,
+          document.body,
+        )}
     </section>
   )
 }

@@ -103,26 +103,36 @@ function useAudioPreviews() {
     const audio = audioRef.current
     if (!audio) return
     if (activeIndex === index) {
-      if (playing) audio.pause()
-      else audio.play().catch(() => {})
+      if (playing) {
+        audio.pause()
+      } else {
+        setPlaying(true) // otimista: disco já gira ao tocar, sem esperar o buffer
+        audio.play().catch(() => setPlaying(false))
+      }
       return
     }
     audio.src = src
     audio.currentTime = 0
     setActiveIndex(index)
     setProgress(0)
-    audio.play().catch(() => {})
+    setPlaying(true)
+    audio.play().catch(() => setPlaying(false))
   }
 
   return { audioRef, activeIndex, playing, progress, toggle }
 }
 
-function AlbumTile({ item, isActive, playing, progress, onToggle }) {
+function AlbumTile({ item, isActive, playing, progress, onToggle, peek = 'right' }) {
+  const peekSide =
+    peek === 'right'
+      ? 'right-0 translate-x-[26%]'
+      : 'left-0 -translate-x-[26%]'
+
   return (
     <div className="flex flex-col gap-3">
       <div className="relative aspect-square">
         <div
-          className={`absolute right-0 top-1/2 h-[78%] w-[78%] -translate-y-1/2 translate-x-[26%] rounded-full shadow-lg shadow-black/40 ${
+          className={`absolute top-1/2 h-[78%] w-[78%] -translate-y-1/2 rounded-full shadow-lg shadow-black/40 ${peekSide} ${
             playing ? '[animation:vinyl-rotate_3.6s_linear_infinite]' : ''
           }`}
           style={{ backgroundImage: VINYL_BG }}
@@ -167,7 +177,7 @@ function AlbumTile({ item, isActive, playing, progress, onToggle }) {
         </button>
       </div>
       <div className="flex items-start justify-between gap-2">
-        <p className="line-clamp-2 text-xs leading-snug text-[#f4eef7]/75 md:text-sm">
+        <p className="line-clamp-2 text-xs font-medium leading-snug text-[#f4eef7] [text-shadow:0_1px_4px_rgba(0,0,0,0.6)] md:text-sm">
           {item.title}
         </p>
         <a
@@ -229,10 +239,10 @@ export default function Videos() {
 
         {videos.items.length > 0 && (
           <Reveal delay={0.2} className="mt-12 md:mt-16">
-            <p className="mb-1 px-1 text-[11px] tracking-[0.3em] uppercase text-[#f4eef7]/45">
+            <p className="mb-1 px-1 text-[11px] tracking-[0.3em] uppercase text-[#f4eef7]/70 [text-shadow:0_1px_4px_rgba(0,0,0,0.6)]">
               Prévia dos clipes
             </p>
-            <p className="mb-6 px-1 text-xs text-[#f4eef7]/40">
+            <p className="mb-6 px-1 text-xs text-[#f4eef7]/85 [text-shadow:0_1px_4px_rgba(0,0,0,0.6)]">
               Toque na capa pra ouvir um trecho. O ícone do YouTube abre o clipe completo.
             </p>
             <div className="grid grid-cols-2 gap-x-5 gap-y-8 sm:grid-cols-4">
@@ -244,6 +254,7 @@ export default function Videos() {
                   playing={activeIndex === i && playing}
                   progress={activeIndex === i ? progress : 0}
                   onToggle={() => toggle(i, item.preview)}
+                  peek={i % 2 === 0 ? 'right' : 'left'}
                 />
               ))}
             </div>

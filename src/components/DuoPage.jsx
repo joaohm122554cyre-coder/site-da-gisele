@@ -7,7 +7,6 @@ import Footer from './Footer'
 import Link from './Link'
 import { goBack, isPlainClick } from '../lib/router'
 import logo from '../assets/logo/gc-monograma.png'
-import fundoVideo from '../assets/videos/stats-bg.mp4'
 import fotoRoxo from '../assets/photos/dupla-roxo.webp'
 import fotoCantando from '../assets/photos/dupla-cantando.webp'
 import fotoViolao from '../assets/photos/dupla-violao.webp'
@@ -124,34 +123,6 @@ function BackLink({ className, children }) {
     >
       {children}
     </a>
-  )
-}
-
-function DuoBackground() {
-  const ref = useRef(null)
-
-  useEffect(() => {
-    const video = ref.current
-    video.muted = true
-    video.play().catch(() => {})
-  }, [])
-
-  return (
-    <div aria-hidden="true" className="fixed inset-0 -z-20 h-lvh overflow-hidden">
-      <video
-        ref={ref}
-        src={fundoVideo}
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload="auto"
-        disableRemotePlayback
-        className="h-full w-full object-cover"
-        style={{ filter: 'blur(2px) brightness(0.4) saturate(0.9)' }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-[#14122a]/60 via-[#1c1638]/35 to-[#170f28]/70" />
-    </div>
   )
 }
 
@@ -330,7 +301,6 @@ export default function DuoPage() {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }} className="relative">
-      <DuoBackground />
       <TopBar />
 
       <main>

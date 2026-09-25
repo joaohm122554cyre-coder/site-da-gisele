@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { FiArrowLeft, FiArrowUpRight } from 'react-icons/fi'
 import Reveal from './Reveal'
@@ -8,7 +8,6 @@ import Link from './Link'
 import { goBack, isPlainClick } from '../lib/router'
 import logo from '../assets/logo/gc-monograma.png'
 import photoGold from '../assets/photos/giselli-nicolas-disco-ouro.webp'
-import fundoVideo from '../assets/videos/stats-bg.mp4'
 import { goldRecord } from '../lib/site-data'
 
 const BACK_TO = '/#conheca-disco-ouro'
@@ -52,34 +51,6 @@ function BackLink({ className, children }) {
     >
       {children}
     </a>
-  )
-}
-
-function GoldBackground() {
-  const ref = useRef(null)
-
-  useEffect(() => {
-    const video = ref.current
-    video.muted = true
-    video.play().catch(() => {})
-  }, [])
-
-  return (
-    <div aria-hidden="true" className="fixed inset-0 -z-20 h-lvh overflow-hidden">
-      <video
-        ref={ref}
-        src={fundoVideo}
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload="auto"
-        disableRemotePlayback
-        className="h-full w-full object-cover"
-        style={{ filter: 'blur(2px) brightness(0.4) saturate(0.9)' }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-[#14122a]/60 via-[#1c1638]/35 to-[#170f28]/70" />
-    </div>
   )
 }
 
@@ -173,7 +144,6 @@ export default function GoldRecordPage() {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }} className="relative">
-      <GoldBackground />
       <TopBar />
 
       <main>

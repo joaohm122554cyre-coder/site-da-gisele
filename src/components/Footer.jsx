@@ -10,6 +10,14 @@ export default function Footer() {
         <p className="text-[11px] text-[#f4eef7]/40">
           &copy; {new Date().getFullYear()} {artist.name}. Todos os direitos reservados. {artist.label}.
         </p>
+        <a
+          href="https://www.instagram.com/agencia_ebenezer_br"
+          target="_blank"
+          rel="noreferrer"
+          className="text-[11px] text-[#f4eef7]/40 transition-colors hover:text-[#f4eef7]/70"
+        >
+          Site por <span className="text-[#d954d1]">Ebenézer</span>
+        </a>
       </div>
     </footer>
   )

@@ -117,7 +117,7 @@ function MobileCarousel({ step, prev, dispatch, inView }) {
                   transition: wraps ? 'none' : `transform 1200ms ${SMOOTH}, box-shadow 500ms ease, filter 500ms ease`,
                   filter: isActive ? 'none' : 'blur(3px) brightness(0.45) saturate(0.7)',
                   boxShadow: isActive
-                    ? '0 18px 36px -14px rgba(0,0,0,0.5), 0 0 32px 3px rgba(217,84,209,0.28), 0 0 0 1px rgba(217,84,209,0.4)'
+                    ? '0 18px 36px -14px rgba(0,0,0,0.5), 0 0 34px 4px rgba(217,84,209,0.36), 0 0 0 1px rgba(217,84,209,0.4)'
                     : '0 0 0 1px rgba(244,238,247,0.1)',
                 }}
               >
@@ -149,18 +149,19 @@ function MobileCarousel({ step, prev, dispatch, inView }) {
                   className="absolute inset-0 rounded-2xl bg-[#14122a] transition-opacity duration-[1200ms]"
                   style={{ opacity: isActive ? 0 : 0.5 }}
                 />
-                {isActive && (
-                  <span
-                    key={step}
-                    aria-hidden="true"
-                    onAnimationEnd={next}
-                    className="absolute inset-x-0 bottom-0 h-[2px] origin-left bg-[#d954d1]"
-                    style={progressStyle(inView)}
-                  />
-                )}
               </button>
             )
           })}
+      </div>
+      <div className="relative mx-6 mt-5 flex justify-center">
+        <StoryDots
+          current={current}
+          onJump={(i) => dispatch({ type: 'set', step: i })}
+          running={inView}
+          onFill={next}
+          accent={ACCENT}
+          seconds={SLIDE_SECONDS}
+        />
       </div>
     </div>
   )
@@ -174,7 +175,7 @@ const ArrowIcon = ({ flip }) => (
 
 // Trilha de barrinhas tipo Stories do Instagram: a ativa preenche sozinha com o
 // tempo do slide (é o que avança pra próxima foto) e dá pra clicar em qualquer uma.
-function StoryDots({ current, onJump, running, onFill, accent }) {
+function StoryDots({ current, onJump, running, onFill, accent, seconds = DESKTOP_SLIDE_SECONDS }) {
   return (
     <div className="flex items-center gap-1.5">
       {photos.map((p, i) => {
@@ -195,7 +196,7 @@ function StoryDots({ current, onJump, running, onFill, accent }) {
                 aria-hidden="true"
                 onAnimationEnd={onFill}
                 className="absolute inset-0 origin-left rounded-full"
-                style={{ background: accent, ...progressStyle(running, DESKTOP_SLIDE_SECONDS) }}
+                style={{ background: accent, ...progressStyle(running, seconds) }}
               />
             )}
           </button>

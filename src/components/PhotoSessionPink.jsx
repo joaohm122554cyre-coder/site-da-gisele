@@ -224,10 +224,6 @@ export default function PhotoSessionPink() {
       <Reveal>
         <div ref={wrapRef}>
           <div className="max-w-7xl md:max-w-none mx-auto px-6 md:px-12">
-            <div className="mb-6 md:mb-8">
-              <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">Ensaio rosa</span>
-            </div>
-
             <MobileCarousel step={step} prev={prev} dispatch={dispatch} inView={inView} />
           </div>
 

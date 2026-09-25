@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, animate } from 'framer-motion'
 
 function formatTime(s) {
@@ -30,32 +31,52 @@ export default function VinylPlayer({
   trackName,
   playing,
   onToggle,
+  onPrev,
+  onNext,
   progress,
   current,
   duration,
   meta,
   youtubeUrl,
+  mini = false,
 }) {
   const toggle = onToggle
 
-  return (
-    <div className="flex flex-col items-center gap-6">
-      <div className="relative w-64 h-64 md:w-80 md:h-80">
+  // No modo mini o disco é "fixed" no canto da tela: se ficasse dentro da
+  // árvore normal, qualquer ancestral com transform (o Reveal que anima a
+  // entrada, por exemplo) vira o "viewport" dele, e o disco passa a seguir
+  // esse ancestral em vez do canto real da tela — daí ele "pula" ao rolar a
+  // página. O portal tira ele de dentro dessa árvore, direto pro body.
+  const content = (
+    <motion.div
+      layout
+      transition={{ type: 'spring', stiffness: 210, damping: 24 }}
+      className={
+        mini
+          ? 'fixed bottom-5 right-5 z-30 flex flex-col items-center gap-2'
+          : 'flex flex-col items-center gap-6'
+      }
+    >
+      <motion.div layout className={`relative ${mini ? 'w-16 h-16' : 'w-64 h-64 md:w-80 md:h-80'}`}>
         {/* tonearm */}
-        <div
-          className="absolute -top-2 -right-2 w-24 h-24 md:w-28 md:h-28 origin-top-right z-20 transition-transform duration-700 ease-out"
-          style={{ transform: playing ? 'rotate(0deg)' : 'rotate(-22deg)' }}
-        >
-          <div className="absolute top-1 right-1 w-4 h-4 rounded-full bg-[#e9c968] border border-[#a9822f] shadow" />
-          <div className="absolute top-2.5 right-2.5 w-[3px] h-20 md:h-24 bg-gradient-to-b from-[#e9c968] to-[#a9822f] rounded-full origin-top rotate-[38deg]" />
-        </div>
+        {!mini && (
+          <div
+            className="absolute -top-2 -right-2 w-24 h-24 md:w-28 md:h-28 origin-top-right z-20 transition-transform duration-700 ease-out"
+            style={{ transform: playing ? 'rotate(0deg)' : 'rotate(-22deg)' }}
+          >
+            <div className="absolute top-1 right-1 w-4 h-4 rounded-full bg-[#e9c968] border border-[#a9822f] shadow" />
+            <div className="absolute top-2.5 right-2.5 w-[3px] h-20 md:h-24 bg-gradient-to-b from-[#e9c968] to-[#a9822f] rounded-full origin-top rotate-[38deg]" />
+          </div>
+        )}
 
         {/* disc */}
         <button
           type="button"
           onClick={toggle}
           aria-label={playing ? `Pausar ${trackName}` : `Tocar ${trackName}`}
-          className="group relative w-full h-full rounded-full cursor-pointer focus:outline-none"
+          className={`group relative w-full h-full rounded-full cursor-pointer focus:outline-none ${
+            mini ? 'shadow-[0_6px_24px_rgba(20,18,42,0.6)]' : ''
+          }`}
         >
           <div
             className={`vinyl-spin ${playing ? 'is-playing' : ''} w-full h-full rounded-full relative shadow-2xl`}
@@ -74,40 +95,80 @@ export default function VinylPlayer({
             </div>
           </div>
 
-          <div
-            className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${
-              playing ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'
-            }`}
-          >
-            <div className="w-14 h-14 rounded-full bg-[#170f28]/70 backdrop-blur-sm flex items-center justify-center border border-[#e9c968]/40">
-              {playing ? (
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="#f4eef7">
-                  <rect x="3" y="2" width="3.5" height="12" rx="1" />
-                  <rect x="9.5" y="2" width="3.5" height="12" rx="1" />
-                </svg>
-              ) : (
-                <svg width="18" height="18" viewBox="0 0 16 16" fill="#f4eef7">
-                  <path d="M4 2.5v11l10-5.5-10-5.5z" />
-                </svg>
-              )}
+          {!mini && (
+            <div
+              className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${
+                playing ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'
+              }`}
+            >
+              <div className="w-14 h-14 rounded-full bg-[#170f28]/70 backdrop-blur-sm flex items-center justify-center border border-[#e9c968]/40">
+                {playing ? (
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="#f4eef7">
+                    <rect x="3" y="2" width="3.5" height="12" rx="1" />
+                    <rect x="9.5" y="2" width="3.5" height="12" rx="1" />
+                  </svg>
+                ) : (
+                  <svg width="18" height="18" viewBox="0 0 16 16" fill="#f4eef7">
+                    <path d="M4 2.5v11l10-5.5-10-5.5z" />
+                  </svg>
+                )}
+              </div>
             </div>
-          </div>
+          )}
         </button>
-      </div>
+      </motion.div>
 
-      <div className="flex flex-col items-center gap-2 w-48">
-        <div className="w-full h-[2px] bg-[#f4eef7]/15 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-[#d954d1] transition-[width] duration-150"
-            style={{ width: `${progress * 100}%` }}
-          />
+      {mini && (
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onPrev}
+            aria-label="Música anterior"
+            className="grid h-7 w-7 place-items-center rounded-full border border-[#e9c968]/50 bg-[#170f28]/80 text-[#f4eef7] backdrop-blur-sm"
+          >
+            <svg width="9" height="9" viewBox="0 0 16 16" fill="none">
+              <path d="M10 2 4 8l6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            onClick={toggle}
+            aria-label="Pausar"
+            className="grid h-8 w-8 place-items-center rounded-full border border-[#e9c968]/60 bg-[#170f28]/90 text-[#f4eef7] backdrop-blur-sm"
+          >
+            <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor">
+              <rect x="3" y="2" width="3.5" height="12" rx="1" />
+              <rect x="9.5" y="2" width="3.5" height="12" rx="1" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            onClick={onNext}
+            aria-label="Próxima música"
+            className="grid h-7 w-7 place-items-center rounded-full border border-[#e9c968]/50 bg-[#170f28]/80 text-[#f4eef7] backdrop-blur-sm"
+          >
+            <svg width="9" height="9" viewBox="0 0 16 16" fill="none">
+              <path d="M6 2l6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
         </div>
-        <p className="text-[10px] tracking-[0.15em] uppercase text-[#f4eef7]/75">
-          {formatTime(current)} / {formatTime(duration)} &middot; prévia
-        </p>
-      </div>
+      )}
 
-      {youtubeUrl && (
+      {!mini && (
+        <div className="flex flex-col items-center gap-2 w-48">
+          <div className="w-full h-[2px] bg-[#f4eef7]/15 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-[#d954d1] transition-[width] duration-150"
+              style={{ width: `${progress * 100}%` }}
+            />
+          </div>
+          <p className="text-[10px] tracking-[0.15em] uppercase text-[#f4eef7]/75">
+            {formatTime(current)} / {formatTime(duration)} &middot; prévia
+          </p>
+        </div>
+      )}
+
+      {!mini && youtubeUrl && (
         <motion.a
           href={youtubeUrl}
           target="_blank"
@@ -130,7 +191,7 @@ export default function VinylPlayer({
         </motion.a>
       )}
 
-      {meta && (
+      {!mini && meta && (
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -168,6 +229,8 @@ export default function VinylPlayer({
           )}
         </motion.div>
       )}
-    </div>
+    </motion.div>
   )
+
+  return mini ? createPortal(content, document.body) : content
 }

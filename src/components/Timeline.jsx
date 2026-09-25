@@ -41,7 +41,7 @@ const items = [
     image: discoDeOuro,
     imageAlt: 'Giselli, Nicolas Henrique e a equipe com o Single de Ouro',
     wide: true,
-    cta: { to: '/disco-de-ouro', eyebrow: 'Eu Só Quero Adorar', label: 'Conheça o Disco de Ouro' },
+    cta: { to: '/disco-de-ouro', label: 'Conheça o Disco de Ouro' },
   },
   {
     year: 'Hoje',
@@ -88,31 +88,6 @@ function Entry({ item, index }) {
         >
           {item.text}
         </p>
-        {item.cta && (
-          <Link
-            to={item.cta.to}
-            id="conheca-disco-ouro"
-            returnTo="conheca-disco-ouro"
-            className={`group mt-6 inline-flex items-center gap-4 rounded-full border border-[#d954d1]/45 bg-[#d954d1]/10 py-2 pl-2 pr-3 backdrop-blur-sm transition-all duration-500 hover:border-[#d954d1] hover:bg-[#d954d1]/20 hover:shadow-[0_0_40px_-8px_rgba(217,84,209,0.7)] ${
-              textOnLeft ? 'md:ml-auto' : ''
-            }`}
-          >
-            <span className="grid h-11 w-11 place-items-center rounded-full bg-[#d954d1]/15 text-[#d954d1]">
-              <FiAward className="text-lg" aria-hidden="true" />
-            </span>
-            <span className="flex flex-col text-left leading-tight">
-              <span className="text-[10px] uppercase tracking-[0.3em] text-[#f4eef7]/55">
-                {item.cta.eyebrow}
-              </span>
-              <span className="mt-1 font-display text-lg italic text-[#f4eef7] md:text-xl">
-                {item.cta.label}
-              </span>
-            </span>
-            <span className="grid h-9 w-9 place-items-center rounded-full bg-[#d954d1] text-white transition-transform duration-500 group-hover:translate-x-1">
-              <FiArrowRight aria-hidden="true" />
-            </span>
-          </Link>
-        )}
       </Reveal>
 
       {item.image && (
@@ -131,6 +106,27 @@ function Entry({ item, index }) {
               item.wide ? 'max-w-[340px] aspect-[3/2]' : 'max-w-[260px] aspect-square'
             }`}
           />
+          {item.cta && (
+            <Link
+              to={item.cta.to}
+              id="conheca-disco-ouro"
+              returnTo="conheca-disco-ouro"
+              className={`group mt-4 inline-flex items-center gap-2.5 rounded-full border border-[#d954d1]/45 bg-[#d954d1]/10 py-1.5 pl-1.5 pr-4 backdrop-blur-sm transition-all duration-500 hover:border-[#d954d1] hover:bg-[#d954d1]/20 hover:shadow-[0_0_30px_-8px_rgba(217,84,209,0.7)] ${
+                item.wide ? 'max-w-[340px]' : 'max-w-[260px]'
+              }`}
+            >
+              <span className="grid h-7 w-7 place-items-center rounded-full bg-[#d954d1]/15 text-[#d954d1]">
+                <FiAward className="text-sm" aria-hidden="true" />
+              </span>
+              <span className="font-display text-sm italic text-[#f4eef7]">
+                {item.cta.label}
+              </span>
+              <FiArrowRight
+                className="ml-auto text-[#d954d1] transition-transform duration-500 group-hover:translate-x-1"
+                aria-hidden="true"
+              />
+            </Link>
+          )}
         </Reveal>
       )}
     </div>

@@ -56,52 +56,46 @@ function MainVideo() {
   )
 }
 
-function VinylThumb({ thumbnail, size = 52 }) {
+// Caixa com proporção 16:9 via padding-top (em vez de aspect-ratio), que não
+// depende do motor de grid/flex do navegador pra calcular a altura — em
+// alguns celulares o aspect-video dentro de layouts mais complexos cortava
+// o vídeo pela metade.
+function VideoFrame({ children }) {
   return (
-    <div
-      className="relative shrink-0 rounded-full [animation:none] group-hover:[animation:vinyl-rotate_3.6s_linear_infinite]"
-      style={{ width: size, height: size, backgroundImage: VINYL_BG }}
-    >
-      <div className="absolute inset-[20%] overflow-hidden rounded-full border border-[#e9c968]/70">
-        <img src={thumbnail} alt="" className="h-full w-full object-cover" />
-      </div>
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="h-1.5 w-1.5 rounded-full border border-[#e9c968]/60 bg-[#170f28]" />
-      </div>
+    <div className="relative w-full overflow-hidden rounded-2xl bg-[#14122a] shadow-xl shadow-black/30 ring-1 ring-[#f4eef7]/10">
+      <div style={{ paddingTop: '56.25%' }} />
+      <div className="absolute inset-0">{children}</div>
     </div>
   )
 }
 
-function VideoList({ items }) {
+function AlbumTile({ item }) {
   return (
-    <div className="flex flex-col gap-1">
-      {items.map((item, i) => (
-        <a
-          key={i}
-          href={item.url}
-          target="_blank"
-          rel="noreferrer"
-          className="group flex items-center gap-3 rounded-xl px-2 py-2 transition-colors hover:bg-[#f4eef7]/5 md:px-3"
-        >
-          <span className="w-4 shrink-0 text-[11px] tabular-nums text-[#f4eef7]/30">
-            {String(i + 1).padStart(2, '0')}
+    <a href={item.url} target="_blank" rel="noreferrer" className="group flex flex-col gap-3">
+      <div className="relative aspect-square">
+        <div
+          className="absolute right-0 top-1/2 h-[78%] w-[78%] -translate-y-1/2 translate-x-[26%] rounded-full shadow-lg shadow-black/40"
+          style={{ backgroundImage: VINYL_BG }}
+        />
+        <div className="absolute inset-0 overflow-hidden rounded-lg shadow-xl shadow-black/40 ring-1 ring-[#f4eef7]/15">
+          <img
+            src={item.thumbnail}
+            alt=""
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          <span className="absolute inset-0 flex items-center justify-center bg-[#14122a]/0 opacity-0 transition-opacity duration-300 group-hover:bg-[#14122a]/30 group-hover:opacity-100">
+            <span className="grid h-8 w-8 place-items-center rounded-full bg-[#14122a]/70 backdrop-blur-sm ring-1 ring-[#e9c968]/50">
+              <svg width="10" height="10" viewBox="0 0 16 16" fill="#f4eef7">
+                <path d="M4 2.5v11l10-5.5-10-5.5z" />
+              </svg>
+            </span>
           </span>
-          <VinylThumb thumbnail={item.thumbnail} />
-          <p className="min-w-0 flex-1 truncate text-sm text-[#f4eef7]/80 transition-colors group-hover:text-[#f4eef7]">
-            {item.title}
-          </p>
-          <svg
-            className="shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
-            width="12"
-            height="12"
-            viewBox="0 0 16 16"
-            fill="#e9c968"
-          >
-            <path d="M4 2.5v11l10-5.5-10-5.5z" />
-          </svg>
-        </a>
-      ))}
-    </div>
+        </div>
+      </div>
+      <p className="line-clamp-2 text-xs leading-snug text-[#f4eef7]/75 transition-colors group-hover:text-[#f4eef7] md:text-sm">
+        {item.title}
+      </p>
+    </a>
   )
 }
 
@@ -121,29 +115,33 @@ export default function Videos() {
           </p>
         </Reveal>
 
-        {videos.main ? (
-          <Reveal delay={0.1} className="grid gap-8 md:grid-cols-[1.6fr_1fr]">
-            <div className="aspect-video overflow-hidden rounded-2xl bg-[#14122a] shadow-xl shadow-black/30 ring-1 ring-[#f4eef7]/10">
+        <Reveal delay={0.1} className="mx-auto max-w-4xl">
+          {videos.main ? (
+            <VideoFrame>
               <MainVideo />
-            </div>
-
-            {videos.items.length > 0 && (
-              <div className="flex flex-col rounded-2xl border border-[#f4eef7]/10 bg-[#170f28]/90 p-3 shadow-xl shadow-black/30 backdrop-blur-md md:p-4">
-                <p className="px-2 pb-2 pt-1 text-[11px] tracking-[0.3em] uppercase text-[#f4eef7]/45">
-                  Mais assistidos
+            </VideoFrame>
+          ) : (
+            <VideoFrame>
+              <div className="flex h-full w-full items-center justify-center border border-[#a9a0d8]/60">
+                <p className="text-[11px] uppercase tracking-[0.2em] text-[#f4eef7]/40">
+                  Vídeos em breve
                 </p>
-                <div className="flex flex-1 flex-col justify-center">
-                  <VideoList items={videos.items} />
-                </div>
               </div>
-            )}
-          </Reveal>
-        ) : (
-          <div className="max-w-4xl mx-auto aspect-video border border-[#a9a0d8]/60 rounded-xl flex items-center justify-center">
-            <p className="text-[11px] uppercase tracking-[0.2em] text-[#f4eef7]/40">
-              Vídeos em breve
+            </VideoFrame>
+          )}
+        </Reveal>
+
+        {videos.items.length > 0 && (
+          <Reveal delay={0.2} className="mt-12 md:mt-16">
+            <p className="mb-6 px-1 text-[11px] tracking-[0.3em] uppercase text-[#f4eef7]/45">
+              Mais assistidos
             </p>
-          </div>
+            <div className="grid grid-cols-2 gap-x-5 gap-y-8 sm:grid-cols-4">
+              {videos.items.map((item, i) => (
+                <AlbumTile key={i} item={item} />
+              ))}
+            </div>
+          </Reveal>
         )}
       </div>
     </section>

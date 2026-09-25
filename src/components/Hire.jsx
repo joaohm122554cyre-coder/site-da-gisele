@@ -5,7 +5,7 @@ import ZigzagLine from './ZigzagLine'
 
 export default function Hire() {
   return (
-    <section id="contrate" className="relative py-32 md:py-48">
+    <section id="contrate" className="relative py-24 md:py-36">
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 text-center">
         <Reveal>
           <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">

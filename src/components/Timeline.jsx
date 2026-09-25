@@ -125,7 +125,7 @@ export default function Timeline() {
   })
 
   return (
-    <section id="historia" className="relative py-28 md:py-40">
+    <section id="historia" className="relative py-20 md:py-32">
       <div className="mx-auto max-w-6xl px-6 md:px-12">
         <Reveal className="mb-16 text-center md:mb-24">
           <span className="font-script text-4xl leading-none text-[#d954d1] md:text-5xl">

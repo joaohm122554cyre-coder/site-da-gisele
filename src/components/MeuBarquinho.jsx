@@ -209,7 +209,7 @@ export default function MeuBarquinho() {
   }
 
   return (
-    <section ref={sectionRef} id="musicas" className="relative py-28 md:py-40">
+    <section ref={sectionRef} id="musicas" className="relative py-20 md:py-32">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 z-0 transition-opacity duration-1000"

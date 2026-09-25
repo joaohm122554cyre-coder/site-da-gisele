@@ -29,7 +29,7 @@ function Rich({ text }) {
 
 export default function About() {
   return (
-    <section id="sobre" className="relative py-28 md:py-40">
+    <section id="sobre" className="relative py-20 md:py-32">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <Reveal>
           <span className="font-script text-4xl md:text-5xl text-[#d954d1] leading-none">

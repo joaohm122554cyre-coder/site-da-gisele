@@ -6,7 +6,7 @@ import Link from './Link'
 
 export default function GoldRecord() {
   return (
-    <section className="relative py-28 md:py-40">
+    <section className="relative py-20 md:py-32">
       <div className="max-w-3xl mx-auto px-6 md:px-12 text-center">
         <Reveal>
           <span className="font-script text-4xl md:text-5xl text-[#d954d1] leading-none">

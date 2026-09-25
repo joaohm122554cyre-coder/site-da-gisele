@@ -117,7 +117,7 @@ function SocialStats() {
 
 export default function Social() {
   return (
-    <section id="redes" className="relative py-28 md:py-40">
+    <section id="redes" className="relative py-20 md:py-32">
       <div className="relative z-10 max-w-4xl mx-auto px-6 md:px-12 text-center">
         <Reveal>
           <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">

@@ -29,7 +29,7 @@ function Rich({ text }) {
 
 export default function Press() {
   return (
-    <section id="imprensa" className="relative py-28 md:py-40">
+    <section id="imprensa" className="relative py-20 md:py-32">
       <div className="relative z-10 max-w-3xl mx-auto px-6 md:px-12 text-center">
         <Reveal>
           <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">

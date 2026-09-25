@@ -48,7 +48,7 @@ function Photo({ index, delay, className = '' }) {
 
 export default function Gallery() {
   return (
-    <section id="galeria" className="relative py-28 md:py-40">
+    <section id="galeria" className="relative py-20 md:py-32">
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
         <Reveal className="mb-16">
           <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">

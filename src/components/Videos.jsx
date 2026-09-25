@@ -13,7 +13,7 @@ function MainVideo() {
   if (playing) {
     return (
       <iframe
-        src={`${videos.main}?autoplay=1`}
+        src={`${videos.main}?autoplay=1&playsinline=1&rel=0&modestbranding=1&cc_load_policy=0`}
         title={videos.mainTitle ?? videos.title}
         className="h-full w-full"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -122,13 +122,13 @@ export default function Videos() {
         </Reveal>
 
         {videos.main ? (
-          <Reveal delay={0.1} className="grid gap-6 md:grid-cols-[1.6fr_1fr] md:gap-8">
-            <div className="aspect-video overflow-hidden rounded-2xl">
+          <Reveal delay={0.1} className="grid gap-8 md:grid-cols-[1.6fr_1fr]">
+            <div className="aspect-video overflow-hidden rounded-2xl bg-[#14122a] shadow-xl shadow-black/30 ring-1 ring-[#f4eef7]/10">
               <MainVideo />
             </div>
 
             {videos.items.length > 0 && (
-              <div className="flex flex-col rounded-2xl border border-[#f4eef7]/10 bg-[#f4eef7]/[0.03] p-3 md:p-4">
+              <div className="flex flex-col rounded-2xl border border-[#f4eef7]/10 bg-[#170f28]/90 p-3 shadow-xl shadow-black/30 backdrop-blur-md md:p-4">
                 <p className="px-2 pb-2 pt-1 text-[11px] tracking-[0.3em] uppercase text-[#f4eef7]/45">
                   Mais assistidos
                 </p>

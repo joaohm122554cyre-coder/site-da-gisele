@@ -112,8 +112,7 @@ function MobileCarousel({ step, prev, dispatch, inView }) {
                   width: slideW,
                   zIndex: isActive ? 10 : 0,
                   transform: `translate3d(${anchor + offset * stepPx}px,0,0)`,
-                  transition: wraps ? 'none' : `transform 1200ms ${SMOOTH}, box-shadow 500ms ease, filter 500ms ease`,
-                  filter: isActive ? 'none' : 'blur(3px) brightness(0.45) saturate(0.7)',
+                  transition: wraps ? 'none' : `transform 1200ms ${SMOOTH}, box-shadow 500ms ease`,
                   boxShadow: isActive
                     ? '0 18px 36px -14px rgba(0,0,0,0.5), 0 0 34px 4px rgba(79,127,214,0.36), 0 0 0 1px rgba(79,127,214,0.45)'
                     : '0 0 0 1px rgba(244,238,247,0.1)',
@@ -145,7 +144,7 @@ function MobileCarousel({ step, prev, dispatch, inView }) {
                 <span
                   aria-hidden="true"
                   className="absolute inset-0 rounded-2xl bg-[#14122a] transition-opacity duration-[1200ms]"
-                  style={{ opacity: isActive ? 0 : 0.5 }}
+                  style={{ opacity: isActive ? 0 : 0.3 }}
                 />
               </button>
             )

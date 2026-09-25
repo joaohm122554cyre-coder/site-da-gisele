@@ -128,11 +128,11 @@ export default function BackgroundVideo({ switchRef }) {
   const { scrollY } = useScroll()
   const heroFilter = useTransform(
     scrollY,
-    [0, 300, 900],
+    [0, 500, 1600],
     [
-      'blur(0px) brightness(0.8) saturate(0.8)',
-      'blur(10px) brightness(0.4) saturate(0.75)',
-      'blur(20px) brightness(0.18) saturate(0.7)',
+      'blur(0px) brightness(0.85) saturate(0.9)',
+      'blur(5px) brightness(0.6) saturate(0.85)',
+      'blur(12px) brightness(0.4) saturate(0.8)',
     ]
   )
 

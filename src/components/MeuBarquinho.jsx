@@ -276,6 +276,8 @@ export default function MeuBarquinho() {
                 trackName={track.title}
                 playing={playing}
                 onToggle={toggle}
+                onPrev={() => go(-1)}
+                onNext={() => go(1)}
                 progress={duration ? Math.min(current / duration, 1) : 0}
                 current={current}
                 duration={duration}

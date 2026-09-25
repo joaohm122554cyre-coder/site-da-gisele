@@ -30,6 +30,8 @@ export default function VinylPlayer({
   trackName,
   playing,
   onToggle,
+  onPrev,
+  onNext,
   progress,
   current,
   duration,
@@ -111,17 +113,39 @@ export default function VinylPlayer({
       </motion.div>
 
       {mini && (
-        <button
-          type="button"
-          onClick={toggle}
-          aria-label="Pausar"
-          className="grid h-7 w-7 place-items-center rounded-full border border-[#e9c968]/50 bg-[#170f28]/80 text-[#f4eef7] backdrop-blur-sm"
-        >
-          <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor">
-            <rect x="3" y="2" width="3.5" height="12" rx="1" />
-            <rect x="9.5" y="2" width="3.5" height="12" rx="1" />
-          </svg>
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onPrev}
+            aria-label="Música anterior"
+            className="grid h-7 w-7 place-items-center rounded-full border border-[#e9c968]/50 bg-[#170f28]/80 text-[#f4eef7] backdrop-blur-sm"
+          >
+            <svg width="9" height="9" viewBox="0 0 16 16" fill="none">
+              <path d="M10 2 4 8l6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            onClick={toggle}
+            aria-label="Pausar"
+            className="grid h-8 w-8 place-items-center rounded-full border border-[#e9c968]/60 bg-[#170f28]/90 text-[#f4eef7] backdrop-blur-sm"
+          >
+            <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor">
+              <rect x="3" y="2" width="3.5" height="12" rx="1" />
+              <rect x="9.5" y="2" width="3.5" height="12" rx="1" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            onClick={onNext}
+            aria-label="Próxima música"
+            className="grid h-7 w-7 place-items-center rounded-full border border-[#e9c968]/50 bg-[#170f28]/80 text-[#f4eef7] backdrop-blur-sm"
+          >
+            <svg width="9" height="9" viewBox="0 0 16 16" fill="none">
+              <path d="M6 2l6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+        </div>
       )}
 
       {!mini && (
@@ -132,7 +156,7 @@ export default function VinylPlayer({
               style={{ width: `${progress * 100}%` }}
             />
           </div>
-          <p className="text-[10px] tracking-[0.15em] uppercase text-[#f4eef7]/45">
+          <p className="text-[10px] tracking-[0.15em] uppercase text-[#f4eef7]/75">
             {formatTime(current)} / {formatTime(duration)} &middot; prévia
           </p>
         </div>
@@ -146,7 +170,7 @@ export default function VinylPlayer({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          className="group inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#f4eef7]/15 hover:border-[#ff0033]/60 bg-[#f4eef7]/[0.03] hover:bg-[#ff0033]/10 transition-colors"
+          className="group inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#ff0033]/40 hover:border-[#ff0033]/80 bg-[#ff0033]/[0.08] hover:bg-[#ff0033]/20 transition-colors"
         >
           <svg width="15" height="11" viewBox="0 0 28 20" fill="none">
             <path
@@ -155,7 +179,7 @@ export default function VinylPlayer({
             />
             <path d="M11 14.3 18.5 10 11 5.7v8.6Z" fill="#170f28" />
           </svg>
-          <span className="text-[10px] tracking-[0.15em] uppercase text-[#f4eef7]/70 group-hover:text-[#f4eef7] transition-colors">
+          <span className="text-[10px] tracking-[0.15em] uppercase text-[#f4eef7]/90 group-hover:text-white transition-colors">
             Assistir clipe completo
           </span>
         </motion.a>
@@ -169,9 +193,9 @@ export default function VinylPlayer({
           className="flex flex-col items-center gap-1.5 text-center max-w-[220px] pt-2 border-t border-[#f4eef7]/10"
         >
           {(meta.views || meta.premiere) && (
-            <p className="text-[10px] text-[#f4eef7]/50 flex items-center gap-1.5">
+            <p className="text-[11px] text-[#f4eef7]/70 flex items-center gap-1.5">
               {meta.views && (
-                <span className="inline-flex items-center gap-1">
+                <span className="inline-flex items-center gap-1 font-medium text-[#e9c968]">
                   <svg width="11" height="11" viewBox="0 0 16 16" fill="none">
                     <path
                       d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5Z"
@@ -183,13 +207,13 @@ export default function VinylPlayer({
                   <CountUpViews value={meta.views} delay={0.5} /> visualizações
                 </span>
               )}
-              {meta.views && meta.premiere && <span>&middot;</span>}
+              {meta.views && meta.premiere && <span className="text-[#f4eef7]/40">&middot;</span>}
               {meta.premiere && <span>estreou {meta.premiere}</span>}
             </p>
           )}
 
           {meta.credit && (
-            <p className="text-[10px] text-[#f4eef7]/40">{meta.credit}</p>
+            <p className="text-[10px] text-[#f4eef7]/55">{meta.credit}</p>
           )}
 
           {meta.tags?.length > 0 && (

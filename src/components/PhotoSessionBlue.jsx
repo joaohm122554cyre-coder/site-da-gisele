@@ -111,7 +111,7 @@ function MobileCarousel({ step, prev, dispatch, inView }) {
                 style={{
                   width: slideW,
                   zIndex: isActive ? 10 : 0,
-                  transform: `translate3d(${anchor + offset * stepPx}px,0,0) scale(${isActive ? 1.05 : 1})`,
+                  transform: `translate3d(${anchor + offset * stepPx}px,0,0)`,
                   transition: wraps ? 'none' : `transform 1200ms ${SMOOTH}, box-shadow 500ms ease`,
                   boxShadow: isActive
                     ? '0 24px 48px -18px rgba(79,127,214,0.65), 0 0 0 1px rgba(79,127,214,0.45)'

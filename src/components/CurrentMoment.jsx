@@ -33,8 +33,32 @@ export default function CurrentMoment() {
   return (
     <section className="relative py-20 md:py-32 bg-transparent">
       <RootLine from="#d954d1" to="#4f7fd6" seed={7} />
-      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 grid md:grid-cols-12 gap-10 md:gap-16">
-        <div className="md:col-span-6">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 grid md:grid-cols-12 gap-y-10 md:gap-x-16 md:gap-y-16">
+        {/* no celular, o texto vem antes das fotos e o convite pra dupla fecha a seção;
+            no computador, as fotos ficam fixas à esquerda e texto+convite formam a coluna direita */}
+        <div className="order-1 md:order-none md:col-span-6">
+          <Reveal>
+            <span className="font-script text-4xl md:text-5xl text-[#d954d1] leading-none">
+              {currentMoment.title}
+            </span>
+            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-[#f4eef7] mt-3 leading-[1.05]">
+              A maré está
+              <br />
+              <span className="italic text-[#d954d1]">cheia</span>
+            </h2>
+          </Reveal>
+          <div className="mt-8 space-y-6">
+            {currentMoment.paragraphs.map((p, i) => (
+              <Reveal key={i} delay={i * 0.1}>
+                <p className="font-fraunces text-base md:text-lg leading-[1.75] text-[#f4eef7]/90">
+                  {p}
+                </p>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+
+        <div className="order-2 md:order-none md:col-span-6 md:row-span-2">
           <div className="md:sticky md:top-28 grid grid-cols-[3fr_2fr] gap-3 md:gap-4 items-start">
             <div className="space-y-3 md:space-y-4">
               <Photo src={photoStage} alt="Giselli Cristina em show recente" ratio="aspect-[4/5]" />
@@ -61,28 +85,9 @@ export default function CurrentMoment() {
             </div>
           </div>
         </div>
-        <div className="md:col-span-6">
-          <Reveal>
-            <span className="font-script text-4xl md:text-5xl text-[#d954d1] leading-none">
-              {currentMoment.title}
-            </span>
-            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-[#f4eef7] mt-3 leading-[1.05]">
-              A maré está
-              <br />
-              <span className="italic text-[#d954d1]">cheia</span>
-            </h2>
-          </Reveal>
-          <div className="mt-8 space-y-6">
-            {currentMoment.paragraphs.map((p, i) => (
-              <Reveal key={i} delay={i * 0.1}>
-                <p className="font-fraunces text-base md:text-lg leading-[1.75] text-[#f4eef7]/90">
-                  {p}
-                </p>
-              </Reveal>
-            ))}
-          </div>
 
-          <Reveal delay={0.3} className="mt-12">
+        <div className="order-3 md:order-none md:col-span-6">
+          <Reveal delay={0.3}>
             <Link
               to="/dupla"
               id="conheca-dupla"

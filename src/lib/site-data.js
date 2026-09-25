@@ -48,9 +48,7 @@ export const songs = [
 export const currentMoment = {
   title: 'Momento Atual',
   paragraphs: [
-    'Giselli Cristina vive uma das fases mais expressivas de sua carreira. Entre os maiores destaques recentes está a canção "Eu Só Quero Adorar", gravada ao lado de seu filho, Nicolas Henrique. O single tornou-se um dos grandes fenômenos da música gospel nas plataformas digitais, conquistando Disco de Ouro, alcançando milhões de reproduções e figurando entre os conteúdos de maior destaque do YouTube Brasil.',
-    'Outro grande destaque é a versão de "Bondade de Deus", uma das mais assistidas do segmento gospel, reafirmando a força da artista nas plataformas digitais.',
-    'O projeto "Fases" também marcou uma nova etapa de sua trajetória, trazendo canções que rapidamente ganharam espaço entre os ouvintes e viralizaram nas redes sociais.',
+    'Giselli Cristina vive a fase mais expressiva da carreira — os grandes sucessos dos últimos anos se somam agora a uma conexão cada vez mais forte com o público, e a uma parceria especial: dividir o palco e os estúdios com o filho, Nicolas Henrique.',
   ],
 }
 

@@ -125,8 +125,8 @@ function useAudioPreviews() {
 function AlbumTile({ item, isActive, playing, progress, onToggle, peek = 'right' }) {
   const peekSide =
     peek === 'right'
-      ? 'right-0 translate-x-[26%]'
-      : 'left-0 -translate-x-[26%]'
+      ? 'right-0 translate-x-[8%]'
+      : 'left-0 -translate-x-[8%]'
 
   return (
     <div className="flex flex-col gap-3">

@@ -132,7 +132,7 @@ function AlbumTile({ item, isActive, playing, progress, onToggle, peek = 'right'
     <div className="flex flex-col gap-3">
       <div className="relative aspect-square">
         <div
-          className={`absolute top-1/2 h-[78%] w-[78%] -translate-y-1/2 rounded-full shadow-lg shadow-black/40 ${peekSide} ${
+          className={`absolute top-1/2 z-0 h-[78%] w-[78%] -translate-y-1/2 rounded-full shadow-lg shadow-black/40 ${peekSide} ${
             playing ? '[animation:vinyl-rotate_3.6s_linear_infinite]' : ''
           }`}
           style={{ backgroundImage: VINYL_BG }}
@@ -141,7 +141,7 @@ function AlbumTile({ item, isActive, playing, progress, onToggle, peek = 'right'
           type="button"
           onClick={onToggle}
           aria-label={playing ? `Pausar prévia de ${item.title}` : `Ouvir prévia de ${item.title}`}
-          className="group absolute inset-0 overflow-hidden rounded-lg shadow-xl shadow-black/40 ring-1 ring-[#f4eef7]/15"
+          className="group absolute inset-0 z-10 overflow-hidden rounded-lg shadow-xl shadow-black/40 ring-1 ring-[#f4eef7]/15"
         >
           <img
             src={item.thumbnail}

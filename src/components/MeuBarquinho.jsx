@@ -244,8 +244,8 @@ export default function MeuBarquinho() {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 grid md:grid-cols-12 gap-10 items-center [text-shadow:0_1px_16px_rgba(20,18,42,0.85)]">
-        <Reveal className="md:col-span-12 text-center mb-2 md:mb-10">
-          <div className={`transition-opacity duration-500 ${mini ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+        {!mini && (
+          <Reveal className="md:col-span-12 text-center mb-2 md:mb-10">
             <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">
               Repertório
             </span>
@@ -254,8 +254,8 @@ export default function MeuBarquinho() {
               <br />
               <span className="italic text-[#d954d1]">corações</span> de gerações
             </h2>
-          </div>
-        </Reveal>
+          </Reveal>
+        )}
 
         <div className="md:col-span-5 flex justify-center min-h-[428px] md:min-h-0">
           <div className="relative flex items-center gap-3 md:gap-5">

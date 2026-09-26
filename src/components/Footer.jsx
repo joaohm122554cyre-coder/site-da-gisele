@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import instagramLogo from '../assets/icons/instagram.svg'
 import ebenezerLogo from '../assets/icons/ebenezer-e.svg'
 import { artist } from '../lib/site-data'
@@ -6,6 +7,67 @@ const credits = [
   { label: 'Instagram', href: 'https://www.instagram.com/agencia_ebenezer_br', logo: instagramLogo },
   { label: 'ebenezeragencia.com.br', href: 'https://ebenezeragencia.com.br', logo: ebenezerLogo },
 ]
+
+// Um só selo com o logo — ao clicar, abre as duas opções (Instagram e site)
+// pra pessoa escolher, em vez de já vir com dois botões separados.
+function EbenezerBadge() {
+  const [open, setOpen] = useState(false)
+  const wrapRef = useRef(null)
+
+  useEffect(() => {
+    if (!open) return
+    const onPointerDown = (e) => {
+      if (wrapRef.current && !wrapRef.current.contains(e.target)) setOpen(false)
+    }
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('pointerdown', onPointerDown)
+    document.addEventListener('keydown', onKeyDown)
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown)
+      document.removeEventListener('keydown', onKeyDown)
+    }
+  }, [open])
+
+  return (
+    <div ref={wrapRef} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-haspopup="true"
+        aria-label="Desenvolvido por Ebenézer — ver Instagram e site"
+        className="group inline-flex items-center gap-3 rounded-full border border-[#f4eef7]/15 bg-[#14122a]/40 py-1.5 pl-1.5 pr-4 backdrop-blur-sm transition-colors duration-300 hover:border-[#d954d1]/50"
+      >
+        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white p-2 shadow-sm">
+          <img src={ebenezerLogo} alt="" className="h-full w-full object-contain" />
+        </span>
+        <span className="font-display text-base italic text-[#f4eef7]">Ebenézer</span>
+      </button>
+
+      {open && (
+        <div className="absolute bottom-full left-1/2 z-20 mb-3 w-60 -translate-x-1/2 rounded-2xl border border-[#f4eef7]/12 bg-[#1c1638]/95 p-2 shadow-2xl shadow-black/50 backdrop-blur-md">
+          {credits.map(({ label, href, logo }) => (
+            <a
+              key={label}
+              href={href}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-3 rounded-xl px-2.5 py-2.5 text-[13px] text-[#f4eef7]/80 transition-colors hover:bg-[#f4eef7]/[0.06] hover:text-[#f4eef7]"
+            >
+              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white p-1.5 shadow-sm">
+                <img src={logo} alt="" className="h-full w-full object-contain" />
+              </span>
+              {label}
+            </a>
+          ))}
+          <span className="absolute left-1/2 top-full h-3 w-3 -translate-x-1/2 -translate-y-1.5 rotate-45 border-b border-r border-[#f4eef7]/12 bg-[#1c1638]/95" />
+        </div>
+      )}
+    </div>
+  )
+}
 
 export default function Footer() {
   return (
@@ -21,25 +83,8 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col items-center gap-3 md:items-end">
-          <span className="text-[10px] uppercase tracking-[0.35em] text-[#f4eef7]/60">Desenvolvido por Ebenézer</span>
-          <div className="flex items-center gap-3">
-            {credits.map(({ label, href, logo }) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noreferrer"
-                className="group inline-flex items-center gap-2.5 rounded-full border border-[#f4eef7]/15 bg-[#14122a]/40 py-1.5 pl-1.5 pr-4 backdrop-blur-sm transition-colors duration-300 hover:border-[#d954d1]/50"
-              >
-                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white p-1.5 shadow-sm">
-                  <img src={logo} alt="" className="h-full w-full object-contain" />
-                </span>
-                <span className="text-[12px] font-medium text-[#f4eef7]/85 transition-colors group-hover:text-[#f4eef7]">
-                  {label}
-                </span>
-              </a>
-            ))}
-          </div>
+          <span className="text-[10px] uppercase tracking-[0.35em] text-[#f4eef7]/60">Desenvolvido por</span>
+          <EbenezerBadge />
         </div>
       </div>
     </footer>

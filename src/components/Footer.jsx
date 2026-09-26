@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import instagramLogo from '../assets/icons/instagram.svg'
-import ebenezerLogo from '../assets/icons/ebenezer-e.svg'
+import ebenezerLogo from '../assets/icons/ebenezer-logo.webp'
 import { artist } from '../lib/site-data'
 
 const credits = [
-  { label: 'Instagram', href: 'https://www.instagram.com/agencia_ebenezer_br', logo: instagramLogo },
-  { label: 'ebenezeragencia.com.br', href: 'https://ebenezeragencia.com.br', logo: ebenezerLogo },
+  { label: 'Instagram', href: 'https://www.instagram.com/agencia_ebenezer_br', logo: instagramLogo, plainBg: true },
+  { label: 'ebenezeragencia.com.br', href: 'https://ebenezeragencia.com.br', logo: ebenezerLogo, plainBg: false },
 ]
 
 // Um só selo com o logo — ao clicar, abre as duas opções (Instagram e site)
@@ -40,15 +40,15 @@ function EbenezerBadge() {
         aria-label="Desenvolvido por Ebenézer — ver Instagram e site"
         className="group inline-flex items-center gap-3 rounded-full border border-[#f4eef7]/15 bg-[#14122a]/40 py-1.5 pl-1.5 pr-4 backdrop-blur-sm transition-colors duration-300 hover:border-[#d954d1]/50"
       >
-        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white p-2 shadow-sm">
-          <img src={ebenezerLogo} alt="" className="h-full w-full object-contain" />
+        <span className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-full shadow-sm">
+          <img src={ebenezerLogo} alt="" className="h-full w-full object-cover" />
         </span>
         <span className="font-display text-base italic text-[#f4eef7]">Ebenézer</span>
       </button>
 
       {open && (
         <div className="absolute bottom-full left-1/2 z-20 mb-3 w-60 -translate-x-1/2 rounded-2xl border border-[#f4eef7]/12 bg-[#1c1638]/95 p-2 shadow-2xl shadow-black/50 backdrop-blur-md">
-          {credits.map(({ label, href, logo }) => (
+          {credits.map(({ label, href, logo, plainBg }) => (
             <a
               key={label}
               href={href}
@@ -56,8 +56,10 @@ function EbenezerBadge() {
               rel="noreferrer"
               className="flex items-center gap-3 rounded-xl px-2.5 py-2.5 text-[13px] text-[#f4eef7]/80 transition-colors hover:bg-[#f4eef7]/[0.06] hover:text-[#f4eef7]"
             >
-              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white p-1.5 shadow-sm">
-                <img src={logo} alt="" className="h-full w-full object-contain" />
+              <span
+                className={`grid h-8 w-8 shrink-0 place-items-center overflow-hidden rounded-full shadow-sm ${plainBg ? 'bg-white p-1.5' : ''}`}
+              >
+                <img src={logo} alt="" className={`h-full w-full ${plainBg ? 'object-contain' : 'object-cover'}`} />
               </span>
               {label}
             </a>

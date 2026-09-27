@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
-import { createPortal } from 'react-dom'
 import Reveal from './Reveal'
 import VinylPlayer from './VinylPlayer'
 import SongMarquee from './SongMarquee'
@@ -240,25 +239,20 @@ export default function MeuBarquinho() {
           )}
           <div className="absolute inset-0 bg-[#14122a]/40" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(20,18,42,0.5)_100%)]" />
-          {mini && (
-            <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#0d0b1a]/95 via-[#0d0b1a]/55 to-transparent" />
-          )}
         </div>
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 grid md:grid-cols-12 gap-10 items-center [text-shadow:0_1px_16px_rgba(20,18,42,0.85)]">
-        {!mini && (
-          <Reveal className="md:col-span-12 text-center mb-2 md:mb-10">
-            <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">
-              Repertório
-            </span>
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl text-[#f4eef7] mt-4 leading-[1.15]">
-              Músicas que encantaram
-              <br />
-              <span className="italic text-[#d954d1]">corações</span> de gerações
-            </h2>
-          </Reveal>
-        )}
+        <Reveal className="md:col-span-12 text-center mb-2 md:mb-10">
+          <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">
+            Repertório
+          </span>
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl text-[#f4eef7] mt-4 leading-[1.15]">
+            Músicas que encantaram
+            <br />
+            <span className="italic text-[#d954d1]">corações</span> de gerações
+          </h2>
+        </Reveal>
 
         <div className="md:col-span-5 flex justify-center min-h-[428px] md:min-h-0">
           <div className="relative flex items-center gap-3 md:gap-5">
@@ -357,24 +351,6 @@ export default function MeuBarquinho() {
       <div className="relative z-10 mt-16 md:mt-24">
         <SongMarquee />
       </div>
-
-      {mini &&
-        createPortal(
-          <div className="fixed inset-x-0 top-0 z-30 flex justify-center px-4 pt-[calc(0.75rem+env(safe-area-inset-top))]">
-            <div className="max-w-sm rounded-2xl border border-[#f4eef7]/15 bg-[#14122a]/90 px-4 py-3 text-center shadow-lg shadow-black/40">
-              <span className="block text-[10px] uppercase tracking-[0.3em] text-[#e9c968]/80">
-                {track.eyebrow}
-              </span>
-              <span className="mt-0.5 block font-display text-lg italic text-[#f4eef7]">
-                {track.title}
-              </span>
-              <p className="mt-1.5 line-clamp-2 text-xs leading-snug text-[#f4eef7]/75">
-                {track.description}
-              </p>
-            </div>
-          </div>,
-          document.body,
-        )}
     </section>
   )
 }

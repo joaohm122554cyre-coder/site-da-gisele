@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
 import { FiArrowRight, FiAward } from 'react-icons/fi'
 import Reveal from './Reveal'
@@ -140,8 +140,19 @@ export default function Timeline() {
   const { scrollYProgress } = useScroll({ target: trackRef, offset: ['start 55%', 'end 55%'] })
   const spring = useSpring(scrollYProgress, { stiffness: 110, damping: 26, restDelta: 0.0005 })
   const progress = reduce ? scrollYProgress : spring
-  const headTop = useTransform(progress, (v) => `${(v * 100).toFixed(3)}%`)
   const headOpacity = useTransform(progress, [0, 0.015, 0.985, 1], [0, 1, 1, 0])
+
+  // a bolinha descia animando `top` (%), que força reflow a cada frame de
+  // scroll — trocado por `y` em pixels (transform), que só recompõe a GPU
+  const [trackHeight, setTrackHeight] = useState(0)
+  useEffect(() => {
+    const el = trackRef.current
+    if (!el) return
+    const ro = new ResizeObserver((entries) => setTrackHeight(entries[0].contentRect.height))
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+  const headY = useTransform(progress, (v) => v * trackHeight)
 
   // a semente planta e a raiz nasce quando a luz chega ao fim da linha
   useMotionValueEvent(progress, 'change', (v) => {
@@ -170,8 +181,8 @@ export default function Timeline() {
               className="absolute inset-y-0 left-0 w-[2px] -translate-x-1/2 origin-top bg-gradient-to-b from-[#d954d1] via-[#d954d1] to-[#7f9cf5] shadow-[0_0_12px_rgba(217,84,209,0.55)]"
             />
             <motion.span
-              style={{ top: headTop, opacity: headOpacity }}
-              className="absolute left-0 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#fdf3f8] shadow-[0_0_20px_7px_rgba(217,84,209,0.8)]"
+              style={{ y: headY, opacity: headOpacity }}
+              className="absolute left-0 top-0 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#fdf3f8] shadow-[0_0_20px_7px_rgba(217,84,209,0.8)]"
             />
           </div>
 

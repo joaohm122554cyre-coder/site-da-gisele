@@ -7,7 +7,7 @@ const upcoming = []
 export default function Agenda() {
   return (
     <section id="agenda" className="relative py-20 md:py-32 bg-transparent">
-      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 text-center">
         <Reveal>
           <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">
             Agenda
@@ -19,7 +19,7 @@ export default function Agenda() {
 
         {upcoming.length === 0 ? (
           <Reveal delay={0.15}>
-            <p className="mt-10 max-w-lg font-fraunces text-lg leading-[1.8] text-[#f4eef7]/90 md:text-xl">
+            <p className="mt-10 max-w-lg mx-auto font-fraunces text-lg leading-[1.8] text-[#f4eef7]/90 md:text-xl">
               {agenda.description}
             </p>
             <a
@@ -35,7 +35,7 @@ export default function Agenda() {
             </a>
           </Reveal>
         ) : (
-          <ul className="mt-14 divide-y divide-[#a9a0d8] max-w-2xl">
+          <ul className="mt-14 mx-auto max-w-2xl divide-y divide-[#a9a0d8] text-left">
             {upcoming.map((ev, i) => (
               <Reveal key={i} delay={i * 0.05}>
                 <li className="flex justify-between py-5 text-[#f4eef7]/75 text-sm md:text-base">

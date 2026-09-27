@@ -166,6 +166,10 @@ export default function BackgroundVideo({ switchRef }) {
   // Desfoque (blur) ao vivo em vídeo de tela cheia é o efeito mais caro pro celular —
   // e na troca pro vídeo do Momento Atual eram dois vídeos borrados ao mesmo tempo,
   // o que travava a rolagem. No celular fica só o escurecimento, que é leve.
+  // No desktop o blur ficava alto (12px) e continuava ligado durante toda a
+  // troca de vídeo (o do hero some enquanto o do momento atual ainda tem um
+  // blur leve) — os dois vídeos borrados ao mesmo tempo travavam a chegada
+  // no "Momento Atual". Reduzido o blur máximo e tirado do vídeo que entra.
   const { scrollY } = useScroll()
   const heroFilter = useTransform(
     scrollY,
@@ -173,18 +177,20 @@ export default function BackgroundVideo({ switchRef }) {
     isWideScreen
       ? [
           'blur(0px) brightness(0.85) saturate(0.9)',
-          'blur(5px) brightness(0.6) saturate(0.85)',
-          'blur(12px) brightness(0.4) saturate(0.8)',
+          'blur(3px) brightness(0.6) saturate(0.85)',
+          'blur(6px) brightness(0.4) saturate(0.8)',
         ]
       : ['brightness(0.85) saturate(0.9)', 'brightness(0.55) saturate(0.85)', 'brightness(0.35) saturate(0.8)']
   )
   const statsFilter = isWideScreen
-    ? 'blur(1.5px) brightness(0.5) saturate(0.9)'
+    ? 'brightness(0.5) saturate(0.9)'
     : 'brightness(0.45) saturate(0.9)'
 
+  // Janela de transição mais curta: menos tempo com os dois vídeos tocando
+  // sobrepostos, que é o trecho mais pesado da rolagem.
   const { scrollYProgress } = useScroll({
     target: switchRef,
-    offset: ['start 25%', 'start -45%'],
+    offset: ['start 15%', 'start -20%'],
   })
   const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0])
   const statsOpacity = useTransform(scrollYProgress, [0, 1], [0, 1])

@@ -53,23 +53,21 @@ function EbenezerBadge() {
       </span>
 
       {open && (
-        <div className="absolute bottom-full left-1/2 z-20 mb-3 w-60 -translate-x-1/2 space-y-2 rounded-2xl border border-[#f4eef7]/12 bg-[#1c1638]/95 p-2 shadow-2xl shadow-black/50 backdrop-blur-md">
-          {credits.map(({ label, href, logo, glow }) => (
-            <span key={label} className="glow-ring block rounded-xl" style={{ '--glow-color': glow }}>
-              <a
-                href={href}
-                target="_blank"
-                rel="noreferrer"
-                className="relative z-[1] flex items-center gap-3 rounded-xl px-2.5 py-2.5 text-[13px] text-[#f4eef7]/80 transition-colors hover:bg-[#f4eef7]/[0.06] hover:text-[#f4eef7]"
-              >
-                <span className="grid h-8 w-8 shrink-0 place-items-center overflow-hidden rounded-full shadow-sm">
-                  <img src={logo} alt="" className="h-full w-full object-cover" />
-                </span>
-                {label}
-              </a>
-            </span>
+        <div className="absolute bottom-full left-1/2 z-20 mb-3 w-60 -translate-x-1/2 space-y-1 rounded-2xl border border-[#f4eef7]/12 p-2 backdrop-blur-md">
+          {credits.map(({ label, href, logo }) => (
+            <a
+              key={label}
+              href={href}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-3 rounded-xl px-2.5 py-2.5 text-[13px] text-[#f4eef7]/80 transition-colors hover:bg-[#f4eef7]/[0.06] hover:text-[#f4eef7]"
+            >
+              <span className="grid h-8 w-8 shrink-0 place-items-center overflow-hidden rounded-full shadow-sm">
+                <img src={logo} alt="" className="h-full w-full object-cover" />
+              </span>
+              {label}
+            </a>
           ))}
-          <span className="absolute left-1/2 top-full h-3 w-3 -translate-x-1/2 -translate-y-1.5 rotate-45 border-b border-r border-[#f4eef7]/12 bg-[#1c1638]/95" />
         </div>
       )}
     </div>

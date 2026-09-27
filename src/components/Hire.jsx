@@ -23,17 +23,20 @@ export default function Hire() {
             <p className="mt-3 text-[13px] text-[#f4eef7]/70 max-w-sm mx-auto">
               Lá você fala direto com quem organiza a agenda dela e fecha a data do seu evento.
             </p>
-            <a
-              href={hire.agency.url}
-              target="_blank"
-              rel="noreferrer"
-              className="group mt-6 inline-flex items-center gap-3 rounded-full border border-[#4f7fd6]/40 bg-[#14122a]/55 py-3.5 pl-5 pr-6 text-[11px] uppercase tracking-[0.28em] text-[#f4eef7]/90 backdrop-blur-md transition hover:border-[#4f7fd6]/80 hover:bg-[#14122a]/75 hover:text-[#f4eef7]"
-            >
-              <span className="grid h-8 w-8 place-items-center rounded-full bg-[#4f7fd6]/15 text-[#4f7fd6] transition group-hover:bg-[#4f7fd6]/25">
-                <FiExternalLink className="text-base" aria-hidden="true" />
-              </span>
-              Contratar pela {hire.agency.name}
-            </a>
+            <span className="glow-ring mt-6 inline-block rounded-full" style={{ '--glow-color': '#d954d1' }}>
+              <a
+                href={hire.agency.url}
+                target="_blank"
+                rel="noreferrer"
+                className="group relative z-[1] inline-flex items-center gap-3 rounded-full py-3.5 pl-2 pr-6 text-[11px] font-semibold uppercase tracking-[0.28em] text-white shadow-lg shadow-black/30 transition-transform duration-300 hover:scale-[1.03]"
+                style={{ background: 'linear-gradient(135deg, #d954d1, #4f7fd6)' }}
+              >
+                <span className="grid h-9 w-9 place-items-center rounded-full bg-white/20 text-white">
+                  <FiExternalLink className="text-base" aria-hidden="true" />
+                </span>
+                Contratar pela {hire.agency.name}
+              </a>
+            </span>
           </Reveal>
         ) : (
           <Reveal delay={0.15}>

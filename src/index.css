@@ -88,6 +88,7 @@ body {
   padding: 3px;
   overflow: hidden;
   isolation: isolate;
+  background: #14122a;
 }
 
 .glow-ring::before {

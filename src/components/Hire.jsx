@@ -1,7 +1,6 @@
 import { FiExternalLink } from 'react-icons/fi'
 import { hire } from '../lib/site-data'
 import Reveal from './Reveal'
-import ZigzagLine from './ZigzagLine'
 
 export default function Hire() {
   return (
@@ -11,13 +10,9 @@ export default function Hire() {
           <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">
             Contrate
           </span>
-          <div className="mt-4 flex items-center gap-2">
-            <ZigzagLine side="left" />
-            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-[#f4eef7]">
-              {hire.title}
-            </h2>
-            <ZigzagLine side="right" />
-          </div>
+          <h2 className="mt-4 font-display text-4xl sm:text-5xl md:text-6xl text-[#f4eef7]">
+            {hire.title}
+          </h2>
           <p className="mt-6 max-w-md mx-auto font-fraunces text-lg leading-[1.7] text-[#f4eef7]/95 [text-shadow:0_1px_14px_rgba(20,18,42,0.85)] md:text-xl">
             {hire.description}
           </p>

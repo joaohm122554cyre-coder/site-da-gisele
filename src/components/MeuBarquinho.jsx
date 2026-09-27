@@ -240,6 +240,9 @@ export default function MeuBarquinho() {
           )}
           <div className="absolute inset-0 bg-[#14122a]/40" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(20,18,42,0.5)_100%)]" />
+          {mini && (
+            <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#0d0b1a]/95 via-[#0d0b1a]/55 to-transparent" />
+          )}
         </div>
       </div>
 
@@ -358,16 +361,13 @@ export default function MeuBarquinho() {
       {mini &&
         createPortal(
           <div className="fixed inset-x-0 top-0 z-30 flex justify-center px-4 pt-[calc(0.75rem+env(safe-area-inset-top))]">
-            <div className="max-w-sm rounded-2xl border border-[#f4eef7]/15 bg-[#14122a]/85 px-4 py-3 text-center shadow-lg shadow-black/40 backdrop-blur-md">
+            <div className="max-w-sm rounded-2xl border border-[#f4eef7]/15 bg-[#14122a]/90 px-5 py-2.5 text-center shadow-lg shadow-black/40">
               <span className="block text-[10px] uppercase tracking-[0.3em] text-[#e9c968]/80">
                 {track.eyebrow}
               </span>
-              <span className="mt-0.5 block font-display text-lg italic text-[#f4eef7]">
+              <span className="block font-display text-lg italic text-[#f4eef7]">
                 {track.title}
               </span>
-              <p className="mt-1.5 line-clamp-2 text-xs leading-snug text-[#f4eef7]/75">
-                {track.description}
-              </p>
             </div>
           </div>,
           document.body,

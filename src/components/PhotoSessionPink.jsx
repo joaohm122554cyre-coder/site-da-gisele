@@ -27,8 +27,8 @@ const photos = [
   { src: photoArco, alt: 'Giselli Cristina sorrindo diante de um arco iluminado em rosa', position: '50% 12%', mood: 'Luz' },
 ]
 
-const SLIDE_SECONDS = 3
-const DESKTOP_SLIDE_SECONDS = 2
+const SLIDE_SECONDS = 4.5
+const DESKTOP_SLIDE_SECONDS = 3.5
 const KENBURNS_SECONDS = DESKTOP_SLIDE_SECONDS + 1
 const SMOOTH = 'cubic-bezier(0.65,0,0.35,1)'
 const mod = (a, n) => ((a % n) + n) % n
@@ -40,10 +40,18 @@ const progressStyle = (running, seconds = SLIDE_SECONDS) => ({
 
 // step só cresce a cada foto que passa (foto atual = step % total), então depois da última a
 // primeira simplesmente continua a sequência, sem rebobinar — loop infinito de verdade.
-function reducer({ step }, action) {
-  if (action.type === 'next') return { step: step + 1, prev: step }
-  if (action.type === 'back') return { step: step - 1, prev: step }
-  return { step: action.step, prev: step }
+// O avanço automático (estilo Stories) e o toque/arrasto manual podem disparar 'next' quase ao
+// mesmo tempo — sem essa trava, os dois somam e a foto "pula" duas de uma vez.
+const MIN_STEP_INTERVAL = 350
+function reducer(state, action) {
+  const { step } = state
+  const now = Date.now()
+  if ((action.type === 'next' || action.type === 'back') && now - (state.lastChange || 0) < MIN_STEP_INTERVAL) {
+    return state
+  }
+  if (action.type === 'next') return { step: step + 1, prev: step, lastChange: now }
+  if (action.type === 'back') return { step: step - 1, prev: step, lastChange: now }
+  return { step: action.step, prev: step, lastChange: now }
 }
 
 const GAP = 12

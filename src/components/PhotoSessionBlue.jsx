@@ -126,29 +126,20 @@ function MobileCarousel({ step, prev, dispatch, inView }) {
                     : '0 0 0 1px rgba(244,238,247,0.1)',
                 }}
               >
-                {isActive ? (
-                  <div className="glow-ring h-full w-full rounded-2xl" style={{ '--glow-color': ACCENT }}>
-                    <img
-                      src={photo.src}
-                      alt={photo.alt}
-                      loading="lazy"
-                      decoding="async"
-                      draggable="false"
-                      className="select-none rounded-[13px] object-cover"
-                      style={{ objectPosition: photo.position }}
-                    />
-                  </div>
-                ) : (
+                <div
+                  className={`absolute inset-0 h-full w-full rounded-2xl ${isActive ? 'glow-ring' : 'overflow-hidden'}`}
+                  style={isActive ? { '--glow-color': ACCENT } : undefined}
+                >
                   <img
                     src={photo.src}
                     alt={photo.alt}
                     loading="lazy"
                     decoding="async"
                     draggable="false"
-                    className="absolute inset-0 h-full w-full select-none rounded-2xl object-cover"
+                    className={`h-full w-full select-none object-cover ${isActive ? 'rounded-[13px]' : 'rounded-2xl'}`}
                     style={{ objectPosition: photo.position }}
                   />
-                )}
+                </div>
                 <span
                   aria-hidden="true"
                   className="absolute inset-0 rounded-2xl bg-[#14122a] transition-opacity duration-[1200ms]"

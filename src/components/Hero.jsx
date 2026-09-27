@@ -56,12 +56,8 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.3 }}
-            className="mt-10 flex flex-col md:flex-row md:items-end md:justify-between gap-6"
+            className="mt-10 flex flex-col md:flex-row md:items-end gap-6"
           >
-            <p className="max-w-sm text-sm md:text-base text-white/90 leading-relaxed [text-shadow:0_1px_14px_rgba(10,8,25,0.85)]">
-              {artist.tagline}, quase 30 anos construindo a trilha sonora da
-              fé de milhões de brasileiros.
-            </p>
             <a
               href="#sobre"
               className="group inline-flex items-center gap-3 text-[11px] tracking-[0.3em] uppercase text-white/90 hover:text-white transition-colors [text-shadow:0_1px_14px_rgba(10,8,25,0.85)]"

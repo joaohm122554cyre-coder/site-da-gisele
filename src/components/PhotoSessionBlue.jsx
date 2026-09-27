@@ -123,7 +123,7 @@ function MobileCarousel({ step, prev, dispatch, inView }) {
                   transition: wraps ? 'none' : `transform 1200ms ${SMOOTH}, box-shadow 500ms ease`,
                   boxShadow: isActive
                     ? '0 18px 36px -14px rgba(0,0,0,0.5), 0 0 34px 4px rgba(79,127,214,0.36), 0 0 0 1px rgba(79,127,214,0.45)'
-                    : 'none',
+                    : '0 0 0 1px rgba(244,238,247,0.1)',
                 }}
               >
                 {isActive ? (

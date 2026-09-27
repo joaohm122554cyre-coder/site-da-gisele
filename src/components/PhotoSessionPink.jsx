@@ -16,8 +16,6 @@ const ACCENT = '#d954d1'
 // Sequência de expressões: sorriso, canto sereno, emoção, louvor com as mãos erguidas e sorriso final.
 // "mood" é a palavra que aparece embaixo do cartão no computador, dando alma pra cada foto.
 const photos = [
-  { src: retratoSorrindo, alt: 'Giselli Cristina sorrindo, sentada diante do arco em rosa', position: '50% 30%', mood: 'Sorriso' },
-  { src: retratoSorrindo2, alt: 'Giselli Cristina sorrindo para a câmera diante do arco em rosa', position: '50% 30%', mood: 'Encanto' },
   { src: cenaCantando, alt: 'Giselli Cristina cantando sentada diante do arco em rosa', position: '48% 30%', mood: 'Entrega' },
   { src: cenaSentada, alt: 'Giselli Cristina sentada diante do arco iluminado em rosa', position: '50% 30%', mood: 'Serenidade' },
   { src: cenaMaoNoCabelo, alt: 'Giselli Cristina cantando com a mão junto ao cabelo', position: '52% 30%', mood: 'Delicadeza' },
@@ -25,6 +23,8 @@ const photos = [
   { src: cenaBracoErguido, alt: 'Giselli Cristina cantando com o braço erguido diante do arco rosa', position: '58% 30%', mood: 'Louvor' },
   { src: cenaMaoErguida, alt: 'Giselli Cristina cantando com a mão erguida', position: '60% 30%', mood: 'Adoração' },
   { src: photoArco, alt: 'Giselli Cristina sorrindo diante de um arco iluminado em rosa', position: '50% 12%', mood: 'Luz' },
+  { src: retratoSorrindo, alt: 'Giselli Cristina sorrindo, sentada diante do arco em rosa', position: '50% 30%', mood: 'Sorriso' },
+  { src: retratoSorrindo2, alt: 'Giselli Cristina sorrindo para a câmera diante do arco em rosa', position: '50% 30%', mood: 'Encanto' },
 ]
 
 const SLIDE_SECONDS = 4.5

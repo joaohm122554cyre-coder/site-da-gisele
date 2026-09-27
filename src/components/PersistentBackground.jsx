@@ -5,14 +5,25 @@ import fundoVideo from '../assets/videos/stats-bg.mp4'
 // /disco-de-ouro). Sem isso, cada página tinha seu próprio vídeo de fundo,
 // que reiniciava do zero a cada troca de rota — daí o flash de fundo roxo
 // sólido por alguns segundos enquanto o vídeo novo carregava.
-export default function PersistentBackground() {
+// active=false na home: ela já tem seu próprio fundo de vídeo cobrindo a tela
+// inteira, então esse aqui fica escondido atrás à toa — decodificar um vídeo
+// que ninguém vê pesa bastante em Android mais fraco. Só toca de verdade nas
+// outras páginas (/dupla, /disco-de-ouro), que não têm fundo próprio.
+export default function PersistentBackground({ active = true }) {
   const ref = useRef(null)
 
   useEffect(() => {
     const video = ref.current
     video.muted = true
-    video.play().catch(() => {})
+    if (active) video.play().catch(() => {})
   }, [])
+
+  useEffect(() => {
+    const video = ref.current
+    if (!video) return
+    if (active) video.play().catch(() => {})
+    else video.pause()
+  }, [active])
 
   return (
     <div aria-hidden="true" className="fixed inset-0 -z-30 h-lvh overflow-hidden">

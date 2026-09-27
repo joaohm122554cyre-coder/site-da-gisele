@@ -14,7 +14,7 @@ export default function Root() {
 
   return (
     <>
-      <PersistentBackground />
+      <PersistentBackground active={path !== '/'} />
       {page}
     </>
   )

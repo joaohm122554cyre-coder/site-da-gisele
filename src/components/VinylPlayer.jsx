@@ -41,8 +41,8 @@ export default function VinylPlayer({
 }) {
   const toggle = onToggle
 
-  // Modo mini: disco pequeno com controles compactos, mas em fluxo normal —
-  // quem decide onde ele fica na página é o componente pai.
+  // Modo mini: só controla tamanho/controles compactos — quem decide a
+  // posição na tela (fixed no canto) é o componente pai.
   const content = (
     <motion.div
       layout

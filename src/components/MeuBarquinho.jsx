@@ -257,8 +257,8 @@ export default function MeuBarquinho() {
         </div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:grid md:grid-cols-12 gap-6 md:gap-10 items-center [text-shadow:0_1px_16px_rgba(20,18,42,0.85)]">
-        <Reveal className="order-1 md:order-none md:col-span-12 text-center mb-2 md:mb-10">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 grid md:grid-cols-12 gap-10 items-center [text-shadow:0_1px_16px_rgba(20,18,42,0.85)]">
+        <Reveal className="md:col-span-12 text-center mb-2 md:mb-10">
           <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">
             Repertório
           </span>

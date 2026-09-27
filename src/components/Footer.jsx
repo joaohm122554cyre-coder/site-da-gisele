@@ -32,45 +32,43 @@ function EbenezerBadge() {
 
   return (
     <div ref={wrapRef} className="relative">
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-        aria-haspopup="true"
-        aria-label="Desenvolvido por Ebenézer — ver Instagram e site"
-        className="group inline-flex items-center gap-3 rounded-full border border-[#f4eef7]/15 bg-[#14122a]/40 py-1.5 pl-1.5 pr-4 backdrop-blur-sm transition-colors duration-300 hover:border-[#d954d1]/50"
-      >
-        <span
-          className="glow-ring grid h-10 w-10 shrink-0 place-items-center rounded-full shadow-sm"
-          style={{ '--glow-color': '#7f5af2' }}
+      {/* o brilho fica no invólucro de fora, do tamanho do botão inteiro (com a
+          escrita) — o botão em si mora dentro, intocado, só ganha z-index pra
+          aparecer por cima do brilho girando */}
+      <span className="glow-ring inline-block rounded-full" style={{ '--glow-color': '#7f5af2' }}>
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          aria-haspopup="true"
+          aria-label="Desenvolvido por Ebenézer — ver Instagram e site"
+          className="group relative z-[1] inline-flex items-center gap-3 rounded-full border border-[#f4eef7]/15 bg-[#14122a]/40 py-1.5 pl-1.5 pr-4 backdrop-blur-sm transition-colors duration-300 hover:border-[#d954d1]/50"
         >
-          <img src={ebenezerLogo} alt="" className="h-full w-full object-cover" />
-        </span>
-        <span className="font-display text-base italic text-[#f4eef7]">Ebenézer</span>
-      </button>
+          <span className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-full shadow-sm">
+            <img src={ebenezerLogo} alt="" className="h-full w-full object-cover" />
+          </span>
+          <span className="font-display text-base italic text-[#f4eef7]">Ebenézer</span>
+        </button>
+      </span>
 
       {open && (
-        <div className="absolute bottom-full left-1/2 z-20 mb-3 w-60 -translate-x-1/2 rounded-2xl border border-[#f4eef7]/12 bg-[#1c1638]/95 p-2 shadow-2xl shadow-black/50 backdrop-blur-md">
+        <div className="absolute bottom-full left-1/2 z-20 mb-3 w-60 -translate-x-1/2 space-y-2 rounded-2xl border border-[#f4eef7]/12 bg-[#1c1638]/95 p-2 shadow-2xl shadow-black/50 backdrop-blur-md">
           {credits.map(({ label, href, logo, plainBg, glow }) => (
-            <a
-              key={label}
-              href={href}
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center gap-3 rounded-xl px-2.5 py-2.5 text-[13px] text-[#f4eef7]/80 transition-colors hover:bg-[#f4eef7]/[0.06] hover:text-[#f4eef7]"
-            >
-              <span
-                className="glow-ring grid h-8 w-8 shrink-0 place-items-center rounded-full shadow-sm"
-                style={{ '--glow-color': glow }}
+            <span key={label} className="glow-ring block rounded-xl" style={{ '--glow-color': glow }}>
+              <a
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                className="relative z-[1] flex items-center gap-3 rounded-xl px-2.5 py-2.5 text-[13px] text-[#f4eef7]/80 transition-colors hover:bg-[#f4eef7]/[0.06] hover:text-[#f4eef7]"
               >
                 <span
-                  className={`relative z-[1] grid h-full w-full place-items-center overflow-hidden rounded-full ${plainBg ? 'bg-white' : ''}`}
+                  className={`grid h-8 w-8 shrink-0 place-items-center overflow-hidden rounded-full shadow-sm ${plainBg ? 'bg-white p-1.5' : ''}`}
                 >
-                  <img src={logo} alt="" className={`h-full w-full ${plainBg ? 'object-contain p-1' : 'object-cover'}`} />
+                  <img src={logo} alt="" className={`h-full w-full ${plainBg ? 'object-contain' : 'object-cover'}`} />
                 </span>
-              </span>
-              {label}
-            </a>
+                {label}
+              </a>
+            </span>
           ))}
           <span className="absolute left-1/2 top-full h-3 w-3 -translate-x-1/2 -translate-y-1.5 rotate-45 border-b border-r border-[#f4eef7]/12 bg-[#1c1638]/95" />
         </div>

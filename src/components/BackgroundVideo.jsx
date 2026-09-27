@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useMotionValueEvent, useScroll, useTransform } from 'framer-motion'
 import heroVideoHd from '../assets/videos/hero-bg.mp4'
 import heroVideoSm from '../assets/videos/hero-bg-sm.mp4'
 import heroPoster from '../assets/videos/hero-poster.webp'
@@ -120,6 +120,40 @@ function useDeferredLoad(scrollThreshold = 0.6, idleDelay = 4000) {
   return ready
 }
 
+// Os dois vídeos de fundo (Hero e Stats) tocavam o tempo inteiro, mesmo o que
+// tá com opacidade 0 (completamente invisível) — decodificar dois vídeos ao
+// mesmo tempo pesa muito em Android mais fraco. Pausa o que sumiu e só
+// retoma quando ele volta a aparecer no cross-fade.
+function usePauseWhenHidden(ref, opacity) {
+  useEffect(() => {
+    const video = ref.current
+    if (!video) return
+    // se o vídeo começar a tocar (autoplay nativo, ou o useForceAutoplay
+    // insistindo) enquanto ainda tá com opacidade 0, pausa na hora — cobre o
+    // instante antes da pessoa rolar até a faixa de transição
+    const enforce = () => {
+      if (opacity.get() < 0.02 && !video.paused) video.pause()
+    }
+    enforce()
+    video.addEventListener('playing', enforce)
+    video.addEventListener('loadeddata', enforce)
+    return () => {
+      video.removeEventListener('playing', enforce)
+      video.removeEventListener('loadeddata', enforce)
+    }
+  }, [ref, opacity])
+
+  useMotionValueEvent(opacity, 'change', (value) => {
+    const video = ref.current
+    if (!video) return
+    if (value < 0.02) {
+      if (!video.paused) video.pause()
+    } else if (video.paused) {
+      video.play().catch(() => {})
+    }
+  })
+}
+
 export default function BackgroundVideo({ switchRef }) {
   const heroRef = useForceAutoplay()
   const statsRef = useForceAutoplay()
@@ -142,6 +176,9 @@ export default function BackgroundVideo({ switchRef }) {
   })
   const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0])
   const statsOpacity = useTransform(scrollYProgress, [0, 1], [0, 1])
+
+  usePauseWhenHidden(heroRef, heroOpacity)
+  usePauseWhenHidden(statsRef, statsOpacity)
 
   return (
     <div className="fixed inset-0 h-lvh -z-20 overflow-hidden">

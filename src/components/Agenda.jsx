@@ -22,19 +22,18 @@ export default function Agenda() {
             <p className="mt-10 max-w-lg mx-auto font-fraunces text-lg leading-[1.8] text-[#f4eef7]/90 md:text-xl">
               {agenda.description}
             </p>
-            <span className="glow-ring mt-8 inline-block rounded-full" style={{ '--glow-color': '#25d366' }}>
-              <a
-                href={`https://wa.me/${agenda.whatsapp}`}
-                target="_blank"
-                rel="noreferrer"
-                className="group relative z-[1] inline-flex items-center gap-3 rounded-full bg-[#25d366] py-3.5 pl-2 pr-6 text-[11px] font-semibold uppercase tracking-[0.28em] text-white shadow-lg shadow-black/30 transition-transform duration-300 hover:scale-[1.03]"
-              >
-                <span className="grid h-9 w-9 place-items-center rounded-full bg-white/20 text-white">
-                  <SiWhatsapp className="text-base" aria-hidden="true" />
-                </span>
-                Falar com {agenda.contactName} no WhatsApp
-              </a>
-            </span>
+            <a
+              href={`https://wa.me/${agenda.whatsapp}`}
+              target="_blank"
+              rel="noreferrer"
+              className="cta-glow group mt-8 inline-flex items-center gap-3 rounded-full border border-[#25d366]/45 bg-[#25d366]/10 py-2 pl-2 pr-6 text-[11px] uppercase tracking-[0.28em] text-[#f4eef7]/90 backdrop-blur-sm transition-all duration-500 hover:border-[#25d366] hover:bg-[#25d366]/20 hover:text-[#f4eef7]"
+              style={{ '--glow-rgb': '37, 211, 102' }}
+            >
+              <span className="grid h-9 w-9 place-items-center rounded-full bg-[#25d366] text-white transition-transform duration-500 group-hover:translate-x-1">
+                <SiWhatsapp className="text-base" aria-hidden="true" />
+              </span>
+              Falar com {agenda.contactName} no WhatsApp
+            </a>
           </Reveal>
         ) : (
           <ul className="mt-14 mx-auto max-w-2xl divide-y divide-[#a9a0d8] text-left">

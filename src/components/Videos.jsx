@@ -221,7 +221,7 @@ export default function Videos() {
           </p>
         </Reveal>
 
-        <Reveal delay={0.1} className="mx-auto max-w-sm">
+        <Reveal delay={0.1} className="mx-auto w-3/4 max-w-sm">
           {videos.main ? (
             <VideoFrame>
               <MainVideo />

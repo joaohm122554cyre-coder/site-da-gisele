@@ -6,10 +6,14 @@ import heroPoster from '../assets/videos/hero-poster.webp'
 import statsVideoHd from '../assets/videos/stats-bg-hd.mp4'
 import statsVideoSm from '../assets/videos/stats-bg.mp4'
 
-const isHdScreen =
-  typeof window !== 'undefined' &&
-  window.matchMedia('(min-width: 900px)').matches &&
-  !navigator.connection?.saveData
+// iPhone decodifica vídeo bem mesmo em qualidade alta, mas Android mais simples
+// engasga — então no celular a escolha também olha o sistema, não só o tamanho
+// da tela: iOS ganha o vídeo HD, Android fica no leve pra não travar.
+const isIOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent)
+const isWideScreen =
+  typeof window !== 'undefined' && window.matchMedia('(min-width: 900px)').matches
+const saveData = typeof navigator !== 'undefined' && navigator.connection?.saveData
+const isHdScreen = !saveData && (isWideScreen || isIOS)
 
 const heroVideo = isHdScreen ? heroVideoHd : heroVideoSm
 const statsVideo = isHdScreen ? statsVideoHd : statsVideoSm

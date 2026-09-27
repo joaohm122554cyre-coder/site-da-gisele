@@ -26,6 +26,11 @@ export const about = {
     'Nos anos de ouro do mercado fonográfico gospel, Giselli foi um dos grandes fenômenos de vendas físicas do segmento: uma carreira construída disco a disco, show a show, em todo o território nacional.',
     'Hoje a discografia passa de **1 bilhão de streams**, resultado de uma carreira feita de excelência, autenticidade e uma identificação genuína com quem ouve.',
   ],
+  // versão resumida só pro celular — mesmo conteúdo, mais direto pra rolagem
+  shortParagraphs: [
+    'Há quase 30 anos a voz de Giselli Cristina segue como maré: nunca para, sempre volta. Foi em [Meu Barquinho] que ganhou o país inteiro, um marco que atravessa gerações.',
+    'Um dos grandes fenômenos de vendas físicas do gospel, hoje sua discografia passa de **1 bilhão de streams** — uma carreira de excelência e autenticidade.',
+  ],
   closing:
     'Mais do que uma cantora, Giselli Cristina é maré, é porto, é bondade cantada: uma geração inteira da música gospel brasileira marcada por fé, excelência e canções que continuam emocionando o país.',
 }

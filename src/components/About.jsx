@@ -52,8 +52,15 @@ export default function About() {
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="grid md:grid-cols-12 gap-6">
           <div className="md:col-span-7 md:col-start-6 space-y-7 font-fraunces text-lg leading-[1.8] text-[#f4eef7]/95 [text-shadow:0_1px_14px_rgba(20,18,42,0.85)] md:text-xl">
+            {about.shortParagraphs.map((p, i) => (
+              <Reveal key={i} delay={i * 0.08} className="md:hidden">
+                <p className={i === 0 ? 'drop-cap' : ''}>
+                  <Rich text={p} />
+                </p>
+              </Reveal>
+            ))}
             {about.paragraphs.map((p, i) => (
-              <Reveal key={i} delay={i * 0.08}>
+              <Reveal key={i} delay={i * 0.08} className="hidden md:block">
                 <p className={i === 0 ? 'drop-cap' : ''}>
                   <Rich text={p} />
                 </p>

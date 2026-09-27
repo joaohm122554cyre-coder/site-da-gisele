@@ -65,7 +65,7 @@ export default function BottomNav() {
         visible ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-[150%] opacity-0'
       }`}
     >
-      <ul className="flex items-stretch justify-between rounded-2xl border border-[#f4eef7]/10 bg-[#14122a]/35 px-1.5 py-1.5 shadow-[0_10px_30px_rgba(0,0,0,0.3)] backdrop-blur-md">
+      <ul className="flex items-stretch justify-between rounded-2xl border border-[#f4eef7]/10 bg-[#14122a]/45 px-1.5 py-1.5 shadow-[0_10px_30px_rgba(0,0,0,0.3)] [text-shadow:0_1px_6px_rgba(0,0,0,0.6)]">
         {links.map((l, i) => {
           const isActive = i === active
           const isCta = l.id === 'contrate'

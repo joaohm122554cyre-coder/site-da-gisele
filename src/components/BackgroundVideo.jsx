@@ -163,16 +163,24 @@ export default function BackgroundVideo({ switchRef }) {
   const statsRef = useForceAutoplay()
   const statsReady = useDeferredLoad()
 
+  // Desfoque (blur) ao vivo em vídeo de tela cheia é o efeito mais caro pro celular —
+  // e na troca pro vídeo do Momento Atual eram dois vídeos borrados ao mesmo tempo,
+  // o que travava a rolagem. No celular fica só o escurecimento, que é leve.
   const { scrollY } = useScroll()
   const heroFilter = useTransform(
     scrollY,
     [0, 500, 1600],
-    [
-      'blur(0px) brightness(0.85) saturate(0.9)',
-      'blur(5px) brightness(0.6) saturate(0.85)',
-      'blur(12px) brightness(0.4) saturate(0.8)',
-    ]
+    isWideScreen
+      ? [
+          'blur(0px) brightness(0.85) saturate(0.9)',
+          'blur(5px) brightness(0.6) saturate(0.85)',
+          'blur(12px) brightness(0.4) saturate(0.8)',
+        ]
+      : ['brightness(0.85) saturate(0.9)', 'brightness(0.55) saturate(0.85)', 'brightness(0.35) saturate(0.8)']
   )
+  const statsFilter = isWideScreen
+    ? 'blur(1.5px) brightness(0.5) saturate(0.9)'
+    : 'brightness(0.45) saturate(0.9)'
 
   const { scrollYProgress } = useScroll({
     target: switchRef,
@@ -215,7 +223,7 @@ export default function BackgroundVideo({ switchRef }) {
         preload={statsReady ? 'auto' : 'none'}
         disableRemotePlayback
         controlsList="nodownload noplaybackrate"
-        style={{ opacity: statsOpacity, filter: 'blur(1.5px) brightness(0.5) saturate(0.9)' }}
+        style={{ opacity: statsOpacity, filter: statsFilter }}
         className="absolute inset-0 w-full h-full object-cover"
       />
     </div>

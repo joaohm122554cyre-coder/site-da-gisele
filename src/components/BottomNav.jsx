@@ -20,6 +20,14 @@ const links = [
   { id: 'contrate', href: '#contrate', label: 'Contratar', Icon: PiMicrophoneStage, IconActive: PiMicrophoneStageFill },
 ]
 
+// No Safari do iPhone a barra de endereço flutua por cima da página, então a nossa
+// barra também flutua (com folga embaixo). No Chrome/Android ela encosta na borda
+// de baixo e preenche até o fim da tela.
+const floating =
+  typeof navigator !== 'undefined' &&
+  /iPad|iPhone|iPod/.test(navigator.userAgent) &&
+  !/CriOS|FxiOS|EdgiOS/.test(navigator.userAgent)
+
 // Celular: barra fixa embaixo, estilo app, com os atalhos principais do site.
 // Aparece depois que a pessoa sai do Hero. No computador quem faz esse papel é a Nav lateral.
 export default function BottomNav() {
@@ -61,11 +69,17 @@ export default function BottomNav() {
     <nav
       aria-label="Atalhos do site"
       aria-hidden={!visible}
-      className={`fixed inset-x-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] z-40 md:hidden transition-all duration-500 ${
-        visible ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-[150%] opacity-0'
-      }`}
+      className={`fixed z-40 md:hidden transition-all duration-500 ${
+        floating ? 'inset-x-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom))]' : 'inset-x-0 bottom-0'
+      } ${visible ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-[150%] opacity-0'}`}
     >
-      <ul className="flex items-stretch justify-between rounded-2xl border border-[#f4eef7]/10 bg-[#14122a]/45 px-1.5 py-1.5 shadow-[0_10px_30px_rgba(0,0,0,0.3)] [text-shadow:0_1px_6px_rgba(0,0,0,0.6)]">
+      <ul
+        className={`flex items-stretch justify-between bg-[#14122a]/45 px-1.5 pt-1.5 [text-shadow:0_1px_6px_rgba(0,0,0,0.6)] ${
+          floating
+            ? 'rounded-2xl border border-[#f4eef7]/10 pb-1.5 shadow-[0_10px_30px_rgba(0,0,0,0.3)]'
+            : 'rounded-t-2xl border-t border-[#f4eef7]/10 pb-[calc(0.375rem+env(safe-area-inset-bottom))] shadow-[0_-8px_24px_rgba(0,0,0,0.25)]'
+        }`}
+      >
         {links.map((l, i) => {
           const isActive = i === active
           const isCta = l.id === 'contrate'

@@ -253,6 +253,19 @@ body {
   }
 }
 
+/* idêntico ao kenburns — existir com outro nome permite alternar entre os dois
+   a cada troca de foto sem precisar desmontar o elemento (o que causava um
+   pulo visível: o zoom saltava de volta pro tamanho normal na hora que a foto
+   deixava de ser a ativa, no meio do crossfade). */
+@keyframes kenburns-alt {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+
 .bg-drift {
   animation: bg-drift 26s ease-in-out infinite alternate;
 }

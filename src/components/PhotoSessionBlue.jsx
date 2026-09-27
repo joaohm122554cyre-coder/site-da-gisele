@@ -219,6 +219,17 @@ function DesktopSlide({ step, current, running, onEnd, onNext, onBack, onJump })
   const peekNext = photos[mod(step + 1, total)]
   const peekPrev = photos[mod(step - 1, total)]
 
+  // Cada foto guarda qual das duas animações (idênticas, só com nome diferente)
+  // usou da última vez — só troca a da foto que está virando a atual. Assim o
+  // zoom sempre reinicia do zero na foto nova, sem forçar as outras fotos
+  // (que só ficam pausadas, congeladas onde estavam) a resetar também.
+  const kenburnsNames = useRef({})
+  const prevActive = useRef(current)
+  if (prevActive.current !== current) {
+    kenburnsNames.current[current] = kenburnsNames.current[current] === 'kenburns' ? 'kenburns-alt' : 'kenburns'
+    prevActive.current = current
+  }
+
   return (
     <>
       <div className="relative flex items-stretch justify-center gap-4">
@@ -243,7 +254,7 @@ function DesktopSlide({ step, current, running, onEnd, onNext, onBack, onJump })
             const isActive = i === current
             return (
               <img
-                key={isActive ? `${p.src}-zoom-${current}` : p.src}
+                key={p.src}
                 src={p.src}
                 alt={isActive ? p.alt : ''}
                 loading="lazy"
@@ -252,7 +263,8 @@ function DesktopSlide({ step, current, running, onEnd, onNext, onBack, onJump })
                 style={{
                   objectPosition: p.position,
                   opacity: isActive ? 1 : 0,
-                  animation: isActive ? `kenburns ${KENBURNS_SECONDS}s ease-out forwards` : 'none',
+                  animation: `${kenburnsNames.current[i] || 'kenburns'} ${KENBURNS_SECONDS}s ease-out forwards`,
+                  animationPlayState: isActive ? 'running' : 'paused',
                 }}
               />
             )

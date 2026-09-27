@@ -274,7 +274,7 @@ export default function MeuBarquinho() {
         <motion.div
           layout
           transition={{ type: 'spring', stiffness: 260, damping: 28 }}
-          className="order-2 w-full md:col-span-6 md:col-start-7 md:order-none"
+          className="order-3 w-full md:col-span-6 md:col-start-7 md:order-none"
         >
           <Reveal key={`${track.key}-text`}>
             <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">
@@ -346,7 +346,7 @@ export default function MeuBarquinho() {
           className={
             mini
               ? 'fixed bottom-[calc(6rem+env(safe-area-inset-bottom))] right-4 z-50'
-              : 'order-3 w-full md:order-none md:col-span-5 flex justify-center min-h-[428px] md:min-h-0'
+              : 'order-2 w-full md:order-none md:col-span-5 flex justify-center min-h-[428px] md:min-h-0'
           }
         >
           <div className="relative flex items-center gap-3 md:gap-5">

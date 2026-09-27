@@ -129,15 +129,17 @@ function MobileCarousel({ step, prev, dispatch, inView }) {
                 }}
               >
                 {isActive ? (
-                  <img
-                    src={photo.src}
-                    alt={photo.alt}
-                    loading="lazy"
-                    decoding="async"
-                    draggable="false"
-                    className="absolute inset-0 h-full w-full select-none rounded-2xl object-cover"
-                    style={{ objectPosition: photo.position }}
-                  />
+                  <div className="glow-ring h-full w-full rounded-2xl" style={{ '--glow-color': ACCENT }}>
+                    <img
+                      src={photo.src}
+                      alt={photo.alt}
+                      loading="lazy"
+                      decoding="async"
+                      draggable="false"
+                      className="select-none rounded-[13px] object-cover"
+                      style={{ objectPosition: photo.position }}
+                    />
+                  </div>
                 ) : (
                   <img
                     src={photo.src}

@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { createPortal } from 'react-dom'
 import { motion, animate } from 'framer-motion'
 
 function formatTime(s) {
@@ -42,20 +41,13 @@ export default function VinylPlayer({
 }) {
   const toggle = onToggle
 
-  // No modo mini o disco é "fixed" no canto da tela: se ficasse dentro da
-  // árvore normal, qualquer ancestral com transform (o Reveal que anima a
-  // entrada, por exemplo) vira o "viewport" dele, e o disco passa a seguir
-  // esse ancestral em vez do canto real da tela — daí ele "pula" ao rolar a
-  // página. O portal tira ele de dentro dessa árvore, direto pro body.
+  // Modo mini: disco pequeno com controles compactos, mas em fluxo normal —
+  // quem decide onde ele fica na página é o componente pai.
   const content = (
     <motion.div
       layout
       transition={{ type: 'spring', stiffness: 210, damping: 24 }}
-      className={
-        mini
-          ? 'fixed bottom-5 right-5 z-30 flex flex-col items-center gap-2'
-          : 'flex flex-col items-center gap-6'
-      }
+      className={mini ? 'flex flex-col items-center gap-2' : 'flex flex-col items-center gap-6'}
     >
       <motion.div layout className={`relative ${mini ? 'w-16 h-16' : 'w-64 h-64 md:w-80 md:h-80'}`}>
         {/* tonearm */}
@@ -232,5 +224,5 @@ export default function VinylPlayer({
     </motion.div>
   )
 
-  return mini ? createPortal(content, document.body) : content
+  return content
 }

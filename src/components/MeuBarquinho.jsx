@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { motion } from 'framer-motion'
 import Reveal from './Reveal'
 import VinylPlayer from './VinylPlayer'
 import SongMarquee from './SongMarquee'
@@ -148,9 +149,8 @@ export default function MeuBarquinho() {
   const [duration, setDuration] = useState(tracks[0].duration)
   const isDesktop = useIsDesktop()
   const mediaRef = useRef(null)
-  // Volta à versão 3 (sem modo mini): o disco fica sempre grande e centralizado,
-  // só o clipe/capa desfocada aparece atrás enquanto toca.
-  const mini = false
+  // no celular, enquanto toca, o disco encolhe e o texto sobe pra cima dele
+  const mini = playing && !isDesktop
   const sectionRef = useRef(null)
   const track = tracks[index]
 
@@ -243,19 +243,85 @@ export default function MeuBarquinho() {
         </div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 grid md:grid-cols-12 gap-10 items-center [text-shadow:0_1px_16px_rgba(20,18,42,0.85)]">
-        <Reveal className="md:col-span-12 text-center mb-2 md:mb-10">
-          <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">
-            Repertório
-          </span>
-          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl text-[#f4eef7] mt-4 leading-[1.15]">
-            Músicas que encantaram
-            <br />
-            <span className="italic text-[#d954d1]">corações</span> de gerações
-          </h2>
-        </Reveal>
+      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:grid md:grid-cols-12 gap-6 md:gap-10 items-center [text-shadow:0_1px_16px_rgba(20,18,42,0.85)]">
+        {!mini && (
+          <Reveal className="order-1 md:order-none md:col-span-12 text-center mb-2 md:mb-10">
+            <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">
+              Repertório
+            </span>
+            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl text-[#f4eef7] mt-4 leading-[1.15]">
+              Músicas que encantaram
+              <br />
+              <span className="italic text-[#d954d1]">corações</span> de gerações
+            </h2>
+          </Reveal>
+        )}
 
-        <div className="md:col-span-5 flex justify-center min-h-[428px] md:min-h-0">
+        {/* contexto da faixa: sobe pro topo (order-1) enquanto toca no celular, e
+            volta pra posição normal (depois do disco) quando pausa */}
+        <motion.div
+          layout
+          transition={{ type: 'spring', stiffness: 260, damping: 28 }}
+          className={`w-full md:col-span-6 md:col-start-7 md:order-none ${mini ? 'order-1 text-center' : 'order-3'}`}
+        >
+          <Reveal key={`${track.key}-text`}>
+            <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">
+              {track.eyebrow}
+            </span>
+            <h2
+              className={`font-display text-[#f4eef7] mt-2 ${
+                mini ? 'text-2xl italic' : 'text-4xl sm:text-5xl md:text-6xl mt-4'
+              }`}
+            >
+              {track.title}
+            </h2>
+
+            {!mini && (
+              <>
+                <p className="mt-6 text-sm md:text-base text-[#f4eef7]/65 leading-relaxed max-w-md">
+                  {track.description}
+                </p>
+
+                {track.award && (
+                  <div className={`mt-8 ${track.award.maxWidth ?? 'max-w-sm'}`}>
+                    <img
+                      src={track.award.image}
+                      alt={track.award.caption}
+                      className="w-full rounded-md grayscale-[8%]"
+                    />
+                    <p className="mt-2 text-[10px] tracking-[0.1em] text-[#f4eef7]/40">
+                      {track.award.caption}
+                    </p>
+                  </div>
+                )}
+
+                <p className="mt-10 text-[11px] uppercase tracking-[0.2em] text-[#f4eef7]/40">
+                  Clique no disco para ouvir uma prévia
+                </p>
+
+                <div className="flex gap-2 mt-8 justify-center md:justify-start">
+                  {tracks.map((t, i) => (
+                    <button
+                      key={t.key}
+                      type="button"
+                      onClick={() => setIndex(i)}
+                      aria-label={`Ir para ${t.title}`}
+                      className={`h-1.5 rounded-full transition-all duration-300 ${
+                        i === index ? 'w-8 bg-[#d954d1]' : 'w-1.5 bg-[#f4eef7]/25'
+                      }`}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </Reveal>
+        </motion.div>
+
+        <motion.div
+          layout
+          transition={{ type: 'spring', stiffness: 260, damping: 28 }}
+          className="order-2 w-full md:order-none md:col-span-5 flex justify-center min-h-[428px] md:min-h-0"
+        >
           <div className="relative flex items-center gap-3 md:gap-5">
             {!mini && (
               <button
@@ -301,52 +367,7 @@ export default function MeuBarquinho() {
               </button>
             )}
           </div>
-        </div>
-
-        <div className="md:col-span-6 md:col-start-7">
-          <Reveal key={`${track.key}-text`}>
-            <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">
-              {track.eyebrow}
-            </span>
-            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-[#f4eef7] mt-4">
-              {track.title}
-            </h2>
-            <p className="mt-6 text-sm md:text-base text-[#f4eef7]/65 leading-relaxed max-w-md">
-              {track.description}
-            </p>
-
-            {track.award && (
-              <div className={`mt-8 ${track.award.maxWidth ?? 'max-w-sm'}`}>
-                <img
-                  src={track.award.image}
-                  alt={track.award.caption}
-                  className="w-full rounded-md grayscale-[8%]"
-                />
-                <p className="mt-2 text-[10px] tracking-[0.1em] text-[#f4eef7]/40">
-                  {track.award.caption}
-                </p>
-              </div>
-            )}
-
-            <p className="mt-10 text-[11px] uppercase tracking-[0.2em] text-[#f4eef7]/40">
-              Clique no disco para ouvir uma prévia
-            </p>
-
-            <div className="flex gap-2 mt-8">
-              {tracks.map((t, i) => (
-                <button
-                  key={t.key}
-                  type="button"
-                  onClick={() => setIndex(i)}
-                  aria-label={`Ir para ${t.title}`}
-                  className={`h-1.5 rounded-full transition-all duration-300 ${
-                    i === index ? 'w-8 bg-[#d954d1]' : 'w-1.5 bg-[#f4eef7]/25'
-                  }`}
-                />
-              ))}
-            </div>
-          </Reveal>
-        </div>
+        </motion.div>
       </div>
 
       <div className="relative z-10 mt-16 md:mt-24">

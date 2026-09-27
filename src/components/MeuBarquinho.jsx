@@ -148,8 +148,9 @@ export default function MeuBarquinho() {
   const [duration, setDuration] = useState(tracks[0].duration)
   const isDesktop = useIsDesktop()
   const mediaRef = useRef(null)
-  // no celular, enquanto toca, o disco vira um mini player no cantinho pra não tapar o clipe
-  const mini = playing && !isDesktop
+  // Volta à versão 3 (sem modo mini): o disco fica sempre grande e centralizado,
+  // só o clipe/capa desfocada aparece atrás enquanto toca.
+  const mini = false
   const sectionRef = useRef(null)
   const track = tracks[index]
 

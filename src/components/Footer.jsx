@@ -40,7 +40,10 @@ function EbenezerBadge() {
         aria-label="Desenvolvido por Ebenézer — ver Instagram e site"
         className="group inline-flex items-center gap-3 rounded-full border border-[#f4eef7]/15 bg-[#14122a]/40 py-1.5 pl-1.5 pr-4 backdrop-blur-sm transition-colors duration-300 hover:border-[#d954d1]/50"
       >
-        <span className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-full shadow-sm">
+        <span
+          className="glow-ring grid h-10 w-10 shrink-0 place-items-center rounded-full shadow-sm"
+          style={{ '--glow-color': '#7f5af2' }}
+        >
           <img src={ebenezerLogo} alt="" className="h-full w-full object-cover" />
         </span>
         <span className="font-display text-base italic text-[#f4eef7]">Ebenézer</span>

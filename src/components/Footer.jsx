@@ -42,7 +42,7 @@ function EbenezerBadge() {
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-haspopup="true"
-          aria-label="Desenvolvido por Ebenézer — ver Instagram e site"
+          aria-label="Desenvolvido por Ebenézer: ver Instagram e site"
           className="group relative z-[1] inline-flex items-center gap-3 rounded-full border border-[#f4eef7]/15 bg-[#14122a]/40 py-1.5 pl-1.5 pr-4 backdrop-blur-sm transition-colors duration-300 hover:border-[#d954d1]/50"
         >
           <span className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-full shadow-sm">

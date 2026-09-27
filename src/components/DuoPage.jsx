@@ -138,7 +138,7 @@ function TopBar() {
       </BackLink>
       <Link
         to="/"
-        aria-label="Giselli Cristina — página inicial"
+        aria-label="Giselli Cristina, página inicial"
         className="pointer-events-auto rounded-full bg-[#14122a]/45 p-2 backdrop-blur-md"
       >
         <img

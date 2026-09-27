@@ -26,7 +26,7 @@ export const about = {
   // versão resumida só pro celular — mesmo conteúdo, mais direto pra rolagem
   shortParagraphs: [
     'Há quase 30 anos a voz de Giselli Cristina segue como maré: nunca para, sempre volta. Foi em [Meu Barquinho] que ganhou o país inteiro, um marco que atravessa gerações.',
-    'Um dos grandes fenômenos de vendas físicas do gospel, hoje sua discografia passa de **1 bilhão de streams** — uma carreira de excelência e autenticidade.',
+    'Um dos grandes fenômenos de vendas físicas do gospel, hoje sua discografia passa de **1 bilhão de streams**, fruto de uma carreira de excelência e autenticidade.',
   ],
   closing:
     'Mais do que uma cantora, Giselli Cristina é maré, é porto, é bondade cantada: uma geração inteira da música gospel brasileira marcada por fé, excelência e canções que continuam emocionando o país.',
@@ -54,7 +54,7 @@ export const songs = [
 export const currentMoment = {
   title: 'Momento Atual',
   paragraphs: [
-    'Giselli Cristina vive a fase mais expressiva da carreira — os grandes sucessos dos últimos anos se somam agora a uma conexão cada vez mais forte com o público, e a uma parceria especial: dividir o palco e os estúdios com o filho, Nicolas Henrique.',
+    'Giselli Cristina vive a fase mais expressiva da carreira: os grandes sucessos dos últimos anos se somam agora a uma conexão cada vez mais forte com o público, e a uma parceria especial: dividir o palco e os estúdios com o filho, Nicolas Henrique.',
   ],
 }
 
@@ -93,17 +93,17 @@ export const videos = {
       url: 'https://www.youtube.com/watch?v=G_bzLfdmryM',
     },
     {
-      title: 'Santo Pra Sempre — feat. Nicolas Henrique',
+      title: 'Santo Pra Sempre (feat. Nicolas Henrique)',
       thumbnail: videoSanto,
       url: 'https://www.youtube.com/watch?v=8zcx613PHLE',
     },
     {
-      title: 'Te Louvarei — feat. Nicolas Henrique',
+      title: 'Te Louvarei (feat. Nicolas Henrique)',
       thumbnail: videoLouvarei,
       url: 'https://www.youtube.com/watch?v=Dxelc3yHVQQ',
     },
     {
-      title: 'Vem Jesus Vem — feat. CeCe Winans',
+      title: 'Vem Jesus Vem (feat. CeCe Winans)',
       thumbnail: videoVemJesus,
       url: 'https://www.youtube.com/watch?v=X4QFSafyzJ0',
     },

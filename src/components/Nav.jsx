@@ -56,7 +56,7 @@ export default function Nav() {
     >
       <a
         href="#"
-        aria-label="Giselli Cristina — voltar ao início"
+        aria-label="Giselli Cristina, voltar ao início"
         className="group flex flex-col items-center gap-2"
       >
         <img

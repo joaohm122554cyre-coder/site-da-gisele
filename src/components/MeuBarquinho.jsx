@@ -366,7 +366,7 @@ export default function MeuBarquinho() {
             <Reveal key={track.key}>
               <VinylPlayer
                 label={track.label}
-                labelAlt={`${track.title} — capa`}
+                labelAlt={`Capa de ${track.title}`}
                 trackName={track.title}
                 playing={playing}
                 onToggle={toggle}

@@ -25,7 +25,7 @@ export default function Hero() {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 2.4 }}
+            transition={{ duration: 0.8, delay: 1.1 }}
             className="text-[11px] md:text-xs tracking-[0.4em] uppercase text-white/80 mb-6 [text-shadow:0_1px_14px_rgba(10,8,25,0.85)]"
           >
             Cantora &middot; Compositora &middot; {artist.label}
@@ -35,7 +35,7 @@ export default function Hero() {
             <motion.h1
               initial={{ y: '100%' }}
               animate={{ y: 0 }}
-              transition={{ duration: 1.1, delay: 1.9, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 1, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
               className="font-display text-[16vw] md:text-[9rem] lg:text-[10.5rem] leading-[0.82] text-white tracking-tight"
             >
               Giselli
@@ -45,7 +45,7 @@ export default function Hero() {
             <motion.h1
               initial={{ y: '100%' }}
               animate={{ y: 0 }}
-              transition={{ duration: 1.1, delay: 2.05, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 1, delay: 0.85, ease: [0.16, 1, 0.3, 1] }}
               className="font-display italic text-[16vw] md:text-[9rem] lg:text-[10.5rem] leading-[0.82] text-transparent [-webkit-text-stroke:1px_#d954d1] md:[-webkit-text-stroke:1.5px_#d954d1]"
             >
               Cristina
@@ -55,7 +55,7 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 2.6 }}
+            transition={{ duration: 0.8, delay: 1.3 }}
             className="mt-10 flex flex-col md:flex-row md:items-end md:justify-between gap-6"
           >
             <p className="max-w-sm text-sm md:text-base text-white/90 leading-relaxed [text-shadow:0_1px_14px_rgba(10,8,25,0.85)]">
@@ -76,7 +76,7 @@ export default function Hero() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 3.2 }}
+        transition={{ duration: 0.8, delay: 1.8 }}
         className="absolute bottom-8 inset-x-0 z-10 flex justify-center"
       >
         <motion.a

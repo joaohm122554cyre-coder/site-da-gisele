@@ -3,6 +3,7 @@ import videoFases from '../assets/photos/video-fases.webp'
 import videoSanto from '../assets/photos/video-santo-pra-sempre.webp'
 import videoLouvarei from '../assets/photos/video-te-louvarei.webp'
 import videoVemJesus from '../assets/photos/video-vem-jesus-vem.webp'
+import videoMeuBarquinho from '../assets/photos/video-meu-barquinho.webp'
 
 export const artist = {
   name: 'Giselli Cristina',
@@ -105,6 +106,11 @@ export const videos = {
       title: 'Vem Jesus Vem — feat. CeCe Winans',
       thumbnail: videoVemJesus,
       url: 'https://www.youtube.com/watch?v=X4QFSafyzJ0',
+    },
+    {
+      title: 'Meu Barquinho',
+      thumbnail: videoMeuBarquinho,
+      url: 'https://www.youtube.com/watch?v=_AOK_aSiDmo',
     },
   ],
 }

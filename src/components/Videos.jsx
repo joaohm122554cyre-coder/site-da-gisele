@@ -173,7 +173,7 @@ export default function Videos() {
             <p className="mb-5 px-1 text-[11px] tracking-[0.3em] uppercase text-[#f4eef7]/70 [text-shadow:0_1px_4px_rgba(0,0,0,0.6)]">
               Escolha um clipe
             </p>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 md:grid-cols-5">
+            <div className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3">
               {playlist.map((video, i) => (
                 <PlaylistTile key={video.id} video={video} selected={i === selected} onSelect={() => select(i)} />
               ))}

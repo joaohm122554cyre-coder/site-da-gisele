@@ -278,7 +278,7 @@ export default function MeuBarquinho() {
 
             {!mini && (
               <>
-                <p className="mt-6 text-sm md:text-base text-[#f4eef7]/65 leading-relaxed max-w-md">
+                <p className="mt-6 font-fraunces text-base md:text-lg text-[#f4eef7]/90 leading-relaxed max-w-md">
                   {track.description}
                 </p>
 

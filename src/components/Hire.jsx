@@ -27,9 +27,10 @@ export default function Hire() {
               href={hire.agency.url}
               target="_blank"
               rel="noreferrer"
-              className="cta-glow group mt-6 inline-flex items-center gap-3 rounded-full border border-[#d954d1]/45 bg-[#d954d1]/10 py-2 pl-2 pr-6 text-[11px] uppercase tracking-[0.28em] text-[#f4eef7]/90 backdrop-blur-sm transition-all duration-500 hover:border-[#d954d1] hover:bg-[#d954d1]/20 hover:text-[#f4eef7]"
+              className="cta-glow group mt-6 inline-flex items-center gap-3 rounded-full border border-[#4f7fd6]/45 bg-[#4f7fd6]/10 py-2 pl-2 pr-6 text-[11px] uppercase tracking-[0.28em] text-[#f4eef7]/90 backdrop-blur-sm transition-all duration-500 hover:border-[#4f7fd6] hover:bg-[#4f7fd6]/20 hover:text-[#f4eef7]"
+              style={{ '--glow-rgb': '79, 127, 214' }}
             >
-              <span className="grid h-9 w-9 place-items-center rounded-full bg-[#d954d1] text-white transition-transform duration-500 group-hover:translate-x-1">
+              <span className="grid h-9 w-9 place-items-center rounded-full bg-[#4f7fd6] text-white transition-transform duration-500 group-hover:translate-x-1">
                 <FiExternalLink className="text-base" aria-hidden="true" />
               </span>
               Contratar pela {hire.agency.name}

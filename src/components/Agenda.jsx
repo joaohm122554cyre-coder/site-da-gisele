@@ -13,7 +13,15 @@ export default function Agenda() {
             Agenda
           </span>
           <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-[#f4eef7] mt-4">
-            Próximos <span className="italic text-[#4f7fd6]">shows</span>
+            {upcoming.length === 0 ? (
+              <>
+                Leve Giselli ao <span className="italic text-[#4f7fd6]">seu evento</span>
+              </>
+            ) : (
+              <>
+                Próximos <span className="italic text-[#4f7fd6]">shows</span>
+              </>
+            )}
           </h2>
         </Reveal>
 
@@ -26,10 +34,10 @@ export default function Agenda() {
               href={`https://wa.me/${agenda.whatsapp}`}
               target="_blank"
               rel="noreferrer"
-              className="cta-glow group mt-8 inline-flex items-center gap-3 rounded-full border border-[#25d366]/45 bg-[#25d366]/10 py-2 pl-2 pr-6 text-[11px] uppercase tracking-[0.28em] text-[#f4eef7]/90 backdrop-blur-sm transition-all duration-500 hover:border-[#25d366] hover:bg-[#25d366]/20 hover:text-[#f4eef7]"
-              style={{ '--glow-rgb': '37, 211, 102' }}
+              className="cta-glow group mt-8 inline-flex items-center gap-3 rounded-full border border-[#4f7fd6]/45 bg-[#4f7fd6]/10 py-2 pl-2 pr-6 text-[11px] uppercase tracking-[0.28em] text-[#f4eef7]/90 backdrop-blur-sm transition-all duration-500 hover:border-[#4f7fd6] hover:bg-[#4f7fd6]/20 hover:text-[#f4eef7]"
+              style={{ '--glow-rgb': '79, 127, 214' }}
             >
-              <span className="grid h-9 w-9 place-items-center rounded-full bg-[#25d366] text-white transition-transform duration-500 group-hover:translate-x-1">
+              <span className="grid h-9 w-9 place-items-center rounded-full bg-[#4f7fd6] text-white transition-transform duration-500 group-hover:translate-x-1">
                 <SiWhatsapp className="text-base" aria-hidden="true" />
               </span>
               Falar com {agenda.contactName} no WhatsApp

@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/react'
 import App from './App'
 import DuoPage from './components/DuoPage'
 import GoldRecordPage from './components/GoldRecordPage'
@@ -16,6 +17,7 @@ export default function Root() {
     <>
       <PersistentBackground active={path !== '/'} />
       {page}
+      <Analytics />
     </>
   )
 }

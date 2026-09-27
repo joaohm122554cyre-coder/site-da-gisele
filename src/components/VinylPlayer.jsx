@@ -157,6 +157,9 @@ export default function VinylPlayer({
           <p className="text-[10px] tracking-[0.15em] uppercase text-[#f4eef7]/75">
             {formatTime(current)} / {formatTime(duration)} &middot; prévia
           </p>
+          <p className="text-[10px] uppercase tracking-[0.2em] text-[#f7b9f1] text-center">
+            Clique no disco para ouvir uma prévia
+          </p>
         </div>
       )}
 

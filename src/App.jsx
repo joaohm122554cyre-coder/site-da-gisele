@@ -15,6 +15,7 @@ import Press from './components/Press'
 import Social from './components/Social'
 import ClosingQuote from './components/ClosingQuote'
 import Footer from './components/Footer'
+import BottomNav from './components/BottomNav'
 
 export default function App() {
   const switchRef = useRef(null)
@@ -23,7 +24,7 @@ export default function App() {
     <div className="relative">
       <BackgroundVideo switchRef={switchRef} />
 
-      <main className="md:pl-14 relative">
+      <main className="md:pl-14 pb-20 md:pb-0 relative">
         <Nav />
         <Hero />
         <About />
@@ -42,6 +43,8 @@ export default function App() {
         <ClosingQuote />
         <Footer />
       </main>
+
+      <BottomNav />
     </div>
   )
 }

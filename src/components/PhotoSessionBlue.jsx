@@ -25,8 +25,8 @@ const photos = [
   { src: clipe, alt: 'Giselli Cristina de braço erguido no clipe de Eu Só Quero Adorar, com o Nicolas Henrique ao teclado', position: '62% 50%', mood: 'Família' },
 ]
 
-const SLIDE_SECONDS = 4.5
-const DESKTOP_SLIDE_SECONDS = 3.5
+const SLIDE_SECONDS = 2.5
+const DESKTOP_SLIDE_SECONDS = 2.5
 const KENBURNS_SECONDS = DESKTOP_SLIDE_SECONDS + 1
 const SMOOTH = 'cubic-bezier(0.65,0,0.35,1)'
 const mod = (a, n) => ((a % n) + n) % n

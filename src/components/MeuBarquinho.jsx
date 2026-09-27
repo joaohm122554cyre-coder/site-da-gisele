@@ -4,6 +4,11 @@ import Reveal from './Reveal'
 import VinylPlayer from './VinylPlayer'
 import SongMarquee from './SongMarquee'
 import { setVideoActive } from '../lib/root-growth'
+import { streaming } from '../lib/site-data'
+import spotifyLogo from '../assets/icons/spotify.svg'
+import appleMusicLogo from '../assets/icons/apple-music.svg'
+import deezerLogo from '../assets/icons/deezer.svg'
+import amazonMusicLogo from '../assets/icons/amazon-music.svg'
 import barquinhoLabel from '../assets/photos/meu-barquinho-capa.jpg'
 import barquinhoAudio from '../assets/audio/meu-barquinho-preview.mp3'
 import barquinhoAlbum from '../assets/photos/meu-barquinho-album.jpg'
@@ -128,6 +133,15 @@ const tracks = [
   },
 ]
 
+// atalhos pra ouvir o repertório completo nas plataformas (o YouTube já tem botão no disco)
+const platformLogos = {
+  Spotify: spotifyLogo,
+  'Apple Music': appleMusicLogo,
+  Deezer: deezerLogo,
+  'Amazon Music': amazonMusicLogo,
+}
+const platforms = streaming.filter((s) => platformLogos[s.name])
+
 const EDGE_MASK = 'linear-gradient(to bottom, transparent 0, #000 7rem, #000 calc(100% - 7rem), transparent 100%)'
 
 function useIsDesktop() {
@@ -244,41 +258,34 @@ export default function MeuBarquinho() {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:grid md:grid-cols-12 gap-6 md:gap-10 items-center [text-shadow:0_1px_16px_rgba(20,18,42,0.85)]">
-        {!mini && (
-          <Reveal className="order-1 md:order-none md:col-span-12 text-center mb-2 md:mb-10">
-            <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">
-              Repertório
-            </span>
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl text-[#f4eef7] mt-4 leading-[1.15]">
-              Músicas que encantaram
-              <br />
-              <span className="italic text-[#d954d1]">corações</span> de gerações
-            </h2>
-          </Reveal>
-        )}
+        <Reveal className="order-1 md:order-none md:col-span-12 text-center mb-2 md:mb-10">
+          <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">
+            Repertório
+          </span>
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl text-[#f4eef7] mt-4 leading-[1.15]">
+            Músicas que encantaram
+            <br />
+            <span className="italic text-[#d954d1]">corações</span> de gerações
+          </h2>
+        </Reveal>
 
-        {/* contexto da faixa: sobe pro topo (order-1) enquanto toca no celular, e
-            volta pra posição normal (depois do disco) quando pausa */}
+        {/* contexto da faixa: no celular, enquanto toca, o disco sai pro canto
+            inferior direito e este bloco sobe pro lugar dele, logo abaixo do título */}
         <motion.div
           layout
           transition={{ type: 'spring', stiffness: 260, damping: 28 }}
-          className={`w-full md:col-span-6 md:col-start-7 md:order-none ${mini ? 'order-1 text-center' : 'order-3'}`}
+          className="order-3 w-full md:col-span-6 md:col-start-7 md:order-none"
         >
           <Reveal key={`${track.key}-text`}>
             <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">
               {track.eyebrow}
             </span>
-            <h2
-              className={`font-display text-[#f4eef7] mt-2 ${
-                mini ? 'text-2xl italic' : 'text-4xl sm:text-5xl md:text-6xl mt-4'
-              }`}
-            >
+            <h2 className="font-bodoni italic text-[#f4eef7] text-4xl sm:text-5xl md:text-6xl mt-4">
               {track.title}
             </h2>
 
-            {!mini && (
-              <>
-                <p className="mt-6 font-fraunces text-base md:text-lg text-[#f4eef7]/90 leading-relaxed max-w-md">
+            <>
+                <p className="mt-6 font-body font-light text-sm md:text-base text-[#f4eef7]/90 leading-relaxed max-w-md">
                   {track.description}
                 </p>
 
@@ -295,11 +302,7 @@ export default function MeuBarquinho() {
                   </div>
                 )}
 
-                <p className="mt-10 text-[11px] uppercase tracking-[0.2em] text-[#f4eef7]/40">
-                  Clique no disco para ouvir uma prévia
-                </p>
-
-                <div className="flex gap-2 mt-8 justify-center md:justify-start">
+                <div className="flex gap-2 mt-10 justify-center md:justify-start">
                   {tracks.map((t, i) => (
                     <button
                       key={t.key}
@@ -312,15 +315,39 @@ export default function MeuBarquinho() {
                     />
                   ))}
                 </div>
-              </>
-            )}
+
+                <div className="mt-8 flex flex-col items-center gap-3 md:items-start">
+                  <span className="text-[10px] uppercase tracking-[0.3em] text-[#f4eef7]/50">
+                    Ouça o repertório completo
+                  </span>
+                  <div className="flex gap-2.5">
+                    {platforms.map((p) => (
+                      <a
+                        key={p.name}
+                        href={p.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label={`Ouvir Giselli Cristina no ${p.name}`}
+                        title={p.name}
+                        className="grid h-10 min-w-10 place-items-center rounded-full bg-white px-2.5 shadow-md transition-transform duration-300 hover:scale-110"
+                      >
+                        <img src={platformLogos[p.name]} alt="" className="h-5 w-auto max-w-[4.5rem] object-contain" />
+                      </a>
+                    ))}
+                  </div>
+                </div>
+            </>
           </Reveal>
         </motion.div>
 
         <motion.div
           layout
           transition={{ type: 'spring', stiffness: 260, damping: 28 }}
-          className="order-2 w-full md:order-none md:col-span-5 flex justify-center min-h-[428px] md:min-h-0"
+          className={
+            mini
+              ? 'fixed bottom-[calc(6rem+env(safe-area-inset-bottom))] right-4 z-50'
+              : 'order-2 w-full md:order-none md:col-span-5 flex justify-center min-h-[428px] md:min-h-0'
+          }
         >
           <div className="relative flex items-center gap-3 md:gap-5">
             {!mini && (

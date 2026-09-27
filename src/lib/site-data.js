@@ -3,10 +3,6 @@ import videoFases from '../assets/photos/video-fases.webp'
 import videoSanto from '../assets/photos/video-santo-pra-sempre.webp'
 import videoLouvarei from '../assets/photos/video-te-louvarei.webp'
 import videoVemJesus from '../assets/photos/video-vem-jesus-vem.webp'
-import videoFasesPreview from '../assets/audio/video-fases-preview.mp3'
-import videoSantoPreview from '../assets/audio/video-santo-pra-sempre-preview.mp3'
-import videoLouvareiPreview from '../assets/audio/video-te-louvarei-preview.mp3'
-import videoVemJesusPreview from '../assets/audio/video-vem-jesus-vem-preview.mp3'
 
 export const artist = {
   name: 'Giselli Cristina',
@@ -85,7 +81,7 @@ export const meuBarquinho = {
 
 export const videos = {
   title: 'Vídeos',
-  description: 'Apresentações, clipes e conteúdos oficiais.',
+  description: 'Do louvor mais recente às parcerias com Nicolas Henrique e CeCe Winans: escolha um clipe e assista aqui mesmo.',
   main: 'https://www.youtube.com/embed/dfRye5vYGI8',
   mainTitle: 'Cura Jesus',
   mainThumbnail: videoCuraJesus,
@@ -93,25 +89,21 @@ export const videos = {
     {
       title: 'Fases',
       thumbnail: videoFases,
-      preview: videoFasesPreview,
       url: 'https://www.youtube.com/watch?v=G_bzLfdmryM',
     },
     {
       title: 'Santo Pra Sempre — feat. Nicolas Henrique',
       thumbnail: videoSanto,
-      preview: videoSantoPreview,
       url: 'https://www.youtube.com/watch?v=8zcx613PHLE',
     },
     {
       title: 'Te Louvarei — feat. Nicolas Henrique',
       thumbnail: videoLouvarei,
-      preview: videoLouvareiPreview,
       url: 'https://www.youtube.com/watch?v=Dxelc3yHVQQ',
     },
     {
       title: 'Vem Jesus Vem — feat. CeCe Winans',
       thumbnail: videoVemJesus,
-      preview: videoVemJesusPreview,
       url: 'https://www.youtube.com/watch?v=X4QFSafyzJ0',
     },
   ],

@@ -30,7 +30,11 @@ export default function BottomNav() {
     let raf = 0
     const update = () => {
       raf = 0
-      setVisible(window.scrollY > window.innerHeight * 0.6)
+      // some no início (Hero) e no fim da página, pra não cobrir o rodapé —
+      // assim não precisa de espaço vazio no fim, e o fundo do site vai até a borda
+      const nearEnd =
+        window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 160
+      setVisible(window.scrollY > window.innerHeight * 0.6 && !nearEnd)
       const line = window.innerHeight * 0.4
       let current = 0
       links.forEach((l, i) => {

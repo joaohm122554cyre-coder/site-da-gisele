@@ -24,7 +24,7 @@ export default function App() {
     <div className="relative">
       <BackgroundVideo switchRef={switchRef} />
 
-      <main className="md:pl-14 pb-20 md:pb-0 relative">
+      <main className="md:pl-14 relative">
         <Nav />
         <Hero />
         <About />

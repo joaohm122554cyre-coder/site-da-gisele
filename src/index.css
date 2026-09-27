@@ -17,6 +17,15 @@ html, body, #root {
   width: 100%;
 }
 
+/* Quando o Safari bloqueia o autoplay (Modo de Baixo Consumo, etc.) ele mostra
+   um botão de play grande em cima do vídeo pausado — como o vídeo é só fundo
+   decorativo, esconde esse botão; a pessoa só vê a imagem de capa até tocar
+   na tela, sem esse ícone feio no meio. */
+video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
 /* O fundo fica no html (e não no body) para ir para trás dos vídeos fixos com z-index negativo;
    um fundo no body cobriria os vídeos. A cor sólida é a que o iOS usa para tingir as barras. */
 html {

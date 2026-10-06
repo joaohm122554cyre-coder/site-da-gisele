@@ -40,7 +40,7 @@ const colors = {
 // YouTube) — nada estimado.
 const urlOf = (name) => socials.find((s) => s.name === name)?.url
 const socialStats = [
-  { name: 'Facebook', value: 78169, label: 'curtidas', url: facebookPage.url },
+  { name: 'Facebook', value: 439000, label: 'seguidores', url: facebookPage.url },
   { name: 'Instagram', value: 481000, label: 'seguidores', url: urlOf('Instagram') },
   { name: 'YouTube', value: 918000, label: 'inscritos', url: urlOf('YouTube') },
   { name: 'TikTok', value: null, label: 'seguidores', url: urlOf('TikTok') },

@@ -27,7 +27,7 @@ export default function Agenda() {
 
         {upcoming.length === 0 ? (
           <Reveal delay={0.15}>
-            <p className="mt-10 max-w-lg mx-auto font-fraunces text-lg leading-[1.8] text-[#f4eef7]/90 md:text-xl">
+            <p className="mt-5 md:mt-6 max-w-lg mx-auto font-fraunces text-lg leading-[1.8] text-[#f4eef7]/90 md:text-xl">
               {agenda.description}
             </p>
             <a

@@ -158,6 +158,7 @@ export const press = {
 export const socials = [
   { name: 'Instagram', handle: '@gisellicristinacantora', url: 'https://www.instagram.com/gisellicristinacantora/' },
   { name: 'YouTube', handle: 'Giselli Cristina', url: 'https://www.youtube.com/@gisellicristinaoficial' },
+  { name: 'TikTok', handle: '@gisellicristinacantora', url: 'https://www.tiktok.com/@gisellicristinacantora' },
 ]
 
 // Página profissional no Facebook (não o perfil pessoal). Preencher com o link.

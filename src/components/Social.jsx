@@ -7,6 +7,7 @@ import appleMusicLogo from '../assets/icons/apple-music.svg'
 import youtubeLogo from '../assets/icons/youtube.svg'
 import instagramLogo from '../assets/icons/instagram.svg'
 import facebookLogo from '../assets/icons/facebook.svg'
+import tiktokLogo from '../assets/icons/tiktok.svg'
 import deezerLogo from '../assets/icons/deezer.svg'
 import amazonMusicLogo from '../assets/icons/amazon-music.svg'
 
@@ -20,6 +21,7 @@ const logos = {
   Deezer: deezerLogo,
   Instagram: instagramLogo,
   Facebook: facebookLogo,
+  TikTok: tiktokLogo,
 }
 
 // Cor de marca de cada plataforma, usada só no contorno/brilho da pílula.
@@ -31,6 +33,7 @@ const colors = {
   Deezer: '#A238FF',
   Instagram: '#E1306C',
   Facebook: '#1877F2',
+  TikTok: '#FE2C55',
 }
 
 // Números reais, conferidos direto nas páginas oficiais (Facebook, Instagram e

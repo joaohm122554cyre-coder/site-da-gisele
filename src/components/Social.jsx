@@ -43,7 +43,7 @@ const socialStats = [
   { name: 'Facebook', value: 439000, label: 'seguidores', url: facebookPage.url },
   { name: 'Instagram', value: 481000, label: 'seguidores', url: urlOf('Instagram') },
   { name: 'YouTube', value: 918000, label: 'inscritos', url: urlOf('YouTube') },
-  { name: 'TikTok', value: null, text: socials.find((s) => s.name === 'TikTok')?.handle, label: 'seguir', url: urlOf('TikTok') },
+  { name: 'TikTok', value: 72100, label: 'seguidores', url: urlOf('TikTok') },
 ]
 // Todas as redes numa lista só, sem repetir o YouTube (que aparece nas duas listas
 // originais — como rede pra seguir e como plataforma pra ouvir).
@@ -115,7 +115,7 @@ function SocialStats() {
                 className="notranslate font-display text-3xl italic font-semibold leading-none md:text-4xl"
                 style={{ color }}
               >
-                {s.value != null ? <AnimatedCompactNumber value={s.value} /> : <span className="text-xl md:text-2xl">{s.text}</span>}
+                <AnimatedCompactNumber value={s.value} />
               </p>
               <p className="mt-1.5 text-[10px] uppercase tracking-[0.25em] text-[#f4eef7]/50">{s.label}</p>
             </div>

@@ -274,7 +274,7 @@ export default function MeuBarquinho() {
         <motion.div
           layout
           transition={{ type: 'spring', stiffness: 260, damping: 28 }}
-          className="order-3 w-full md:col-span-6 md:col-start-7 md:order-none"
+          className="order-3 w-full text-center md:col-span-12 md:order-3"
         >
           <Reveal key={`${track.key}-text`}>
             <span className="text-[11px] tracking-[0.4em] uppercase text-[#f4eef7]/50">
@@ -285,12 +285,12 @@ export default function MeuBarquinho() {
             </h2>
 
             <>
-                <p className="mt-6 font-body font-light text-sm md:text-base text-[#f4eef7]/90 leading-relaxed max-w-md">
+                <p className="mt-6 font-body font-light text-sm md:text-base text-[#f4eef7]/90 leading-relaxed max-w-md mx-auto">
                   {track.description}
                 </p>
 
                 {track.award && (
-                  <div className={`mt-8 ${track.award.maxWidth ?? 'max-w-sm'}`}>
+                  <div className={`mt-8 mx-auto ${track.award.maxWidth ?? 'max-w-sm'}`}>
                     <img
                       src={track.award.image}
                       alt={track.award.caption}
@@ -302,7 +302,7 @@ export default function MeuBarquinho() {
                   </div>
                 )}
 
-                <div className="flex gap-2 mt-10 justify-center md:justify-start">
+                <div className="flex gap-2 mt-10 justify-center">
                   {tracks.map((t, i) => (
                     <button
                       key={t.key}
@@ -316,7 +316,7 @@ export default function MeuBarquinho() {
                   ))}
                 </div>
 
-                <div className="mt-8 flex flex-col items-center gap-3 md:items-start">
+                <div className="mt-8 flex flex-col items-center gap-3">
                   <span className="text-[10px] uppercase tracking-[0.3em] text-[#f4eef7]/50">
                     Ouça o repertório completo
                   </span>
@@ -346,7 +346,7 @@ export default function MeuBarquinho() {
           className={
             mini
               ? 'fixed bottom-[calc(6rem+env(safe-area-inset-bottom))] right-4 z-50'
-              : 'order-2 w-full md:order-none md:col-span-5 flex justify-center min-h-[428px] md:min-h-0'
+              : 'order-2 w-full md:order-2 md:col-span-12 flex justify-center min-h-[428px] md:min-h-0'
           }
         >
           <div className="relative flex items-center gap-3 md:gap-5">

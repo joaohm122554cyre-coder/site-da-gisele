@@ -43,7 +43,7 @@ const socialStats = [
   { name: 'Facebook', value: 439000, label: 'seguidores', url: facebookPage.url },
   { name: 'Instagram', value: 481000, label: 'seguidores', url: urlOf('Instagram') },
   { name: 'YouTube', value: 918000, label: 'inscritos', url: urlOf('YouTube') },
-  { name: 'TikTok', value: null, label: 'seguidores', url: urlOf('TikTok') },
+  { name: 'TikTok', value: null, text: socials.find((s) => s.name === 'TikTok')?.handle, label: 'seguir', url: urlOf('TikTok') },
 ]
 // Todas as redes numa lista só, sem repetir o YouTube (que aparece nas duas listas
 // originais — como rede pra seguir e como plataforma pra ouvir).
@@ -96,7 +96,7 @@ function PlatformMarquee() {
 function SocialStats() {
   return (
     <Reveal delay={0.05} className="mb-16 flex flex-wrap items-center justify-center gap-x-12 gap-y-8">
-      {socialStats.filter((s) => s.value != null).map((s) => {
+      {socialStats.map((s) => {
         const color = colors[s.name]
         const Wrapper = s.url ? 'a' : 'div'
         const linkProps = s.url ? { href: s.url, target: '_blank', rel: 'noreferrer' } : {}
@@ -115,7 +115,7 @@ function SocialStats() {
                 className="notranslate font-display text-3xl italic font-semibold leading-none md:text-4xl"
                 style={{ color }}
               >
-                <AnimatedCompactNumber value={s.value} />
+                {s.value != null ? <AnimatedCompactNumber value={s.value} /> : <span className="text-xl md:text-2xl">{s.text}</span>}
               </p>
               <p className="mt-1.5 text-[10px] uppercase tracking-[0.25em] text-[#f4eef7]/50">{s.label}</p>
             </div>

@@ -1,4 +1,4 @@
-import { socials, streaming } from '../lib/site-data'
+import { facebookPage, socials, streaming } from '../lib/site-data'
 import AnimatedCompactNumber from './AnimatedCompactNumber'
 import Marquee from './Marquee'
 import Reveal from './Reveal'
@@ -35,10 +35,11 @@ const colors = {
 
 // Números reais, conferidos direto nas páginas oficiais (Facebook, Instagram e
 // YouTube) — nada estimado.
+const urlOf = (name) => socials.find((s) => s.name === name)?.url
 const socialStats = [
-  { name: 'Facebook', value: 78169, label: 'curtidas' },
-  { name: 'Instagram', value: 481000, label: 'seguidores' },
-  { name: 'YouTube', value: 918000, label: 'inscritos' },
+  { name: 'Facebook', value: 78169, label: 'curtidas', url: facebookPage.url },
+  { name: 'Instagram', value: 481000, label: 'seguidores', url: urlOf('Instagram') },
+  { name: 'YouTube', value: 918000, label: 'inscritos', url: urlOf('YouTube') },
 ]
 // Todas as redes numa lista só, sem repetir o YouTube (que aparece nas duas listas
 // originais — como rede pra seguir e como plataforma pra ouvir).
@@ -93,8 +94,14 @@ function SocialStats() {
     <Reveal delay={0.05} className="mb-16 flex flex-wrap items-center justify-center gap-x-12 gap-y-8">
       {socialStats.map((s) => {
         const color = colors[s.name]
+        const Wrapper = s.url ? 'a' : 'div'
+        const linkProps = s.url ? { href: s.url, target: '_blank', rel: 'noreferrer' } : {}
         return (
-          <div key={s.name} className="flex items-center gap-3">
+          <Wrapper
+            key={s.name}
+            {...linkProps}
+            className={`flex items-center gap-3 ${s.url ? 'group' : ''}`}
+          >
             <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white p-2 shadow-sm">
               <img src={logos[s.name]} alt="" className="h-full w-full object-contain" />
             </span>
@@ -108,7 +115,7 @@ function SocialStats() {
               </p>
               <p className="mt-1.5 text-[10px] uppercase tracking-[0.25em] text-[#f4eef7]/50">{s.label}</p>
             </div>
-          </div>
+          </Wrapper>
         )
       })}
     </Reveal>

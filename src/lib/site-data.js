@@ -162,4 +162,4 @@ export const socials = [
 ]
 
 // Página profissional no Facebook (não o perfil pessoal). Preencher com o link.
-export const facebookPage = { url: null }
+export const facebookPage = { url: 'https://www.facebook.com/profile.php?id=61572503707345' }

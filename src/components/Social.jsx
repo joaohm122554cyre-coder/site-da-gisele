@@ -43,6 +43,7 @@ const socialStats = [
   { name: 'Facebook', value: 78169, label: 'curtidas', url: facebookPage.url },
   { name: 'Instagram', value: 481000, label: 'seguidores', url: urlOf('Instagram') },
   { name: 'YouTube', value: 918000, label: 'inscritos', url: urlOf('YouTube') },
+  { name: 'TikTok', value: null, label: 'seguidores', url: urlOf('TikTok') },
 ]
 // Todas as redes numa lista só, sem repetir o YouTube (que aparece nas duas listas
 // originais — como rede pra seguir e como plataforma pra ouvir).
@@ -95,7 +96,7 @@ function PlatformMarquee() {
 function SocialStats() {
   return (
     <Reveal delay={0.05} className="mb-16 flex flex-wrap items-center justify-center gap-x-12 gap-y-8">
-      {socialStats.map((s) => {
+      {socialStats.filter((s) => s.value != null).map((s) => {
         const color = colors[s.name]
         const Wrapper = s.url ? 'a' : 'div'
         const linkProps = s.url ? { href: s.url, target: '_blank', rel: 'noreferrer' } : {}

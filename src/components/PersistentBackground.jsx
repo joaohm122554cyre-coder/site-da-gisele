@@ -34,7 +34,7 @@ export default function PersistentBackground({ active = true }) {
         loop
         muted
         playsInline
-        preload="auto"
+        preload={active ? 'auto' : 'none'}
         disableRemotePlayback
         className="h-full w-full object-cover"
         style={{ filter: 'blur(2px) brightness(0.4) saturate(0.9)' }}

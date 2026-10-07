@@ -1,6 +1,7 @@
 {
   "rewrites": [
     { "source": "/dupla", "destination": "/index.html" },
+    { "source": "/single-de-ouro", "destination": "/index.html" },
     { "source": "/disco-de-ouro", "destination": "/index.html" }
   ]
 }

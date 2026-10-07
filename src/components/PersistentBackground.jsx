@@ -2,13 +2,13 @@ import { useEffect, useRef } from 'react'
 import fundoVideo from '../assets/videos/stats-bg.mp4'
 
 // Fica montado no Root, nunca desmonta ao trocar de página (/, /dupla,
-// /disco-de-ouro). Sem isso, cada página tinha seu próprio vídeo de fundo,
+// /single-de-ouro). Sem isso, cada página tinha seu próprio vídeo de fundo,
 // que reiniciava do zero a cada troca de rota — daí o flash de fundo roxo
 // sólido por alguns segundos enquanto o vídeo novo carregava.
 // active=false na home: ela já tem seu próprio fundo de vídeo cobrindo a tela
 // inteira, então esse aqui fica escondido atrás à toa — decodificar um vídeo
 // que ninguém vê pesa bastante em Android mais fraco. Só toca de verdade nas
-// outras páginas (/dupla, /disco-de-ouro), que não têm fundo próprio.
+// outras páginas (/dupla, /single-de-ouro), que não têm fundo próprio.
 export default function PersistentBackground({ active = true }) {
   const ref = useRef(null)
 

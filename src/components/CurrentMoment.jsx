@@ -78,7 +78,7 @@ export default function CurrentMoment() {
               />
               <Photo
                 src={photoGold}
-                alt="Giselli Cristina e Nicolas Henrique com o Disco de Ouro"
+                alt="Giselli Cristina e Nicolas Henrique com o Single de Ouro"
                 ratio="aspect-[2/3]"
                 delay={0.15}
               />

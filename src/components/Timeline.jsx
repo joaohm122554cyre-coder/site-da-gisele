@@ -41,7 +41,7 @@ const items = [
     image: discoDeOuro,
     imageAlt: 'Giselli, Nicolas Henrique e a equipe com o Single de Ouro',
     wide: true,
-    cta: { to: '/disco-de-ouro', label: 'Conheça o Disco de Ouro' },
+    cta: { to: '/single-de-ouro', label: 'Conheça o Single de Ouro' },
   },
   {
     year: 'Hoje',
@@ -109,8 +109,8 @@ function Entry({ item, index }) {
           {item.cta && (
             <Link
               to={item.cta.to}
-              id="conheca-disco-ouro"
-              returnTo="conheca-disco-ouro"
+              id="conheca-single-de-ouro"
+              returnTo="conheca-single-de-ouro"
               className={`cta-glow group mt-4 inline-flex items-center gap-2.5 rounded-full border border-[#d954d1]/45 bg-[#d954d1]/10 py-1.5 pl-1.5 pr-4 backdrop-blur-sm transition-all duration-500 hover:border-[#d954d1] hover:bg-[#d954d1]/20 ${
                 item.wide ? 'max-w-[340px]' : 'max-w-[260px]'
               }`}

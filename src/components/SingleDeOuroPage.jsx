@@ -8,9 +8,9 @@ import Link from './Link'
 import { goBack, isPlainClick } from '../lib/router'
 import logo from '../assets/logo/gc-monograma.png'
 import photoGold from '../assets/photos/giselli-nicolas-disco-ouro.webp'
-import { goldRecord } from '../lib/site-data'
+import { singleDeOuro } from '../lib/site-data'
 
-const BACK_TO = '/#conheca-disco-ouro'
+const BACK_TO = '/#conheca-single-de-ouro'
 const goBackToSite = () => goBack(BACK_TO, { block: 'center' })
 
 const MARKUP = /(\*\*[^*]+\*\*|\[[^\]]+\])/g
@@ -85,7 +85,7 @@ function PageHero() {
       <div className="relative aspect-[4/5] overflow-hidden [-webkit-mask-image:linear-gradient(to_bottom,#000_50%,transparent_100%)] [mask-image:linear-gradient(to_bottom,#000_50%,transparent_100%)] md:absolute md:inset-0 md:aspect-auto md:[-webkit-mask-image:linear-gradient(to_bottom,#000_60%,transparent_100%)] md:[mask-image:linear-gradient(to_bottom,#000_60%,transparent_100%)]">
         <motion.img
           src={photoGold}
-          alt="Giselli Cristina e Nicolas Henrique recebendo o Disco de Ouro de Eu Só Quero Adorar"
+          alt="Giselli Cristina e Nicolas Henrique recebendo o Single de Ouro de Eu Só Quero Adorar"
           decoding="async"
           fetchPriority="high"
           initial={{ scale: 1.08 }}
@@ -102,7 +102,7 @@ function PageHero() {
           transition={{ duration: 1.1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           className="block font-script text-5xl leading-none text-[#f08de8] [text-shadow:0_2px_30px_rgba(20,18,42,0.9)] md:text-7xl"
         >
-          Disco de Ouro
+          Single de Ouro
         </motion.span>
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
@@ -128,15 +128,15 @@ function PageHero() {
 }
 
 const stats = [
-  { value: Math.floor(goldRecord.views / 1e6), suffix: 'mi+', label: 'visualizações no clipe oficial', tone: 'stat-pink' },
-  { value: 1, label: 'Disco de Ouro', tone: 'stat-blue' },
+  { value: Math.floor(singleDeOuro.views / 1e6), suffix: 'mi+', label: 'visualizações no clipe oficial', tone: 'stat-pink' },
+  { value: 1, label: 'Single de Ouro', tone: 'stat-blue' },
   { value: 2, label: 'vozes, mãe e filho', tone: 'stat-pink' },
 ]
 
-export default function GoldRecordPage() {
+export default function SingleDeOuroPage() {
   useEffect(() => {
     const previous = document.title
-    document.title = 'Disco de Ouro | Giselli Cristina'
+    document.title = 'Single de Ouro | Giselli Cristina'
     return () => {
       document.title = previous
     }
@@ -152,7 +152,7 @@ export default function GoldRecordPage() {
         <section className="relative py-24 md:py-36">
           <div className="mx-auto max-w-2xl px-6 md:px-12">
             <div className="space-y-6">
-              {goldRecord.paragraphs.map((p, i) => (
+              {singleDeOuro.paragraphs.map((p, i) => (
                 <Reveal key={i} delay={i * 0.08}>
                   <p
                     className={`font-fraunces text-[1.0625rem] leading-[1.8] text-[#f4eef7]/95 [text-shadow:0_1px_14px_rgba(20,18,42,0.85)] md:text-[1.2rem] ${

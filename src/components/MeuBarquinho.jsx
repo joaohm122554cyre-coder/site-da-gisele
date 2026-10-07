@@ -49,10 +49,10 @@ const tracks = [
   },
   {
     key: 'adorar',
-    eyebrow: 'Disco de Ouro',
+    eyebrow: 'Single de Ouro',
     title: 'Eu Só Quero Adorar',
     description:
-      'Gravada ao lado do filho, Nicolas Henrique, conquistou Disco de Ouro e se tornou um dos maiores fenômenos da música gospel nas plataformas digitais.',
+      'Gravada ao lado do filho, Nicolas Henrique, conquistou Single de Ouro e se tornou um dos maiores fenômenos da música gospel nas plataformas digitais.',
     label: adorarLabel,
     video: adorarVideo,
     duration: 78,

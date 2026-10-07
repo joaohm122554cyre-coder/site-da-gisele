@@ -1,7 +1,7 @@
 import { Analytics } from '@vercel/analytics/react'
 import App from './App'
 import DuoPage from './components/DuoPage'
-import GoldRecordPage from './components/GoldRecordPage'
+import SingleDeOuroPage from './components/SingleDeOuroPage'
 import PersistentBackground from './components/PersistentBackground'
 import { usePath, useRouteScroll } from './lib/router'
 
@@ -11,7 +11,9 @@ export default function Root() {
 
   let page = <App />
   if (path === '/dupla') page = <DuoPage />
-  if (path === '/disco-de-ouro') page = <GoldRecordPage />
+  // /disco-de-ouro é o endereço antigo (renomeado pro nome certo do prêmio);
+  // mantido pra não quebrar quem já tiver esse link salvo.
+  if (path === '/single-de-ouro' || path === '/disco-de-ouro') page = <SingleDeOuroPage />
 
   return (
     <>

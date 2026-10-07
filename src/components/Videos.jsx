@@ -149,7 +149,6 @@ export default function Videos() {
           <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-[#f4eef7] mt-4 leading-[1.1]">
             Clipes que <span className="italic text-[#ff4d6d]">tocaram</span> o Brasil
           </h2>
-          <p className="mt-6 font-fraunces italic text-base md:text-lg text-[#f4eef7]/80">{videos.description}</p>
         </Reveal>
 
         {current ? (

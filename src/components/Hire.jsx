@@ -1,5 +1,5 @@
-import { FiExternalLink } from 'react-icons/fi'
-import { hire } from '../lib/site-data'
+import { SiWhatsapp } from 'react-icons/si'
+import { agenda, hire } from '../lib/site-data'
 import Reveal from './Reveal'
 
 export default function Hire() {
@@ -18,31 +18,20 @@ export default function Hire() {
           </p>
         </Reveal>
 
-        {hire.agency ? (
-          <Reveal delay={0.15}>
-            <p className="mt-3 text-[13px] text-[#f4eef7]/70 max-w-sm mx-auto">
-              Lá você fala direto com quem organiza a agenda dela e fecha a data do seu evento.
-            </p>
-            <a
-              href={hire.agency.url}
-              target="_blank"
-              rel="noreferrer"
-              className="cta-glow group mt-6 inline-flex items-center gap-3 rounded-full border border-[#4f7fd6]/45 bg-[#4f7fd6]/10 py-2 pl-2 pr-6 text-[11px] uppercase tracking-[0.28em] text-[#f4eef7]/90 backdrop-blur-sm transition-all duration-500 hover:border-[#4f7fd6] hover:bg-[#4f7fd6]/20 hover:text-[#f4eef7]"
-              style={{ '--glow-rgb': '79, 127, 214' }}
-            >
-              <span className="grid h-9 w-9 place-items-center rounded-full bg-[#4f7fd6] text-white transition-transform duration-500 group-hover:translate-x-1">
-                <FiExternalLink className="text-base" aria-hidden="true" />
-              </span>
-              Contratar pela {hire.agency.name}
-            </a>
-          </Reveal>
-        ) : (
-          <Reveal delay={0.15}>
-            <p className="mt-10 text-[11px] uppercase tracking-[0.2em] text-[#f4eef7]/40">
-              Canal oficial de contratação em breve
-            </p>
-          </Reveal>
-        )}
+        <Reveal delay={0.15}>
+          <a
+            href={`https://wa.me/${agenda.whatsapp}`}
+            target="_blank"
+            rel="noreferrer"
+            className="cta-glow group mt-8 inline-flex items-center gap-3 rounded-full border border-[#4f7fd6]/45 bg-[#4f7fd6]/10 py-2 pl-2 pr-6 text-[11px] uppercase tracking-[0.28em] text-[#f4eef7]/90 backdrop-blur-sm transition-all duration-500 hover:border-[#4f7fd6] hover:bg-[#4f7fd6]/20 hover:text-[#f4eef7]"
+            style={{ '--glow-rgb': '79, 127, 214' }}
+          >
+            <span className="grid h-9 w-9 place-items-center rounded-full bg-[#4f7fd6] text-white transition-transform duration-500 group-hover:translate-x-1">
+              <SiWhatsapp className="text-base" aria-hidden="true" />
+            </span>
+            Falar com {agenda.contactName} no WhatsApp
+          </a>
+        </Reveal>
       </div>
     </section>
   )
